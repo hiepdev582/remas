@@ -1,5 +1,6 @@
 package com.hiepnn.remas.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -18,33 +19,44 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "audit_logs")
+@Table(name = "contract_fees")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuditLog {
+public class ContractFee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
 
-    // CREATE_CONTRACT, UPDATE_ITEM, DELETE_CUSTOMER,...
-    @Column(length = 100, nullable = false)
-    private String action;
+    // DELIVERY (giao đồ), CLEANING (vệ sinh), DAMAGE (hư hại), LATE (quá hạn)
+    @Column(name = "fee_type", length = 50, nullable = false)
+    private String feeType;
 
-    // Chi tiết: "Sửa trạng thái hợp đồng số #12 sang ACTIVE"
+    // Số tiền phí
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal amount;
+
+    @Column(name = "pickup_location", length = 500)
+    private String pickupLocation;
+
+    @Column(name = "return_location", length = 500)
+    private String returnLocation;
+
+    // Ghi chú chi tiết
     @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(name = "ip_address", length = 50)
-    private String ipAddress;
+    private String note;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

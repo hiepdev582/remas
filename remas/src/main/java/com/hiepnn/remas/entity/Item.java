@@ -18,33 +18,34 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "audit_logs")
+@Table(name = "items")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuditLog {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    // CREATE_CONTRACT, UPDATE_ITEM, DELETE_CUSTOMER,...
-    @Column(length = 100, nullable = false)
-    private String action;
-
-    // Chi tiết: "Sửa trạng thái hợp đồng số #12 sang ACTIVE"
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(name = "ip_address", length = 50)
-    private String ipAddress;
+    // AVAILABLE, RENTED, MAINTENANCE
+    @Column(length = 50, nullable = false)
+    @Builder.Default
+    private String status = "AVAILABLE";
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

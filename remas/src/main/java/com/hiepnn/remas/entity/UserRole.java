@@ -25,6 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class UserRole {
+    // Khóa chính tổ hợp
     @EmbeddedId
     private UserRoleId id;
 

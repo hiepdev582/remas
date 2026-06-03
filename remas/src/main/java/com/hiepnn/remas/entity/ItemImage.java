@@ -18,33 +18,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "audit_logs")
+@Table(name = "item_images")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuditLog {
+public class ItemImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "item_id")
+    private Item item;    
 
-    // CREATE_CONTRACT, UPDATE_ITEM, DELETE_CUSTOMER,...
-    @Column(length = 100, nullable = false)
-    private String action;
+    // Đường dẫn URL ảnh của món đồ (Cloudinary/S3)
+    @Column(name = "image_url", length = 500, nullable = false)
+    private String imageUrl;
 
-    // Chi tiết: "Sửa trạng thái hợp đồng số #12 sang ACTIVE"
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    // Đánh dấu ảnh này làm ảnh đại diện chính của món đồ
+    @Column(name = "is_thumbnail", nullable = false)
+    @Builder.Default
+    private Boolean isThumbnail = false;  
 
-    @Column(name = "ip_address", length = 50)
-    private String ipAddress;
+    // Ghi chú góc chụp: ví dụ "Góc chính diện", "Vết xước nhẹ ở thân máy"
+    private String note;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

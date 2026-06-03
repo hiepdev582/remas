@@ -29,6 +29,7 @@ public class User {
   @Column(length = 100, nullable = false, unique = true)
   private String username;
 
+  // Mật khẩu đã mã hóa Bcrypt
   @Column(nullable = false)
   private String password;
 
@@ -45,4 +46,8 @@ public class User {
   @Column(name = "created_at", nullable = false, updatable = false)
   @Builder.Default
   private LocalDateTime createdAt = LocalDateTime.now();
+
+  @Column(name = "updated_at", nullable = false, updatable = false)
+  @Builder.Default
+  private LocalDateTime updatedAt = LocalDateTime.now();
 }

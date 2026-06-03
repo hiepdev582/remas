@@ -13,20 +13,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // ADMIN, STAFF, CUSTOMER
-    @Column(length = 50, nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
-    private String description;
+    @Column(columnDefinition = "TEXT")
+    private String description; 
 }
