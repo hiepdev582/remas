@@ -66,7 +66,11 @@ public class Contract {
     @Builder.Default
     private String collateralStatus = "NONE";
 
-    // RESERVED (Đã cọc giữ chỗ), ACTIVE (Khách đã lấy đồ và đang thuê), COMPLETED (Đã trả đồ xong), CANCELLED (Hủy đơn), OVERDUE (Quá hạn)
+    // RESERVED (Đã cọc giữ chỗ)
+    // ACTIVE (Khách đã lấy đồ và đang thuê)
+    // COMPLETED (Đã trả đồ xong)
+    // CANCELLED (Hủy đơn)
+    // OVERDUE (Quá hạn)
     @Column(length = 50, nullable = false)
     @Builder.Default
     private String status = "RESERVED";

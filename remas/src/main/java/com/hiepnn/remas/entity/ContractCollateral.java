@@ -34,11 +34,17 @@ public class ContractCollateral {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
-    // CASH (Tiền mặt/Chuyển khoản), IDENTITY_CARD (CCCD), DRIVER_LICENSE (Bằng lái), MOTORBIKE (Xe máy), LAPTOP, OTHER
+    // CASH (Tiền mặt/Chuyển khoản)
+    // IDENTITY_CARD (CCCD)
+    // DRIVER_LICENSE (Bằng lái)
+    // MOTORBIKE (Xe máy)
+    // LAPTOP
+    // OTHER
     @Column(name = "collateral_type", length = 50, nullable = false)
     private String collateralType;
 
-    // Nếu là tiền mặt thì điền số tiền, nếu là vật chất thì điền giá trị ước tính (hoặc 0 nếu là giấy tờ tùy thân)
+    // Nếu là tiền mặt thì điền số tiền, nếu là vật chất thì điền giá trị ước tính
+    // (hoặc 0 nếu là giấy tờ tùy thân)
     // Giá trị quy đổi bằng tiền nếu có
     @Column(precision = 10, scale = 2)
     @Builder.Default
@@ -48,7 +54,9 @@ public class ContractCollateral {
     @Column(name = "asset_description", columnDefinition = "TEXT")
     private String assetDescription;
 
-    // HOLDING (Đang giữ), RETURNED (Đã trả lại khách), FORFEITED (Đã tịch thu do mất đồ/đền bù)
+    // HOLDING (Đang giữ)
+    // RETURNED (Đã trả lại khách)
+    // FORFEITED (Đã tịch thu do mất đồ/đền bù)
     @Column(length = 50, nullable = false)
     @Builder.Default
     private String status = "HOLDING";

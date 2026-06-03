@@ -33,7 +33,11 @@ public class CustomerDocument {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    // CCCD_FRONT (Mặt trước CCCD), CCCD_BACK (Mặt sau CCCD), DRIVER_LICENSE_FRONT, DRIVER_LICENSE_BACK, OTHER
+    // CCCD_FRONT (Mặt trước CCCD)
+    // CCCD_BACK (Mặt sau CCCD)
+    // DRIVER_LICENSE_FRONT
+    // DRIVER_LICENSE_BACK
+    // OTHER
     @Column(name = "document_type", length = 50, nullable = false)
     private String documentType;
 
