@@ -18,33 +18,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "audit_logs")
+@Table(name = "customer_documents")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuditLog {
+public class CustomerDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    // CREATE_CONTRACT, UPDATE_ITEM, DELETE_CUSTOMER,...
-    @Column(length = 100, nullable = false)
-    private String action;
+    // CCCD_FRONT (Mặt trước CCCD), CCCD_BACK (Mặt sau CCCD), DRIVER_LICENSE_FRONT, DRIVER_LICENSE_BACK, OTHER
+    @Column(name = "document_type", length = 50, nullable = false)
+    private String documentType;
 
-    // Chi tiết: "Sửa trạng thái hợp đồng số #12 sang ACTIVE"
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    // Số giấy tờ cụ thể (nếu có)
+    @Column(name = "document_number", length = 50)
+    private String documentNumber;
 
-    @Column(name = "ip_address", length = 50)
-    private String ipAddress;
+    // Đường dẫn URL của ảnh đã upload lên Cloudinary/S3 hoặc Server
+    @Column(name = "image_url", length = 500, nullable = false)
+    private String imageUrl;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }
