@@ -12,15 +12,22 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.hiepnn.remas.feature.auth.filter.JwtAuthenticationFilter;
+import com.hiepnn.remas.feature.auth.repository.InvalidatedTokenRepository;
 
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final InvalidatedTokenRepository invalidatedTokenRepository;
+
+    SecurityConfig(InvalidatedTokenRepository invalidatedTokenRepository) {
+        this.invalidatedTokenRepository = invalidatedTokenRepository;
+    }
+
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
+        return new JwtAuthenticationFilter(invalidatedTokenRepository);
     }
 
     @Bean
