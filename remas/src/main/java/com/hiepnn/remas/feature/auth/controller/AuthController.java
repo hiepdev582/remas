@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -35,4 +38,12 @@ public class AuthController {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+    @Operation(summary = "Đăng xuất hệ thống", description = "Đưa token hiện tại vào danh sách đen (Blacklist) để vô hiệu hóa")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
+        String result = authService.logout(authHeader);
+        return ResponseEntity.ok(result);
+    }
+
 }

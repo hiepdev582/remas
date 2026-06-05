@@ -10,15 +10,16 @@ import org.springframework.stereotype.Component;
 
 import com.hiepnn.remas.feature.auth.model.UserPrincipal;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
-    private final String jwtSecret = "";
+    private static final String jwtSecret = "";
 
-    private final long jwtExpirationMs = 86400000; // 24 hours
+    private static final long jwtExpirationMs = 86400000; // 24 hours
 
     public String generateToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -36,5 +37,17 @@ public class JwtTokenProvider {
                 .setExpiration(expiryDate)
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS512)
                 .compact();
+    }
+
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public Date getExpirationDate(String token) {
+        return getClaimsFromToken(token).getExpiration();
     }
 }
