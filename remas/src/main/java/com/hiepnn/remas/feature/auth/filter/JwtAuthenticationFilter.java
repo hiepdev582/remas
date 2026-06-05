@@ -11,6 +11,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.hiepnn.remas.feature.auth.repository.InvalidatedTokenRepository;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -21,6 +23,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final String jwtSecret = "";
+    private final InvalidatedTokenRepository invalidatedTokenRepository;
+
+    public JwtAuthenticationFilter(InvalidatedTokenRepository invalidatedTokenRepository) {
+        this.invalidatedTokenRepository = invalidatedTokenRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -29,6 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
+            boolean isInvalidated = invalidatedTokenRepository.existsById(token);
+            if (isInvalidated) {
+                logger.warn("Token is invalidated");
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             try {
                 Claims claims = Jwts.parserBuilder()
                         .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
