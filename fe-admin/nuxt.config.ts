@@ -29,4 +29,7 @@ export default defineNuxtConfig({
       methods: ["GET", "POST", "PUT", "DELETE"],
     },
   },
+  components: [
+    { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
+  ],
 });
