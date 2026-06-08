@@ -30,6 +30,15 @@ export default defineNuxtConfig({
     },
   },
   components: [
+    { path: "~/components/base", prefix: "Base", pathPrefix: false },
     { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
   ],
+  imports: {
+    dirs: [
+      "~/constants/*.ts",
+      "~/features/*/store.ts",
+      "~/features/*/service.ts",
+      "~/features/*/constants.ts",
+    ],
+  },
 });

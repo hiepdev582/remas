@@ -1,17 +1,14 @@
-import { useAuthStore } from "~/features/auth/store";
-
 export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore();
 
-  const publicPages = ["/login"];
-
+  const publicPages: string[] = [ROUTES.AUTH.LOGIN];
   const isPublicPage = publicPages.includes(to.path);
 
   if (!authStore.isLoggedIn && !isPublicPage) {
-    return navigateTo("/login");
+    return navigateTo(ROUTES.AUTH.LOGIN);
   }
 
   if (authStore.isLoggedIn && isPublicPage) {
-    return navigateTo("/");
+    return navigateTo(ROUTES.DASHBOARD);
   }
 });
