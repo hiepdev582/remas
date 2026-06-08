@@ -1,8 +1,8 @@
-export interface AuthResponse {
-  token: string;
+export interface RegisterRequest {
   username: string;
+  password: string;
   email: string;
-  roles: string;
+  fullName: string;
 }
 
 export interface LoginRequest {
@@ -10,9 +10,9 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface RegisterRequest {
+export interface AuthResponse {
+  token: string;
   username: string;
-  password: string;
   email: string;
-  fullName: string;
+  roles: string;
 }
