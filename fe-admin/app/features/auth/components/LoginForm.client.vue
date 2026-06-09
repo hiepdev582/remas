@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { toTypedSchema } from "@vee-validate/zod";
 import type { LoginRequest } from "../types";
-import * as zod from "zod";
 import { authFieldLabels, authFieldNames, authRoles } from "../constants";
+import { loginFieldSchema } from "../validation";
 
 //#region Common
 const authStore = useAuthStore();
@@ -10,24 +9,23 @@ const authService = useAuthService();
 const isLoading = ref(false);
 //#endregion
 
-//#region Validation
-const loginSchema = zod.object({
-  username: zod
-    .string()
-    .min(1, errorMessages.required(authFieldLabels.username))
-    .min(3, errorMessages.minLength(authFieldLabels.username, 3)),
-  password: zod
-    .string()
-    .min(1, errorMessages.required(authFieldLabels.password))
-    .min(6, errorMessages.minLength(authFieldLabels.password, 6)),
-});
+//#region State
+const loginFields: FormFieldConfig[] = [
+  {
+    name: authFieldNames.username,
+    label: authFieldLabels.username,
+    type: FormFieldType.TEXT,
+    placeholder: placeholders.enter(authFieldLabels.username),
+  },
+  {
+    name: authFieldNames.password,
+    label: authFieldLabels.password,
+    type: FormFieldType.PASSWORD,
+    placeholder: placeholders.enter(authFieldLabels.password),
+  },
+];
 
-const { value: username } = useField<string>(authFieldNames.username);
-const { value: password } = useField<string>(authFieldNames.password);
-
-const { handleSubmit, errors } = useForm({
-  validationSchema: toTypedSchema(loginSchema),
-});
+const loginSchema = toTypedSchema(loginFieldSchema.getSchema());
 //#endregion
 
 //#region Services
@@ -36,7 +34,6 @@ const handleLogin = async (values: LoginRequest) => {
 
   try {
     const response = await authService.login(values);
-
     authStore.setAuth(response);
 
     if (
@@ -60,7 +57,22 @@ const handleLogin = async (values: LoginRequest) => {
 </script>
 
 <template>
-  <div>
-    <BaseInputPassword></BaseInputPassword>
+  <div
+    class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg border border-gray-100"
+  >
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-gray-900 tracking-tight">
+        REMAS ADMIN
+      </h2>
+      <p class="mt-2 text-sm text-gray-500">REntal MAnagement System</p>
+    </div>
+
+    <BaseForm
+      submit-button-text="Login"
+      :fields="loginFields"
+      :validation-schema="loginSchema"
+      :loading="isLoading"
+      @onSubmit="handleLogin"
+    />
   </div>
 </template>
