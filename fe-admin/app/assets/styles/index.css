@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #19489a;
+  --color-primary-hover: #1852b8;
+  --color-primary-active: #16408a;
+  --color-secondary: #17ba98;
+  --color-text-primary: #212121;
+  --color-error: #ff4d4f;
+  --color-info: #1677ff;
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --border-radius: 6px;
+}
+
+body {
+  color: var(--color-text-primary);
+}

@@ -15,7 +15,7 @@ export const loginFieldSchema = {
     )
     .regex(
       /^[a-zA-Z0-9._]+$/,
-      "Username must contain only letters, numbers, dots, or underscores",
+      "Contain only letters, numbers, dots, or underscores",
     ),
   password: zod
     .string()
