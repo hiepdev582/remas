@@ -69,7 +69,7 @@ const onSubmit = handleSubmit((values) => emit("onSubmit", values));
       </BaseFormItem>
     </template>
     <!-- Action -->
-    <BaseFormItem name="submitButton">
+    <BaseFormItem name="submitButton" class="mt-8">
       <BaseButton block htmlType="submit" :loading>
         {{ submitButtonText }}
       </BaseButton>
@@ -80,5 +80,9 @@ const onSubmit = handleSubmit((values) => emit("onSubmit", values));
 <style lang="css" scoped>
 .ant-form-vertical :deep(.ant-form-item-label) {
   padding-bottom: 4px;
+}
+
+:deep(.ant-form-item) {
+  margin-bottom: 18px;
 }
 </style>

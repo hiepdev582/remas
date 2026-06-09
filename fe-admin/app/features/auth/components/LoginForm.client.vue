@@ -58,21 +58,19 @@ const handleLogin = async (values: LoginRequest) => {
 
 <template>
   <div
-    class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg border border-gray-100"
+    class="bg-[teal] w-full h-screen overflow-hidden flex items-center justify-center"
   >
-    <div class="text-center mb-8">
-      <h2 class="text-3xl font-bold text-gray-900 tracking-tight">
-        REMAS ADMIN
-      </h2>
-      <p class="mt-2 text-sm text-gray-500">REntal MAnagement System</p>
+    <div
+      class="bg-white w-[400px] max-w-[90%] max-h-[90%] rounded-md shadow-md p-8"
+    >
+      <h1 class="text-center text-2xl font-bold mb-4">Login</h1>
+      <BaseForm
+        submit-button-text="Login"
+        :fields="loginFields"
+        :validation-schema="loginSchema"
+        :loading="isLoading"
+        @onSubmit="handleLogin"
+      />
     </div>
-
-    <BaseForm
-      submit-button-text="Login"
-      :fields="loginFields"
-      :validation-schema="loginSchema"
-      :loading="isLoading"
-      @onSubmit="handleLogin"
-    />
   </div>
 </template>

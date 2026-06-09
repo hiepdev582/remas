@@ -14,6 +14,12 @@ export default defineNuxtConfig({
     "@nuxtjs/robots",
     "nuxt-security",
   ],
+  app: {
+    head: {
+      title: "Remas - Rental Management System | hiepnn",
+    },
+  },
+  css: ["~/assets/styles/index.css"],
   // Cấu hình cho Ant Design Vue
   antd: {
     extractStyle: true,
