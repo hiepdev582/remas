@@ -68,7 +68,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .fullName(request.getFullName())
-                .isActive(true)
+                .isActive(false)
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -90,6 +90,13 @@ public class AuthService {
 
     // #region Đăng nhập - Sinh token
     public AuthResponse login(LoginRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new BadRequestException("Invalid username or password"));
+
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new BadRequestException("User is inactive");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
