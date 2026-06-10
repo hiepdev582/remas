@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.hiepnn.remas.common.constant.RoleName;
 import com.hiepnn.remas.feature.auth.filter.JwtAuthenticationFilter;
 import com.hiepnn.remas.feature.auth.repository.InvalidatedTokenRepository;
 
@@ -55,8 +56,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
-                        .requestMatchers("/api/v1/client/**").hasAuthority("CUSTOMER")
-                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ADMIN", "STAFF")
+                        .requestMatchers("/api/v1/client/**").hasAuthority(RoleName.CUSTOMER.getValue())
+                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority(RoleName.SUPER_ADMIN.getValue(), RoleName.ADMIN.getValue())
                         .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

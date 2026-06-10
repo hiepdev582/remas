@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.hiepnn.remas.common.constant.FeeType;
 
 @Entity
 @Table(name = "contract_fees")
@@ -34,9 +38,9 @@ public class ContractFee {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
-    // DELIVERY (giao đồ), CLEANING (vệ sinh), DAMAGE (hư hại), LATE (quá hạn)
     @Column(name = "fee_type", length = 50, nullable = false)
-    private String feeType;
+    @Enumerated(EnumType.STRING)
+    private FeeType feeType;
 
     // Số tiền phí
     @Column(nullable = false, precision = 10, scale = 2)

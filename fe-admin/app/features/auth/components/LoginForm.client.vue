@@ -38,7 +38,7 @@ const handleLogin = async (values: LoginRequest) => {
 
     if (
       response.roles.includes(authRoles.admin) ||
-      response.roles.includes(authRoles.staff)
+      response.roles.includes(authRoles.superAdmin)
     ) {
       message.success("Welcome back " + response.username);
       await navigateTo(ROUTES.DASHBOARD);

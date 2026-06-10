@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.hiepnn.remas.common.constant.DocumentType;
 
 @Entity
 @Table(name = "customer_documents")
@@ -33,13 +37,9 @@ public class CustomerDocument {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    // CCCD_FRONT (Mặt trước CCCD)
-    // CCCD_BACK (Mặt sau CCCD)
-    // DRIVER_LICENSE_FRONT
-    // DRIVER_LICENSE_BACK
-    // OTHER
     @Column(name = "document_type", length = 50, nullable = false)
-    private String documentType;
+    @Enumerated(EnumType.STRING)
+    private DocumentType documentType;
 
     // Số giấy tờ cụ thể (nếu có)
     @Column(name = "document_number", length = 50)

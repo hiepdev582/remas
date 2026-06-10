@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.hiepnn.remas.common.constant.CollateralStatus;
+import com.hiepnn.remas.common.constant.ContractStatus;
 
 @Entity
 @Table(name = "contracts")
@@ -61,19 +66,15 @@ public class Contract {
     @Builder.Default
     private BigDecimal finalAmount = BigDecimal.ZERO;
 
-    // NONE (Không cọc), CASH (Cọc tiền), ASSET (Cọc vật), BOTH (Cọc cả tiền cả vật)
     @Column(name = "collateral_status", length = 50, nullable = false)
     @Builder.Default
-    private String collateralStatus = "NONE";
+    @Enumerated(EnumType.STRING)
+    private CollateralStatus collateralStatus = CollateralStatus.NONE;
 
-    // RESERVED (Đã cọc giữ chỗ)
-    // ACTIVE (Khách đã lấy đồ và đang thuê)
-    // COMPLETED (Đã trả đồ xong)
-    // CANCELLED (Hủy đơn)
-    // OVERDUE (Quá hạn)
     @Column(length = 50, nullable = false)
     @Builder.Default
-    private String status = "RESERVED";
+    @Enumerated(EnumType.STRING)
+    private ContractStatus status = ContractStatus.RESERVED;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default

@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
 
         List<SimpleGrantedAuthority> authorities = userRoles.stream()
-                .map(ur -> new SimpleGrantedAuthority(ur.getRole().getName()))
+                .map(ur -> new SimpleGrantedAuthority(ur.getRole().getName().getValue()))
                 .collect(Collectors.toList());
 
         return new UserPrincipal(user, authorities);

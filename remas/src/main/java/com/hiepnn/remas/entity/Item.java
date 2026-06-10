@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.hiepnn.remas.common.constant.ItemStatus;
 
 @Entity
 @Table(name = "items")
@@ -36,10 +40,10 @@ public class Item {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    // AVAILABLE, RENTED, MAINTENANCE
     @Column(length = 50, nullable = false)
     @Builder.Default
-    private String status = "AVAILABLE";
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status = ItemStatus.AVAILABLE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default

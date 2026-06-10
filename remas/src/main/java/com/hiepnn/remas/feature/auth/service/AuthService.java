@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.hiepnn.remas.common.constant.RoleName;
 import com.hiepnn.remas.entity.InvalidatedToken;
 import com.hiepnn.remas.entity.Role;
 import com.hiepnn.remas.entity.User;
@@ -72,7 +73,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        Role defaultRole = Role.builder().id(3).name("CUSTOMER").build();
+        Role defaultRole = Role.builder().id(3).name(RoleName.CUSTOMER).build();
 
         UserRole.UserRoleId userRoleId = new UserRole.UserRoleId(savedUser.getId(), defaultRole.getId());
         UserRole userRole = UserRole.builder()

@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.hiepnn.remas.common.constant.CollateralType;
+import com.hiepnn.remas.common.constant.CollateralItemStatus;
 
 @Entity
 @Table(name = "contract_collaterals")
@@ -34,14 +39,9 @@ public class ContractCollateral {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
-    // CASH (Tiền mặt/Chuyển khoản)
-    // IDENTITY_CARD (CCCD)
-    // DRIVER_LICENSE (Bằng lái)
-    // MOTORBIKE (Xe máy)
-    // LAPTOP
-    // OTHER
     @Column(name = "collateral_type", length = 50, nullable = false)
-    private String collateralType;
+    @Enumerated(EnumType.STRING)
+    private CollateralType collateralType;
 
     // Nếu là tiền mặt thì điền số tiền, nếu là vật chất thì điền giá trị ước tính
     // (hoặc 0 nếu là giấy tờ tùy thân)
@@ -54,12 +54,10 @@ public class ContractCollateral {
     @Column(name = "asset_description", columnDefinition = "TEXT")
     private String assetDescription;
 
-    // HOLDING (Đang giữ)
-    // RETURNED (Đã trả lại khách)
-    // FORFEITED (Đã tịch thu do mất đồ/đền bù)
     @Column(length = 50, nullable = false)
     @Builder.Default
-    private String status = "HOLDING";
+    @Enumerated(EnumType.STRING)
+    private CollateralItemStatus status = CollateralItemStatus.HOLDING;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
