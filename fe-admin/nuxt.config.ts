@@ -24,6 +24,13 @@ export default defineNuxtConfig({
   antd: {
     extractStyle: true,
   },
+  // Cấu hình cho Tailwindcss
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
   // Cấu hình tối ưu cho Nuxt Image - Ưu tiên xuất ảnh ra định dạng siêu nhẹ
   image: {
     format: ["webp", "avif"],
