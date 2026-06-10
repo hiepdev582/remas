@@ -2,8 +2,12 @@ package com.hiepnn.remas.entity;
 
 import java.math.BigDecimal;
 
+import com.hiepnn.remas.common.constant.PriceType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,7 +47,8 @@ public class ContractDetail {
 
     // Lưu lại khách thuê theo kiểu gì: HOURLY, WEEKLY, HOLIDAY...
     @Column(name = "applied_price_type", length = 50, nullable = false)
-    private String appliedPriceType;
+    @Enumerated(EnumType.STRING)
+    private PriceType appliedPriceType;    
 
     // Giá tiền tính trên 1 đơn vị thời gian tại lúc ký
     @Column(name = "price_applied", nullable = false, precision = 10, scale = 2)

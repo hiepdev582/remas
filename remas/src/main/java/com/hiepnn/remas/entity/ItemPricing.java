@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.hiepnn.remas.common.constant.PriceType;
 
 @Entity
 @Table(name = "item_pricings")
@@ -34,9 +38,9 @@ public class ItemPricing {
     @JoinColumn(name = "item_id")
     private Item item; 
 
-    // HOURLY, DAILY, WEEKLY, MONTHLY, WEEKEND, HOLIDAY
     @Column(name = "price_type", length = 50, nullable = false)
-    private String priceType;
+    @Enumerated(EnumType.STRING)
+    private PriceType priceType;
     
     // Số tiền áp dụng cho loại hình đó
     @Column(nullable = false, precision = 10, scale = 2)

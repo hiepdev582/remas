@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.hiepnn.remas.common.constant.AuditAction;
 
 @Entity
 @Table(name = "audit_logs")
@@ -33,9 +37,9 @@ public class AuditLog {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // CREATE_CONTRACT, UPDATE_ITEM, DELETE_CUSTOMER,...
-    @Column(length = 100, nullable = false)
-    private String action;
+    @Column(name = "action", length = 100, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuditAction action;
 
     // Chi tiết: "Sửa trạng thái hợp đồng số #12 sang ACTIVE"
     @Column(columnDefinition = "TEXT")

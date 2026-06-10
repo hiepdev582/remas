@@ -19,8 +19,8 @@ const authFieldNames = {
 } as const;
 
 const authRoles = {
+  superAdmin: "SUPER_ADMIN",
   admin: "ADMIN",
-  staff: "STAFF",
   customer: "CUSTOMER",
 } as const;
 //#endregion
