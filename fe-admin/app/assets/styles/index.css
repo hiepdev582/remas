@@ -18,3 +18,8 @@
 body {
   color: var(--color-text-primary);
 }
+
+::selection {
+  background-color: var(--color-primary);
+  color: white;
+}
