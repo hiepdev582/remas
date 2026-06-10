@@ -11,11 +11,15 @@ const AUTH_PASSWORD_MAX_CHAR = 64;
 const authFieldLabels = {
   username: "Username",
   password: "Password",
+  email: "Email",
+  fullName: "Full Name",
 } as const;
 
 const authFieldNames = {
   username: "username",
   password: "password",
+  email: "email",
+  fullName: "fullName",
 } as const;
 
 const authRoles = {
