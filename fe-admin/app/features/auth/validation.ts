@@ -44,3 +44,24 @@ export const loginFieldSchema = {
     });
   },
 } as const;
+
+export const registerFieldSchema = {
+  ...loginFieldSchema,
+  email: zod
+    .string()
+    .trim()
+    .min(MIN_CHAR, errorMessages.required(authFieldLabels.email))
+    .email("Invalid email format"),
+  fullName: zod
+    .string()
+    .trim()
+    .min(MIN_CHAR, errorMessages.required(authFieldLabels.fullName)),
+  getSchema() {
+    return zod.object({
+      username: this.username,
+      password: this.password,
+      email: this.email,
+      fullName: this.fullName,
+    });
+  },
+} as const;

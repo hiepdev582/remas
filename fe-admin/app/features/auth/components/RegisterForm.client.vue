@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import type { LoginRequest } from "../types";
-import { authFieldLabels, authFieldNames, authRoles } from "../constants";
-import { loginFieldSchema } from "../validation";
+import type { RegisterRequest } from "../types";
+import { authFieldLabels, authFieldNames } from "../constants";
+import { registerFieldSchema } from "../validation";
 
 //#region Common
-const authStore = useAuthStore();
 const authService = useAuthService();
 const isLoading = ref(false);
 //#endregion
 
 //#region State
-const loginFields: FormFieldConfig[] = [
+const registerFields: FormFieldConfig[] = [
   {
     name: authFieldNames.username,
     label: authFieldLabels.username,
@@ -23,31 +22,36 @@ const loginFields: FormFieldConfig[] = [
     type: FormFieldType.PASSWORD,
     placeholder: placeholders.enter(authFieldLabels.password),
   },
+  {
+    name: authFieldNames.email,
+    label: authFieldLabels.email,
+    type: FormFieldType.TEXT,
+    placeholder: placeholders.enter(authFieldLabels.email),
+  },
+  {
+    name: authFieldNames.fullName,
+    label: authFieldLabels.fullName,
+    type: FormFieldType.TEXT,
+    placeholder: placeholders.enter(authFieldLabels.fullName),
+  },
 ];
 
-const loginSchema = toTypedSchema(loginFieldSchema.getSchema());
+const registerSchema = toTypedSchema(registerFieldSchema.getSchema());
 //#endregion
 
 //#region Services
-const handleLogin = async (values: LoginRequest) => {
+const handleRegister = async (values: RegisterRequest) => {
   isLoading.value = true;
 
   try {
-    const response = await authService.login(values);
-    authStore.setAuth(response);
-
-    if (
-      response.roles.includes(authRoles.admin) ||
-      response.roles.includes(authRoles.superAdmin)
-    ) {
-      message.success("Welcome back " + response.username);
-      await navigateTo(ROUTES.DASHBOARD);
-    } else {
-      authStore.clearAuth();
-      message.error("You do not have permission to login to admin page");
-    }
+    const response = await authService.register(values);
+    message.success(
+      response ||
+        "Registered successfully! Plase contact admin to activate your account.",
+    );
+    await navigateTo(ROUTES.AUTH.LOGIN);
   } catch (error: any) {
-    const apiMessage = error.response?._data?.message || "Login failed";
+    const apiMessage = error.response?._data?.message || "Registration failed";
     message.error(apiMessage);
   } finally {
     isLoading.value = false;
@@ -57,7 +61,7 @@ const handleLogin = async (values: LoginRequest) => {
 </script>
 
 <template>
-  <section
+  <div
     class="select-none relative w-full h-screen overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#0e2450] via-primary to-[#07132c]"
   >
     <!-- Background Effects -->
@@ -68,13 +72,13 @@ const handleLogin = async (values: LoginRequest) => {
       class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#17ba98]/10 blur-[120px] pointer-events-none"
     ></div>
 
-    <!-- Login Card -->
+    <!-- Register Card -->
     <div
-      class="z-10 w-[400px] max-w-[90%] max-h-[90%] bg-white rounded shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)] border border-gray-100 p-8 transition-all duration-300 hover:shadow-[0_30px_60px_-10px_rgba(0,0,0,0.4)] hover:-translate-y-1"
+      class="relative z-10 w-[420px] max-w-[90%] bg-white rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)] border border-gray-100 p-8 transition-all duration-300 hover:shadow-[0_30px_60px_-10px_rgba(0,0,0,0.4)] hover:-translate-y-1"
     >
-      <section class="text-center mb-8">
+      <div class="text-center mb-6">
         <div
-          class="inline-flex items-center justify-center w-16 h-w-16 rounded-full shadow-md shadow-primary/20 mb-4"
+          class="inline-flex items-center justify-center w-16 h-16 rounded-full shadow-md shadow-primary/20 mb-4"
         >
           <NuxtImg
             src="/images/logo_circle.png"
@@ -82,30 +86,28 @@ const handleLogin = async (values: LoginRequest) => {
           />
         </div>
         <h1 class="text-2xl font-extrabold tracking-tight">REMAS ADMIN</h1>
-        <p class="mt-2 text-xs font-semibold">
-          Login to Rental Management System
-        </p>
-      </section>
+        <p class="mt-2 text-xs font-medium">Create a new account for REMAS</p>
+      </div>
 
       <!-- Form -->
       <BaseForm
-        submit-button-text="Login"
-        :fields="loginFields"
-        :validation-schema="loginSchema"
+        submit-button-text="Register"
+        :fields="registerFields"
+        :validation-schema="registerSchema"
         :loading="isLoading"
-        @onSubmit="handleLogin"
+        @onSubmit="handleRegister"
       />
 
       <!-- Redirect Link -->
       <div class="mt-6 text-center text-sm font-medium">
-        Don't have an account?
+        Already have an account?
         <NuxtLink
-          :to="ROUTES.AUTH.REGISTER"
+          :to="ROUTES.AUTH.LOGIN"
           class="text-primary hover:text-primary-hover font-semibold transition-colors ml-[2px]"
         >
-          Register
+          Login
         </NuxtLink>
       </div>
     </div>
-  </section>
+  </div>
 </template>
