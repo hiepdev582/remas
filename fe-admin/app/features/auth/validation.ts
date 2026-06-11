@@ -47,21 +47,20 @@ export const loginFieldSchema = {
 
 export const registerFieldSchema = {
   ...loginFieldSchema,
+  fullName: zod.string().trim().nullable(),
   email: zod
     .string()
     .trim()
-    .min(MIN_CHAR, errorMessages.required(authFieldLabels.email))
-    .email("Invalid email format"),
-  fullName: zod
-    .string()
-    .trim()
-    .min(MIN_CHAR, errorMessages.required(authFieldLabels.fullName)),
+    .email("Invalid email format")
+    .optional()
+    .nullable()
+    .or(zod.literal("")),
   getSchema() {
     return zod.object({
+      fullName: this.fullName,
+      email: this.email,
       username: this.username,
       password: this.password,
-      email: this.email,
-      fullName: this.fullName,
     });
   },
 } as const;

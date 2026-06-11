@@ -11,16 +11,10 @@ const isLoading = ref(false);
 //#region State
 const registerFields: FormFieldConfig[] = [
   {
-    name: authFieldNames.username,
-    label: authFieldLabels.username,
+    name: authFieldNames.fullName,
+    label: authFieldLabels.fullName,
     type: FormFieldType.TEXT,
-    placeholder: placeholders.enter(authFieldLabels.username),
-  },
-  {
-    name: authFieldNames.password,
-    label: authFieldLabels.password,
-    type: FormFieldType.PASSWORD,
-    placeholder: placeholders.enter(authFieldLabels.password),
+    placeholder: placeholders.enter(authFieldLabels.fullName),
   },
   {
     name: authFieldNames.email,
@@ -29,10 +23,18 @@ const registerFields: FormFieldConfig[] = [
     placeholder: placeholders.enter(authFieldLabels.email),
   },
   {
-    name: authFieldNames.fullName,
-    label: authFieldLabels.fullName,
+    name: authFieldNames.username,
+    label: authFieldLabels.username,
     type: FormFieldType.TEXT,
-    placeholder: placeholders.enter(authFieldLabels.fullName),
+    placeholder: placeholders.enter(authFieldLabels.username),
+    required: true,
+  },
+  {
+    name: authFieldNames.password,
+    label: authFieldLabels.password,
+    type: FormFieldType.PASSWORD,
+    placeholder: placeholders.enter(authFieldLabels.password),
+    required: true,
   },
 ];
 
@@ -74,11 +76,11 @@ const handleRegister = async (values: RegisterRequest) => {
 
     <!-- Register Card -->
     <div
-      class="relative z-10 w-[420px] max-w-[90%] bg-white rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)] border border-gray-100 p-8 transition-all duration-300 hover:shadow-[0_30px_60px_-10px_rgba(0,0,0,0.4)] hover:-translate-y-1"
+      class="relative z-10 w-[420px] max-w-[90%] bg-white rounded shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)] border border-gray-100 py-6 px-8 transition-all duration-300 hover:shadow-[0_30px_60px_-10px_rgba(0,0,0,0.4)] hover:-translate-y-1"
     >
-      <div class="text-center mb-6">
+      <div class="text-center mb-5">
         <div
-          class="inline-flex items-center justify-center w-16 h-16 rounded-full shadow-md shadow-primary/20 mb-4"
+          class="inline-flex items-center justify-center w-16 h-16 rounded-full shadow-md shadow-primary/20 mb-3"
         >
           <NuxtImg
             src="/images/logo_circle.png"
@@ -86,7 +88,7 @@ const handleRegister = async (values: RegisterRequest) => {
           />
         </div>
         <h1 class="text-2xl font-extrabold tracking-tight">REMAS ADMIN</h1>
-        <p class="mt-2 text-xs font-medium">Create a new account for REMAS</p>
+        <p class="mt-1 text-xs font-medium">Create a new account for REMAS</p>
       </div>
 
       <!-- Form -->
@@ -99,7 +101,7 @@ const handleRegister = async (values: RegisterRequest) => {
       />
 
       <!-- Redirect Link -->
-      <div class="mt-6 text-center text-sm font-medium">
+      <div class="mt-4 text-center text-sm font-medium">
         Already have an account?
         <NuxtLink
           :to="ROUTES.AUTH.LOGIN"
@@ -111,3 +113,9 @@ const handleRegister = async (values: RegisterRequest) => {
     </div>
   </div>
 </template>
+
+<style lang="css" scoped>
+:deep(.ant-form-item) {
+  margin-bottom: 8px;
+}
+</style>
