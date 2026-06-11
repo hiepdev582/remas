@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore();
 
-  const publicPages: string[] = [ROUTES.AUTH.LOGIN];
+  const publicPages: string[] = [ROUTES.AUTH.LOGIN, ROUTES.AUTH.REGISTER];
   const isPublicPage = publicPages.includes(to.path);
 
   if (!authStore.isLoggedIn && !isPublicPage) {

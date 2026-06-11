@@ -16,12 +16,14 @@ const loginFields: FormFieldConfig[] = [
     label: authFieldLabels.username,
     type: FormFieldType.TEXT,
     placeholder: placeholders.enter(authFieldLabels.username),
+    required: true,
   },
   {
     name: authFieldNames.password,
     label: authFieldLabels.password,
     type: FormFieldType.PASSWORD,
     placeholder: placeholders.enter(authFieldLabels.password),
+    required: true,
   },
 ];
 

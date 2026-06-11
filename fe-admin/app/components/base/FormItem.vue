@@ -28,3 +28,17 @@ const errorMessage = useFieldError(() => props.name);
     <slot />
   </a-form-item>
 </template>
+
+<style scoped>
+:deep(.ant-form-item-required::before) {
+  display: none !important;
+}
+
+:deep(.ant-form-item-required::after) {
+  display: inline-block !important;
+  content: " *" !important;
+  color: var(--color-error);
+  margin-left: 4px !important;
+  font-family: SimSun, sans-serif !important;
+}
+</style>
