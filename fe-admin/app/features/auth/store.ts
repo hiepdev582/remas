@@ -1,14 +1,8 @@
-import { AUTH_TOKEN_EXPIRATION_TIME } from "./constants";
 import type { AuthResponse } from "./types";
 
 export const useAuthStore = defineStore("auth", () => {
-  // 1 day token
-  const token = useCookie<string | null>("auth_token", {
-    maxAge: AUTH_TOKEN_EXPIRATION_TIME,
-  });
-  const adminInfo = useCookie<Partial<AuthResponse | null>>("admin_info", {
-    maxAge: AUTH_TOKEN_EXPIRATION_TIME,
-  });
+  const token = ref<string | null>(null);
+  const adminInfo = ref<Partial<AuthResponse> | null>(null);
 
   const isLoggedIn = computed(() => !!token.value);
 
@@ -19,6 +13,10 @@ export const useAuthStore = defineStore("auth", () => {
       email: data.email,
       roles: data.roles,
     };
+  };
+
+  const updateToken = (newToken: string) => {
+    token.value = newToken;
   };
 
   const clearAuth = () => {
@@ -32,6 +30,7 @@ export const useAuthStore = defineStore("auth", () => {
     adminInfo,
     isLoggedIn,
     setAuth,
+    updateToken,
     clearAuth,
   };
 });
