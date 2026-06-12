@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { LoginRequest } from "../types";
-import { authFieldLabels, authFieldNames, authRoles } from "../constants";
 import { loginFieldSchema } from "../validation";
 
 //#region Common

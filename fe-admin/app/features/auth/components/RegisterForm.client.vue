@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { RegisterRequest } from "../types";
-import { authFieldLabels, authFieldNames } from "../constants";
 import { registerFieldSchema } from "../validation";
 
 //#region Common

@@ -1,4 +1,5 @@
 import { message } from "ant-design-vue";
+import type { AuthResponse } from "~/features/auth/types";
 
 export const useApi = () => {
   const authStore = useAuthStore();
@@ -8,24 +9,68 @@ export const useApi = () => {
   return $fetch.create({
     baseURL,
     onRequest({ options }) {
-      options.headers = options.headers || {};
+      // Allow send HttpOnly Cookie to Backend
+      options.credentials = "include";
 
-      if (options.headers instanceof Headers) {
-        options.headers.set("Authorization", `Bearer ${authStore.token}`);
-      } else if (Array.isArray(options.headers)) {
-        (options.headers as [string, string][]).push([
-          "Authorization",
-          `Bearer ${authStore.token}`,
-        ]);
-      } else {
-        (options.headers as Record<string, string>).Authorization =
-          `Bearer ${authStore.token}`;
+      // Get Access Token from RAM (Pinia) and put it in Header Authorization
+      if (authStore.token) {
+        options.headers = options.headers || {};
+        if (options.headers instanceof Headers) {
+          options.headers.set("Authorization", `Bearer ${authStore.token}`);
+        } else if (Array.isArray(options.headers)) {
+          (options.headers as any[]).push([
+            "Authorization",
+            `Bearer ${authStore.token}`,
+          ]);
+        } else {
+          (options.headers as Record<string, string>).Authorization =
+            `Bearer ${authStore.token}`;
+        }
       }
     },
-    onResponseError({ response }) {
-      if (response.status === 401) {
-        message.error("Unauthorized");
-        authStore.clearAuth();
+    async onResponseError({ request, options, response }) {
+      // If 401 error (Access Token expired) and not on refresh page
+      if (
+        response.status === 401 &&
+        !request.toString().includes("auth/refresh")
+      ) {
+        try {
+          // Call refresh token API
+          const refreshRes = await $fetch<AuthResponse>("auth/refresh", {
+            baseURL,
+            method: HTTP_METHOD.POST,
+            credentials: "include",
+          });
+
+          // Update Access Token
+          authStore.updateToken(refreshRes.token);
+
+          // Resend request with new token
+          options.headers = options.headers || {};
+          if (options.headers instanceof Headers) {
+            options.headers.set("Authorization", `Bearer ${refreshRes.token}`);
+          } else if (Array.isArray(options.headers)) {
+            const headers = options.headers as any[];
+            const authHeaderIndex = headers.findIndex(
+              (h) =>
+                Array.isArray(h) && h[0]?.toLowerCase() === "authorization",
+            );
+            if (authHeaderIndex !== -1) {
+              headers[authHeaderIndex][1] = `Bearer ${refreshRes.token}`;
+            } else {
+              headers.push(["Authorization", `Bearer ${refreshRes.token}`]);
+            }
+          } else {
+            (options.headers as Record<string, string>).Authorization =
+              `Bearer ${refreshRes.token}`;
+          }
+
+          return $fetch(request, options as any);
+        } catch (error) {
+          // If error (Refresh Token in cookie is also expired) -> Logout
+          message.error("Session expired, please login again.");
+          authStore.clearAuth();
+        }
       }
     },
   });
