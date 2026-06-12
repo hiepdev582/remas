@@ -2,12 +2,17 @@ package com.hiepnn.remas.feature.auth.controller;
 
 import com.hiepnn.remas.feature.auth.model.AuthResponse;
 import com.hiepnn.remas.feature.auth.model.LoginRequest;
+import com.hiepnn.remas.feature.auth.model.LoginResult;
 import com.hiepnn.remas.feature.auth.model.RegisterRequest;
 import com.hiepnn.remas.feature.auth.service.AuthService;
+
+import com.hiepnn.remas.feature.auth.util.CookieUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +40,19 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Đăng nhập hệ thống", description = "Trả về chuỗi Token JWT cùng thông tin tài khoản và quyền hạn")
     public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginRequest request) {
-        AuthResponse response = authService.login(request);
+        LoginResult loginResult = authService.login(request);
+
+        ResponseCookie cookie = CookieUtils.createRefreshTokenCookie(loginResult.getRefreshToken());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(loginResult.getAuthResponse());
+    }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "Làm mới Token truy cập", description = "Đọc Refresh Token từ HttpOnly Cookie và cấp lại Access Token mới")
+    public ResponseEntity<AuthResponse> refresh(@CookieValue(name = "refresh_token", required = false) String refreshToken) {
+        AuthResponse response = authService.refresh(refreshToken);
         return ResponseEntity.ok(response);
     }
 

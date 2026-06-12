@@ -14,9 +14,22 @@ export default defineNuxtConfig({
     "@nuxtjs/robots",
     "nuxt-security",
   ],
+  app: {
+    head: {
+      title: "Remas - Rental Management System | hiepnn",
+    },
+  },
+  css: ["~/assets/styles/index.css"],
   // Cấu hình cho Ant Design Vue
   antd: {
     extractStyle: true,
+  },
+  // Cấu hình cho Tailwindcss
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
   },
   // Cấu hình tối ưu cho Nuxt Image - Ưu tiên xuất ảnh ra định dạng siêu nhẹ
   image: {
@@ -28,5 +41,17 @@ export default defineNuxtConfig({
       origin: ["http://localhost:8080"],
       methods: ["GET", "POST", "PUT", "DELETE"],
     },
+  },
+  components: [
+    { path: "~/components/base", prefix: "Base", pathPrefix: false },
+    { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
+  ],
+  imports: {
+    dirs: [
+      "~/constants/*.ts",
+      "~/features/*/store.ts",
+      "~/features/*/service.ts",
+      "~/features/*/constants.ts",
+    ],
   },
 });
