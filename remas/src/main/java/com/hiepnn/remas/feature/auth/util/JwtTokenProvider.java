@@ -5,46 +5,49 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import com.hiepnn.remas.config.JwtProperties;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 
 @Component
+@AllArgsConstructor
 public class JwtTokenProvider {
-    private static final String JWT_SECRET = "secret";
-
-    private static final long ACCESS_TOKEN_EXPIRATION_MS = 60 * 15 * 1000; // 15 minutes
-    private static final long REFRESH_TOKEN_EXPIRATION_MS = 60 * 60 * 24 * 7 * 1000; // 7 days
+    private final JwtProperties jwtProperties;
 
     public String generateAccessToken(String username, String roles) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_MS);
+        Date expiryDate = new Date(now.getTime() + jwtProperties.getAccessTokenExpirationMs());
 
         return Jwts.builder()
                 .setSubject(username)
                 .claim("roles", roles)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS512)
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8)),
+                        SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String generateRefreshToken(String username) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_MS);
+        Date expiryDate = new Date(now.getTime() + jwtProperties.getRefreshTokenExpirationMs());
 
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS512)
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8)),
+                        SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)))
+                .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8)))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

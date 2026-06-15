@@ -2,6 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      apiBase: "http://localhost:8080/api/v1",
+    },
+  },
   modules: [
     "@nuxtjs/tailwindcss",
     "@ant-design-vue/nuxt",
