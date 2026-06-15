@@ -1,4 +1,3 @@
-import { message } from "ant-design-vue";
 import type { AuthResponse } from "~/features/auth/types";
 
 export const useApi = () => {
@@ -32,7 +31,8 @@ export const useApi = () => {
       // If 401 error (Access Token expired) and not on refresh page
       if (
         response.status === 401 &&
-        !request.toString().includes("auth/refresh")
+        !request.toString().includes("auth/refresh") &&
+        !request.toString().includes("auth/login")
       ) {
         try {
           // Call refresh token API

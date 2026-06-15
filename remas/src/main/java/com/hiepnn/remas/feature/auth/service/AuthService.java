@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,8 +32,10 @@ import com.hiepnn.remas.feature.auth.repository.UserRoleRepository;
 import com.hiepnn.remas.feature.auth.util.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -41,28 +44,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(AuthenticationManager authenticationManager,
-            UserRepository userRepository,
-            UserRoleRepository userRoleRepository,
-            InvalidatedTokenRepository invalidatedTokenRepository,
-            PasswordEncoder passwordEncoder,
-            JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.invalidatedTokenRepository = invalidatedTokenRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
-
     // #region Đăng ký tài khoản
     @Transactional
     public String register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username already exists");
+            throw new BadRequestException("Username already exists");
         }
         if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new BadRequestException("Email already exists");
         }
 
         User user = User.builder()
@@ -86,14 +75,14 @@ public class AuthService {
 
         userRoleRepository.save(userRole);
 
-        return "Registered successfully!";
+        return "Registered successfully! Plase contact admin to activate your account.";
     }
     // #endregion
 
     // #region Đăng nhập - Sinh token
     public LoginResult login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new BadRequestException("Invalid username or password"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
 
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new BadRequestException("User is inactive");

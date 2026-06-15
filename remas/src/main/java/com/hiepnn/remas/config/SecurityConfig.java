@@ -15,6 +15,8 @@ import com.hiepnn.remas.common.constant.RoleName;
 import com.hiepnn.remas.feature.auth.filter.JwtAuthenticationFilter;
 import com.hiepnn.remas.feature.auth.repository.InvalidatedTokenRepository;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,16 +26,14 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
+    private final JwtProperties jwtProperties;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
-
-    SecurityConfig(InvalidatedTokenRepository invalidatedTokenRepository) {
-        this.invalidatedTokenRepository = invalidatedTokenRepository;
-    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(invalidatedTokenRepository);
+        return new JwtAuthenticationFilter(jwtProperties, invalidatedTokenRepository);
     }
 
     @Bean
