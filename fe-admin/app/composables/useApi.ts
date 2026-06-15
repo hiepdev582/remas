@@ -68,7 +68,7 @@ export const useApi = () => {
           return $fetch(request, options as any);
         } catch (error) {
           // If error (Refresh Token in cookie is also expired) -> Logout
-          message.error("Session expired, please login again.");
+          toast.error("Session expired, please login again.");
           authStore.clearAuth();
         }
       }

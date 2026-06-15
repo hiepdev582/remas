@@ -49,15 +49,15 @@ const handleLogin = async (values: LoginRequest) => {
       response.roles.includes(authRoles.admin) ||
       response.roles.includes(authRoles.superAdmin)
     ) {
-      message.success("Welcome back " + response.username);
+      toast.success("Welcome back " + response.username);
       await navigateTo(ROUTES.DASHBOARD);
     } else {
       authStore.clearAuth();
-      message.error("You do not have permission to login to admin page");
+      toast.error("You do not have permission to login to admin page");
     }
   } catch (error: any) {
     const apiMessage = error.response?._data?.message || "Login failed";
-    message.error(apiMessage);
+    toast.error(apiMessage);
   } finally {
     isLoading.value = false;
   }

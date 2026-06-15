@@ -60,14 +60,14 @@ const handleRegister = async (values: RegisterRequest) => {
 
   try {
     const response = await authService.register(values);
-    message.success(
+    toast.success(
       response ||
         "Registered successfully! Plase contact admin to activate your account.",
     );
     await navigateTo(ROUTES.AUTH.LOGIN);
   } catch (error: any) {
     const apiMessage = error.response?._data?.message || "Registration failed";
-    message.error(apiMessage);
+    toast.error(apiMessage);
   } finally {
     isLoading.value = false;
   }
