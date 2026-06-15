@@ -1,3 +1,7 @@
+import type { BaseInputProps } from "~/components/base/Input.vue";
+import type { BaseInputPasswordProps } from "~/components/base/InputPassword.vue";
+import type { BaseTextAreaProps } from "~/components/base/TextArea.vue";
+
 //#region Enum
 export enum FormFieldType {
   TEXT = "text",
@@ -13,14 +17,28 @@ export enum FormLayout {
 //#endregion
 
 //#region Interface
-export interface FormFieldConfig {
+interface BaseFieldConfig {
   name: string;
   label: string;
-  type: FormFieldType;
   required?: boolean;
-  placeholder?: string;
   options?: { label: string; value: string }[];
 }
+
+//#endregion
+
+//#region Types
+export type FormFieldConfigMap = {
+  [FormFieldType.TEXT]: BaseInputProps;
+  [FormFieldType.PASSWORD]: BaseInputPasswordProps;
+  [FormFieldType.AREA]: BaseTextAreaProps;
+};
+
+export type FormFieldConfig = {
+  [K in FormFieldType]: BaseFieldConfig & {
+    type: K;
+    config: FormFieldConfigMap[K];
+  };
+}[FormFieldType];
 //#endregion
 
 //#region Constants

@@ -4,7 +4,8 @@ import Input from "./Input.vue";
 import InputPassword from "./InputPassword.vue";
 import TextArea from "./TextArea.vue";
 
-interface BaseFormProps extends /* @vue-ignore */ FormProps {
+//#region Props & emits
+export interface BaseFormProps extends /* @vue-ignore */ FormProps {
   fields: FormFieldConfig[];
   validationSchema: any;
   submitButtonText?: string;
@@ -25,7 +26,9 @@ const props = withDefaults(defineProps<BaseFormProps>(), {
 });
 
 const emit = defineEmits(["onSubmit"]);
+//#endregion
 
+//#region State
 const { handleSubmit } = useForm({
   validationSchema: props.validationSchema,
 });
@@ -45,15 +48,70 @@ props.fields.forEach((field) => {
 });
 
 const onSubmit = handleSubmit((values) => emit("onSubmit", values));
+//#endregion
+
+//#region Utils
+const formRef = ref<any>(null);
+
+const getFocusableElements = (): HTMLElement[] => {
+  if (!formRef.value) return [];
+  const formElements = formRef.value.$el;
+
+  return Array.from(
+    formElements.querySelectorAll(
+      "input:not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])",
+    ),
+  );
+};
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === "Tab") {
+    const focusableEls = getFocusableElements();
+    if (focusableEls.length === 0) return;
+
+    const firstFocusableEl = focusableEls[0];
+    const lastFocusableEl = focusableEls[focusableEls.length - 1];
+
+    if (
+      firstFocusableEl &&
+      document.activeElement === lastFocusableEl &&
+      !event.shiftKey
+    ) {
+      event.preventDefault();
+      firstFocusableEl.focus();
+    } else if (
+      lastFocusableEl &&
+      document.activeElement === firstFocusableEl &&
+      event.shiftKey
+    ) {
+      event.preventDefault();
+      lastFocusableEl.focus();
+    }
+  }
+};
+//#endregion
+
+//#region Life circle
+onMounted(() => {
+  nextTick(() => {
+    const focusableElements = getFocusableElements();
+    if (focusableElements.length > 0) {
+      focusableElements[0]?.focus();
+    }
+  });
+});
+//#endregion
 </script>
 
 <template>
   <a-form
+    ref="formRef"
     :colon
     :disabled
     :layout
     :scrollToFirstError
     @submit.prevent="onSubmit"
+    @keydown="handleKeyDown"
   >
     <template v-for="field in fields" :key="field.name">
       <BaseFormItem
@@ -62,9 +120,9 @@ const onSubmit = handleSubmit((values) => emit("onSubmit", values));
         :required="field.required"
       >
         <component
+          v-bind="{ ...field.config }"
           v-model="formValues[field.name]"
           :is="componentMappers[field.type]"
-          :placeholder="field.placeholder"
         />
       </BaseFormItem>
     </template>
@@ -84,5 +142,9 @@ const onSubmit = handleSubmit((values) => emit("onSubmit", values));
 
 :deep(.ant-form-item) {
   margin-bottom: 18px;
+}
+
+:deep(.ant-form-item-explain-error) {
+  font-size: 13px;
 }
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ButtonProps } from "ant-design-vue";
 
-interface BaseButtonProps extends /* @vue-ignore */ ButtonProps {
+export interface BaseButtonProps extends /* @vue-ignore */ ButtonProps {
   block?: boolean;
   danger?: boolean;
   disabled?: boolean;
