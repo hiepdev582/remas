@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TextAreaProps } from "ant-design-vue";
 
-interface BaseTextAreaProps extends /* @vue-ignore */ TextAreaProps {
+export interface BaseTextAreaProps extends /* @vue-ignore */ TextAreaProps {
   modelValue?: string | number;
   placeholder?: string;
   allowClear?: boolean;
@@ -11,6 +11,8 @@ interface BaseTextAreaProps extends /* @vue-ignore */ TextAreaProps {
   status?: InputStatus;
   size?: InputSize;
   autosize?: boolean;
+  readonly?: boolean;
+  autocomplete?: string;
 }
 
 const props = withDefaults(defineProps<BaseTextAreaProps>(), {
@@ -20,6 +22,8 @@ const props = withDefaults(defineProps<BaseTextAreaProps>(), {
   disabled: false,
   size: InputSize.MIDDLE,
   autosize: false,
+  readonly: false,
+  autocomplete: "off",
 });
 
 const emit = defineEmits(["update:modelValue"]);

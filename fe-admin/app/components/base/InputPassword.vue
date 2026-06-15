@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { InputProps } from "ant-design-vue";
 
-interface BaseInputPasswordProps extends /* @vue-ignore */ InputProps {
+export interface BaseInputPasswordProps extends /* @vue-ignore */ InputProps {
   modelValue?: string | number;
   placeholder?: string;
   addonAfter?: string;
@@ -13,6 +13,8 @@ interface BaseInputPasswordProps extends /* @vue-ignore */ InputProps {
   showCount?: boolean;
   status?: InputStatus;
   size?: InputSize;
+  readonly?: boolean;
+  autocomplete?: string;
 }
 
 const props = withDefaults(defineProps<BaseInputPasswordProps>(), {
@@ -24,6 +26,8 @@ const props = withDefaults(defineProps<BaseInputPasswordProps>(), {
   disabled: false,
   showCount: false,
   size: InputSize.MIDDLE,
+  readonly: false,
+  autocomplete: "off",
 });
 
 const emit = defineEmits(["update:modelValue"]);
