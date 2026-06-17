@@ -1,9 +1,12 @@
 const ROUTES = {
+  DASHBOARD: "/",
   AUTH: {
     LOGIN: "/login",
     REGISTER: "/register",
   },
-  DASHBOARD: "/",
+  INVENTORY: {
+    CATEGORY: "/inventory/category",
+  },
 } as const;
 
 export { ROUTES };
