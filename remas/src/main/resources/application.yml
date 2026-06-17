@@ -2,9 +2,9 @@ spring:
   application:
     name: remas
   datasource:
-    url: jdbc:mysql://localhost:3307/remas?useSSL=false&serverTimezone=UTC
-    username: root
-    password: Zz0973300Zz@
+    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=UTC
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     show-sql: true
     hibernate:
