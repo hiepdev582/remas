@@ -43,7 +43,7 @@ export const useApi = () => {
           });
 
           // Update Access Token
-          authStore.updateToken(refreshRes.token);
+          authStore.setAuth(refreshRes);
 
           // Resend request with new token
           options.headers = options.headers || {};

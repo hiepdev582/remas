@@ -15,10 +15,6 @@ export const useAuthStore = defineStore("auth", () => {
     };
   };
 
-  const updateToken = (newToken: string) => {
-    token.value = newToken;
-  };
-
   const clearAuth = () => {
     token.value = null;
     adminInfo.value = null;
@@ -30,7 +26,6 @@ export const useAuthStore = defineStore("auth", () => {
     adminInfo,
     isLoggedIn,
     setAuth,
-    updateToken,
     clearAuth,
   };
 });

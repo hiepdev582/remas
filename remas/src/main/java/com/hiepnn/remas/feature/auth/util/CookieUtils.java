@@ -7,7 +7,7 @@ public class CookieUtils {
         return ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
                 .secure(false) // localhost
-                .path("/api/v1/auth/refresh")
+                .path("/")
                 .maxAge(60 * 60 * 24 * 7) // 7 days
                 .sameSite("Lax")
                 .build();

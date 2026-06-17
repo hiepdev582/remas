@@ -50,7 +50,7 @@ const handleLogin = async (values: LoginRequest) => {
       response.roles.includes(authRoles.superAdmin)
     ) {
       toast.success("Welcome back " + response.username);
-      await navigateTo(ROUTES.DASHBOARD);
+      await navigateTo(ROUTES.INVENTORY.CATEGORY);
     } else {
       authStore.clearAuth();
       toast.error("You do not have permission to login to admin page");
