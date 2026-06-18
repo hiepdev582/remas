@@ -24,9 +24,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
       // Get new Access Token -> Allow
       authStore.setAuth(refreshRes);
-    } catch (error) {
-      // Cookie is expired -> Back to login
-      return navigateTo(ROUTES.AUTH.LOGIN);
+    } catch (error: any) {
+      const apiMessage =
+        error.response?._data?.message ||
+        "Session expired, please login again.";
+
+      if (import.meta.client) {
+        toast.error(apiMessage);
+      }
+
+      return navigateTo({
+        path: ROUTES.AUTH.LOGIN,
+        query: {
+          error: apiMessage,
+        },
+      });
     }
   }
 

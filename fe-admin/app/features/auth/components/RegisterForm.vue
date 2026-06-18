@@ -66,7 +66,7 @@ const handleRegister = async (values: RegisterRequest) => {
     );
     await navigateTo(ROUTES.AUTH.LOGIN);
   } catch (error: any) {
-    const apiMessage = error.response?._data?.message || "Registration failed";
+    const apiMessage = error.response?._data?.message || "Registration failed!";
     toast.error(apiMessage);
   } finally {
     isLoading.value = false;
