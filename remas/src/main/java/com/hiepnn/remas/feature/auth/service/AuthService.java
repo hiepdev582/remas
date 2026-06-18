@@ -48,10 +48,10 @@ public class AuthService {
     @Transactional
     public String register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new BadRequestException("Username already exists");
+            throw new BadRequestException("Username already exists!");
         }
         if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("Email already exists");
+            throw new BadRequestException("Email already exists!");
         }
 
         User user = User.builder()
@@ -82,10 +82,10 @@ public class AuthService {
     // #region Đăng nhập - Sinh token
     public LoginResult login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid username or password!"));
 
         if (Boolean.FALSE.equals(user.getIsActive())) {
-            throw new BadRequestException("User is inactive");
+            throw new BadRequestException("User is inactive!");
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -114,10 +114,10 @@ public class AuthService {
 
         String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BadRequestException("User not found"));
+                .orElseThrow(() -> new BadRequestException("User not found!"));
 
         if (Boolean.FALSE.equals(user.getIsActive())) {
-            throw new BadRequestException("User is inactive");
+            throw new BadRequestException("User is inactive!");
         }
 
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
@@ -134,7 +134,7 @@ public class AuthService {
     // #region Đăng xuất
     public String logout(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new BadRequestException("Invalid token");
+            throw new BadRequestException("Invalid token!");
         }
         String token = authHeader.substring(7);
 

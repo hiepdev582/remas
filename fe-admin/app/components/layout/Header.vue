@@ -8,7 +8,7 @@ const handleClickLogout = async () => {
     toast.success(responseMessage || "Logged out successfully!");
     authStore.clearAuth();
   } catch (error: any) {
-    const apiMessage = error.response?._data?.message || "Logout failed";
+    const apiMessage = error.response?._data?.message || "Logout failed!";
     toast.error(apiMessage);
   }
 };

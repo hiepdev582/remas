@@ -49,19 +49,30 @@ const handleLogin = async (values: LoginRequest) => {
       response.roles.includes(authRoles.admin) ||
       response.roles.includes(authRoles.superAdmin)
     ) {
-      toast.success("Welcome back " + response.username);
+      toast.success("Welcome back, " + response.username);
       await navigateTo(ROUTES.INVENTORY.CATEGORY);
     } else {
       authStore.clearAuth();
-      toast.error("You do not have permission to login to admin page");
+      toast.error("You do not have permission to login to admin page!");
     }
   } catch (error: any) {
-    const apiMessage = error.response?._data?.message || "Login failed";
+    const apiMessage = error.response?._data?.message || "Login failed!";
     toast.error(apiMessage);
   } finally {
     isLoading.value = false;
   }
 };
+//#endregion
+
+//#region Show error message
+const route = useRoute();
+
+onMounted(() => {
+  if (route.query.error) {
+    toast.error(route.query.error as string);
+    navigateTo({ path: route.path, query: {} }, { replace: true });
+  }
+});
 //#endregion
 </script>
 
