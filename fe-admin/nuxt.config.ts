@@ -50,6 +50,7 @@ export default defineNuxtConfig({
   components: [
     { path: "~/components/base", prefix: "Base", pathPrefix: false },
     { path: "~/components/layout", prefix: "App", pathPrefix: false },
+    { path: "~/components/others", prefix: "App", pathPrefix: false },
     { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
     {
       path: "~/features/inventory/components/category",

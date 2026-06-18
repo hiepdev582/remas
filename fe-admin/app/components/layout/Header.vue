@@ -37,7 +37,7 @@ const handleClickLogout = async () => {
               <p class="text-xs">{{ authStore.adminInfo?.email }}</p>
             </div>
             <div
-              class="cursor-pointer flex items-center group hover:bg-[#fff1f1] px-2 py-1 rounded"
+              class="cursor-pointer flex items-center group hover:bg-[#fff1f1] px-2 py-1 rounded select-none"
               @click="handleClickLogout"
             >
               <Icon
