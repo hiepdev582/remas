@@ -10,11 +10,11 @@ import com.hiepnn.remas.feature.auth.util.CookieUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,14 +32,14 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Đăng ký tài khoản mới", description = "Mặc định gán quyền CUSTOMER khi đăng ký thành công")
-    public ResponseEntity<String> register(@Validated @RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
         String result = authService.register(request);
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/login")
     @Operation(summary = "Đăng nhập hệ thống", description = "Trả về chuỗi Token JWT cùng thông tin tài khoản và quyền hạn")
-    public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResult loginResult = authService.login(request);
 
         ResponseCookie cookie = CookieUtils.createRefreshTokenCookie(loginResult.getRefreshToken());

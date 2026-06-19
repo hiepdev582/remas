@@ -50,14 +50,18 @@ public class AuthService {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new BadRequestException("Username already exists!");
         }
-        if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail())) {
+        String email = (request.getEmail() != null && !request.getEmail().trim().isEmpty())
+                ? request.getEmail().trim()
+                : null;
+
+        if (email != null && userRepository.existsByEmail(email)) {
             throw new BadRequestException("Email already exists!");
         }
 
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .email(request.getEmail())
+                .email(email)
                 .fullName(request.getFullName())
                 .isActive(false)
                 .build();
