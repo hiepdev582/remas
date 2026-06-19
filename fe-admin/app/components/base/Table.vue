@@ -1,19 +1,43 @@
 <script setup lang="ts">
 import type { TableProps } from "ant-design-vue";
 
+//#region Props
 export interface BaseTableProps extends /* @vue-ignore */ TableProps {
   dataSource: any[];
   columns: any[];
+  bordered?: boolean;
 }
 
 const props = withDefaults(defineProps<BaseTableProps>(), {
   dataSource: () => [],
   columns: () => [],
+  bordered: false,
 });
+//#endregion
+
+//#region Pagination
+const pagination = defineModel<any>("pagination");
+
+const emit = defineEmits(["change"]);
+
+const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
+  if (pagination.value) {
+    pagination.value = {
+      ...pagination.value,
+      ...pag,
+    };
+  }
+  emit("change", pag, filters, sorter, extra);
+};
+//#endregion
 </script>
 
 <template>
-  <a-table v-bind="{ ...$attrs, ...props }">
+  <a-table v-bind="{ ...$attrs, ...props }" :pagination @change="onChange">
+    <template #title v-if="$slots.title">
+      <slot name="title" />
+    </template>
+
     <template #headerCell="{ column }">
       <span>
         {{ column.title }}
@@ -23,5 +47,35 @@ const props = withDefaults(defineProps<BaseTableProps>(), {
     <template #bodyCell="{ column, record }">
       <slot name="bodyCell" :column="column" :record="record" />
     </template>
+
+    <template #footer v-if="$slots.footer">
+      <slot name="footer" />
+    </template>
   </a-table>
 </template>
+
+<style lang="css" scoped>
+.ant-table-wrapper :deep(.ant-table-thead > tr > th) {
+  color: white;
+  background-color: var(--color-primary);
+  user-select: none;
+  padding: 10px 16px;
+}
+
+.ant-table-wrapper :deep(.ant-table-tbody > tr > td) {
+  padding: 4px 16px;
+}
+
+.ant-table-wrapper
+  :deep(.ant-table-thead th.ant-table-column-has-sorters:hover) {
+  color: white;
+  background-color: var(--color-primary-hover);
+}
+
+.ant-table-wrapper
+  :deep(th.ant-table-column-has-sorters:hover .ant-table-column-sorter),
+.ant-table-wrapper :deep(.ant-table-column-sorter),
+.ant-table-wrapper :deep(.ant-table-filter-trigger) {
+  color: white;
+}
+</style>

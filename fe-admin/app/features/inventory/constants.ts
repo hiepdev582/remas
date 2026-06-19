@@ -12,22 +12,26 @@ const categoryColumns: ColumnType[] = [
     title: "Name",
     dataIndex: "name",
     key: "name",
-    width: "30%",
     sorter: true,
+    ellipsis: true,
+    fixed: TableFixed.LEFT,
+    width: "30%",
   },
   {
     title: "Description",
     dataIndex: "description",
     key: "description",
-    width: "40%",
     filters: [
       { text: "Male", value: "male" },
       { text: "Female", value: "female" },
     ],
+    ellipsis: true,
+    width: "40%",
   },
   {
     title: "Action",
     key: "action",
+    fixed: TableFixed.RIGHT,
   },
 ];
 //#endregion
