@@ -1,6 +1,11 @@
 const tableAction = {
   edit: "ic:baseline-edit",
-  delete: "material-symbols:delete",
+  remove: "material-symbols:delete",
 } as const;
 
-export { tableAction };
+enum TableFixed {
+  LEFT = "left",
+  RIGHT = "right",
+}
+
+export { tableAction, TableFixed };

@@ -22,6 +22,9 @@ const props = withDefaults(defineProps<BaseButtonProps>(), {
 
 <template>
   <a-button v-bind="{ ...$attrs, ...props }">
-    <slot></slot>
+    <template #icon>
+      <slot name="icon" />
+    </template>
+    <slot />
   </a-button>
 </template>

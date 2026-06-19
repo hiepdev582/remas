@@ -1,3 +1,5 @@
+@import url(./lib.css);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,6 +15,7 @@
   --color-success: #52c41a;
   --color-warning: #faad14;
   --border-radius: 6px;
+  --color-primary-active: #cfdbf3;
 }
 
 body {

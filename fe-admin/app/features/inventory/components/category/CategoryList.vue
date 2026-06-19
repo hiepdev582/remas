@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TableProps } from "ant-design-vue";
-
 //#region Config
 const dataSource = ref([
   {
@@ -22,35 +20,54 @@ const dataSource = ref([
 
 const loading = ref(false);
 
-const pagination = computed(() => ({
+const pagination = ref({
   total: 200,
   current: 1,
   pageSize: 10,
-}));
+});
 //#endregion
 
 //#region Actions
 const onEdit = (record: any) => {
-  console.log(record);
+  console.log("Edit", record);
 };
 
-const onDelete = (record: any) => {
-  console.log(record);
+const onRemove = (record: any) => {
+  console.log("Remove", record);
 };
 
-const handleTableChange = (event: any) => {
-  console.log(event);
+const handleTableChange = (pag: any, filters: any, sorter: any, extra: any) => {
+  console.log("-------------------------------------------------");
+  console.log("Current page:", pagination.value.current);
+  console.log("Pagination", pag);
+  console.log("Filters", filters);
+  console.log("Sorter", sorter);
+  console.log("Extra", extra);
+};
+
+const handleClickAdd = () => {
+  console.log("Add");
 };
 //#endregion
 </script>
 
 <template>
   <section>
-    <h1>Category</h1>
+    <BasePageHeader title="Category">
+      <template #extra>
+        <BaseButton @click="handleClickAdd">
+          <div class="flex items-center justify-between gap-1">
+            <Icon name="material-symbols:add-rounded" :size="18" />
+            <span>Add</span>
+          </div>
+        </BaseButton>
+      </template>
+    </BasePageHeader>
+    <BaseFilter></BaseFilter>
     <BaseTable
+      v-model:pagination="pagination"
       :columns="categoryColumns"
       :dataSource
-      :pagination
       :loading
       @change="handleTableChange"
     >
@@ -63,9 +80,9 @@ const handleTableChange = (event: any) => {
               @click="() => onEdit(record)"
             />
             <BaseTableAction
-              title="Delete"
-              :icon="tableAction.delete"
-              @click="() => onDelete(record)"
+              title="Remove"
+              :icon="tableAction.remove"
+              @click="() => onRemove(record)"
             />
           </div>
         </template>

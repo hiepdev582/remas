@@ -1,10 +1,18 @@
+import type { TableFixed } from "~/constants/table";
+
 export type ColumnType = {
   title: string;
   dataIndex?: string;
   key: string;
+  ellipsis?: boolean;
+  fixed?: TableFixed;
   sorter?: boolean;
-  width?: string;
+  resizable?: boolean;
+  width?: string | number;
+  minWidth?: string | number;
+  maxWidth?: string | number;
   filters?: TableFilter[];
+  customCell?: Function;
 };
 
 export type TableFilter = {
@@ -13,8 +21,8 @@ export type TableFilter = {
 };
 
 export type TableAPIParams = {
-  results: number;
   page?: number;
+  pageSize?: number;
   sortField?: string;
   sortOrder?: number;
   [key: string]: any;
