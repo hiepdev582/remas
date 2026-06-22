@@ -1,4 +1,4 @@
-import type { TableFixed } from "~/constants/table";
+import type { SortValue, TableFixed } from "~/constants/table";
 
 export type ColumnType = {
   title: string;
@@ -20,10 +20,24 @@ export type TableFilter = {
   value: string;
 };
 
+export type TableFilterParam = {
+  field: string;
+  value: string[];
+};
+
 export type TableAPIParams = {
   page?: number;
   pageSize?: number;
   sortField?: string;
-  sortOrder?: number;
+  sortOrder?: SortValue;
+  filters?: TableFilterParam[];
+  search?: string;
   [key: string]: any;
+};
+
+export type TableAction = {
+  key: string;
+  icon: string;
+  title: string;
+  onClick: Function;
 };

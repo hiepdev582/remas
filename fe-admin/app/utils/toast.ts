@@ -12,6 +12,10 @@ export const toast = {
     antdMessage.error(content, duration);
   },
 
+  errorOccured(duration = 4) {
+    antdMessage.error("An error occurred! Please try again.", duration);
+  },
+
   warning(content: string, duration = 3) {
     antdMessage.warning(content, duration);
   },

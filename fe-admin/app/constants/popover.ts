@@ -12,3 +12,9 @@ export enum PopoverPlacement {
   BOTTOM = "bottom",
   BOTTOM_RIGHT = "bottomRight",
 }
+
+export enum PopoverTrigger {
+  HOVER = "hover",
+  FOCUS = "focus",
+  CLICK = "click",
+}

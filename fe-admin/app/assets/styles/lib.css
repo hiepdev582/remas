@@ -13,7 +13,17 @@
   background-color: var(--color-primary-active);
 }
 
+.ant-select-dropdown
+  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: var(--color-primary-active);
+}
+
 /* Region Button */
 .ant-btn-link {
   color: var(--color-primary);
+}
+
+/* Icon */
+.anticon {
+  vertical-align: middle;
 }
