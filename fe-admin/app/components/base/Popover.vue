@@ -4,11 +4,13 @@ import type { PopoverProps } from "ant-design-vue";
 export interface BasePopoverProps extends /* @vue-ignore */ PopoverProps {
   title?: string;
   placement?: PopoverPlacement;
+  trigger?: PopoverTrigger;
 }
 
 const props = withDefaults(defineProps<BasePopoverProps>(), {
   title: "",
   placement: PopoverPlacement.TOP,
+  trigger: PopoverTrigger.HOVER,
 });
 </script>
 

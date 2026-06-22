@@ -4,7 +4,6 @@ import type { ColumnType } from "~/types/table";
 const CATEGORY_FEATURE = "category";
 const CATEGORY_NAME_MIN_CHAR = 2;
 const CATEGORY_NAME_MAX_CHAR = 50;
-const CATEGORY_DESCRIPTION_MIN_CHAR = 5;
 const CATEGORY_DESCRIPTION_MAX_CHAR = 255;
 
 const categoryColumns: ColumnType[] = [
@@ -52,7 +51,6 @@ export {
   CATEGORY_FEATURE,
   CATEGORY_NAME_MIN_CHAR,
   CATEGORY_NAME_MAX_CHAR,
-  CATEGORY_DESCRIPTION_MIN_CHAR,
   CATEGORY_DESCRIPTION_MAX_CHAR,
   categoryColumns,
   categoryFieldLabels,

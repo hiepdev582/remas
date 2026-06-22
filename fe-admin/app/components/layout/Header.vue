@@ -20,8 +20,9 @@ const handleClickLogout = async () => {
       height: '48px',
       lineHeight: '48px',
       paddingInline: '24px',
-      color: '#fff',
-      backgroundColor: 'var(--color-primary-hover)',
+      color: 'var(--color-text-primary)',
+      backgroundColor: '#ffffff',
+      borderBottom: '1px solid #f3f4f6',
       userSelect: 'none',
     }"
   >
@@ -50,7 +51,7 @@ const handleClickLogout = async () => {
               </p>
             </div>
           </template>
-          <BaseAvatar class="cursor-pointer">
+          <BaseAvatar class="cursor-pointer bg-primary">
             {{ authStore.adminInfo?.username?.[0]?.toUpperCase() }}
           </BaseAvatar>
         </BasePopover>

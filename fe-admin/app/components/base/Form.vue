@@ -14,6 +14,7 @@ export interface BaseFormProps extends /* @vue-ignore */ FormProps {
   disabled?: boolean;
   layout?: FormLayout;
   scrollToFirstError?: boolean;
+  hideSubmitButton?: boolean;
 }
 
 const props = withDefaults(defineProps<BaseFormProps>(), {
@@ -23,14 +24,21 @@ const props = withDefaults(defineProps<BaseFormProps>(), {
   disabled: false,
   layout: FormLayout.VERTICAL,
   scrollToFirstError: false,
+  hideSubmitButton: false,
 });
 
 const emit = defineEmits(["onSubmit"]);
 //#endregion
 
 //#region State
-const { handleSubmit } = useForm({
+const initialValues = props.fields.reduce((acc, field) => {
+  acc[field.name] = "";
+  return acc;
+}, {} as Record<string, any>);
+
+const { handleSubmit, resetForm, setValues } = useForm({
   validationSchema: props.validationSchema,
+  initialValues,
 });
 
 const formValues = ref<Record<string, any>>({});
@@ -43,11 +51,16 @@ const componentMappers = {
 
 props.fields.forEach((field) => {
   const { value } = useField(field.name);
-  value.value = "";
   formValues.value[field.name] = value;
 });
 
 const onSubmit = handleSubmit((values) => emit("onSubmit", values));
+
+defineExpose({
+  onSubmit,
+  resetForm,
+  setValues,
+});
 //#endregion
 
 //#region Utils
@@ -127,11 +140,13 @@ onMounted(() => {
       </BaseFormItem>
     </template>
     <!-- Action -->
-    <BaseFormItem name="submitButton" class="mt-8">
-      <BaseButton block htmlType="submit" :loading>
-        {{ submitButtonText }}
-      </BaseButton>
-    </BaseFormItem>
+    <slot name="actions" :submit="onSubmit" :loading="loading">
+      <BaseFormItem v-if="!hideSubmitButton" name="submitButton" class="mt-8">
+        <BaseButton block htmlType="submit" :loading>
+          {{ submitButtonText }}
+        </BaseButton>
+      </BaseFormItem>
+    </slot>
   </a-form>
 </template>
 

@@ -56,8 +56,10 @@ const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
 
 <style lang="css" scoped>
 .ant-table-wrapper :deep(.ant-table-thead > tr > th) {
-  color: white;
-  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
   user-select: none;
   padding: 10px 16px;
 }
@@ -68,14 +70,6 @@ const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
 
 .ant-table-wrapper
   :deep(.ant-table-thead th.ant-table-column-has-sorters:hover) {
-  color: white;
-  background-color: var(--color-primary-hover);
-}
-
-.ant-table-wrapper
-  :deep(th.ant-table-column-has-sorters:hover .ant-table-column-sorter),
-.ant-table-wrapper :deep(.ant-table-column-sorter),
-.ant-table-wrapper :deep(.ant-table-filter-trigger) {
-  color: white;
+  background-color: #e5e7eb;
 }
 </style>

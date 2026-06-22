@@ -14,6 +14,12 @@ export enum FormLayout {
   VERTICAL = "vertical",
   INLINE = "inline",
 }
+
+export enum FormState {
+  ADD = "add",
+  EDIT = "edit",
+  VIEW = "view",
+}
 //#endregion
 
 //#region Interface
