@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { BaseInputProps } from "~/components/base/Input.vue";
 import type { BaseTextAreaProps } from "~/components/base/TextArea.vue";
-import { upsertCategoryFieldSchema } from "../../validation";
-import type { AddCategoryRequest, EditCategoryRequest } from "../../types";
+import { upsertCategoryFieldSchema } from "../validation";
+import type { AddCategoryRequest, EditCategoryRequest } from "../types";
 
 const props = defineProps<{
   id?: number;
   state: FormState;
 }>();
+
+const emit = defineEmits<{ (e: "onSuccess"): void }>();
 
 const isLoading = ref(false);
 const categoryService = useCategoryService();
@@ -71,16 +73,14 @@ const handleConfirmUpsertCategory = async (
   isLoading.value = true;
 
   try {
-    let response: string;
     if (props.state === FormState.ADD) {
-      response = await categoryService.add(values as AddCategoryRequest);
-      toast.success(response || formInfo.value.successMessage);
+      await categoryService.add(values as AddCategoryRequest);
+      toast.success(formInfo.value.successMessage);
+      emit("onSuccess");
     } else if (props.id) {
-      response = await categoryService.edit(
-        props.id,
-        values as EditCategoryRequest,
-      );
-      toast.success(response || formInfo.value.successMessage);
+      await categoryService.edit(props.id, values as EditCategoryRequest);
+      toast.success(formInfo.value.successMessage);
+      emit("onSuccess");
     } else {
       toast.errorOccured();
     }
@@ -95,8 +95,10 @@ const handleConfirmUpsertCategory = async (
 };
 
 watch(
-  () => props.state,
+  () => isOpen.value,
   async () => {
+    if (!isOpen.value) return;
+
     formRef.value?.resetForm();
 
     if (props.state !== FormState.ADD && props.id) {

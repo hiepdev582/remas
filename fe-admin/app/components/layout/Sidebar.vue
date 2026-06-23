@@ -53,8 +53,14 @@ const menuItems = [
             class="flex items-center gap-2 px-3 py-2.5 rounded text-[#b9cbe7] hover:text-white hover:bg-white/5 transition-all duration-200 select-none overflow-hidden whitespace-nowrap"
             active-class="active-menu-item"
             :to="item.path"
+            :class="isCollapsed ? 'justify-center' : ''"
           >
-            <Icon :name="item.icon" :size="20" class="shrink-0" />
+            <Icon
+              :name="item.icon"
+              :size="20"
+              class="shrink-0"
+              :title="isCollapsed ? item.label : ''"
+            />
             <span v-show="!isCollapsed" class="transition-opacity duration-300">
               {{ item.label }}
             </span>

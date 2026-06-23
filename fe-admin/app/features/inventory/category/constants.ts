@@ -1,5 +1,13 @@
 import type { ColumnType } from "~/types/table";
 
+//#region Enum
+enum CategoryStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  DELETED = "DELETED",
+}
+//#endregion
+
 //#region CONSTANTS
 const CATEGORY_FEATURE = "category";
 const CATEGORY_NAME_MIN_CHAR = 2;
@@ -14,18 +22,25 @@ const categoryColumns: ColumnType[] = [
     sorter: true,
     ellipsis: true,
     fixed: TableFixed.LEFT,
-    width: "30%",
+    width: "25%",
   },
   {
     title: "Description",
     dataIndex: "description",
     key: "description",
-    filters: [
-      { text: "Male", value: "male" },
-      { text: "Female", value: "female" },
-    ],
     ellipsis: true,
-    width: "40%",
+    width: "35%",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    width: "20%",
+    filters: [
+      { text: "Active", value: CategoryStatus.ACTIVE },
+      { text: "Inactive", value: CategoryStatus.INACTIVE },
+      { text: "Deleted", value: CategoryStatus.DELETED },
+    ],
   },
   {
     title: "Action",
@@ -45,6 +60,12 @@ const categoryFieldNames = {
   name: "name",
   description: "description",
 } as const;
+
+const categoryStatusColor = {
+  [CategoryStatus.ACTIVE]: "#52c41a",
+  [CategoryStatus.INACTIVE]: "#ff4d4f",
+  [CategoryStatus.DELETED]: "#948f8f",
+} as const;
 //#endregion
 
 export {
@@ -55,4 +76,6 @@ export {
   categoryColumns,
   categoryFieldLabels,
   categoryFieldNames,
+  CategoryStatus,
+  categoryStatusColor,
 };

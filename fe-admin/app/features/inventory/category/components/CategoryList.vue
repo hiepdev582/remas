@@ -6,7 +6,8 @@ import type {
   TableAPIParams,
   TableFilterParam,
 } from "~/types/table";
-import type { Category } from "../../types";
+import type { Category } from "../types";
+import type { CategoryStatus } from "#imports";
 
 //#region Config
 const dataSource = ref<Category[]>([]);
@@ -60,8 +61,9 @@ const confirmRemove = async (record: Category) => {
   }
 
   try {
-    const response = await categoryService.remove(record.id);
-    toast.success(response || "Remove category successfully!");
+    await categoryService.remove(record.id);
+    toast.success("Remove category successfully!");
+    getCategories();
   } catch (error: any) {
     const errorMessage =
       error.response?._data?.message || "Remove category failed!";
@@ -96,7 +98,7 @@ const tableActions: TableAction[] = [
 
 const handleTableChange = (_: any, filters: any, sorter: any, __: any) => {
   getCategories({
-    sortField: sorter.field,
+    sortField: sorter.order ? sorter.field : "",
     sortOrder: sorter.order,
     filters: Object.entries(filters).map(([key, value]) => ({
       field: key,
@@ -146,9 +148,20 @@ onMounted(() => {
       :columns="categoryColumns"
       :dataSource
       :loading
+      :scroll="{
+        y: 'calc(100vh - 48px - 20px - 14px - 50px - 44px - 43px - 64px - 14px - 40px)',
+      }"
       @change="handleTableChange"
     >
       <template #bodyCell="{ column, record }">
+        <div v-if="column.key === 'status'">
+          <BaseTag
+            :label="record.status"
+            :color="categoryStatusColor[record.status as CategoryStatus]"
+          >
+            {{ capitalize(record.status) }}
+          </BaseTag>
+        </div>
         <div v-if="column.key === 'action'">
           <div class="flex items-center gap-1">
             <BaseTableAction
@@ -167,6 +180,7 @@ onMounted(() => {
       v-model="isOpenUpsertModal"
       :id="categoryId"
       :state="formState"
+      @onSuccess="getCategories()"
     />
   </section>
 </template>
