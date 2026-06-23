@@ -6,11 +6,11 @@ import type {
   TableAPIParams,
   TableFilterParam,
 } from "~/types/table";
-import type { Category } from "../types";
-import type { CategoryStatus } from "#imports";
+import type { Item } from "../types";
+import type { ItemStatus } from "#imports";
 
 //#region Config
-const dataSource = ref<Category[]>([]);
+const dataSource = ref<Item[]>([]);
 
 const pagination = ref<TablePagination>({ ...tablePaginationDefault });
 
@@ -37,42 +37,42 @@ const filterActions: FilterAction[] = [
 
 const handleSearch = (value: string) => {
   searchValue.value = value;
-  getCategories();
+  getItems();
 };
 //#endregion
 
 //#region Table actions
-const categoryService = useCategoryService();
+const itemService = useItemService();
 const formState = ref<FormState>(FormState.ADD);
-const categoryId = ref<number | undefined>(undefined);
+const itemId = ref<number | undefined>(undefined);
 
-const onEdit = (record: Category) => {
-  categoryId.value = record.id;
+const onEdit = (record: Item) => {
+  itemId.value = record.id;
   formState.value = FormState.EDIT;
   isOpenUpsertModal.value = true;
 };
 
-const confirmRemove = async (record: Category) => {
+const confirmRemove = async (record: Item) => {
   if (!record.id) {
     toast.errorOccured();
     return;
   }
 
   try {
-    await categoryService.remove(record.id);
-    toast.success("Remove category successfully!");
-    getCategories();
+    await itemService.remove(record.id);
+    toast.success("Remove item successfully!");
+    getItems();
   } catch (error: any) {
     const errorMessage =
-      error.response?._data?.message || "Remove category failed!";
+      error.response?._data?.message || "Remove item failed!";
     toast.error(errorMessage);
   }
 };
 
-const onRemove = async (record: Category) => {
+const onRemove = async (record: Item) => {
   confirmModal.showDeleteConfirm(
-    "Remove Category",
-    `Are you sure remove category "${record.name}"?`,
+    "Remove Item",
+    `Are you sure remove item "${record.name}"?`,
     () => confirmRemove(record),
   );
 };
@@ -93,7 +93,7 @@ const tableActions: TableAction[] = [
 ];
 
 const handleTableChange = (_: any, filters: any, sorter: any, __: any) => {
-  getCategories({
+  getItems({
     sortField: sorter.order ? sorter.field : "",
     sortOrder: sorter.order,
     filters: Object.entries(filters).map(([key, value]) => ({
@@ -103,7 +103,7 @@ const handleTableChange = (_: any, filters: any, sorter: any, __: any) => {
   });
 };
 
-const getCategories = async (tableApiParams?: TableAPIParams) => {
+const getItems = async (tableApiParams?: TableAPIParams) => {
   try {
     loading.value = true;
 
@@ -114,14 +114,14 @@ const getCategories = async (tableApiParams?: TableAPIParams) => {
       pageSize: pagination.value.pageSize,
     };
 
-    const response = await categoryService.getList(params);
+    const response = await itemService.getList(params);
     dataSource.value = response.data;
     pagination.value.total = response.total ?? 0;
 
     // Nếu trang hiện tại không có dữ liệu và không phải là trang đầu tiên, tự động lùi về trang trước
     if (dataSource.value.length === 0 && pagination.value.current > 1) {
       pagination.value.current = Math.max(1, pagination.value.current - 1);
-      await getCategories(tableApiParams);
+      await getItems(tableApiParams);
     }
   } finally {
     loading.value = false;
@@ -131,23 +131,23 @@ const getCategories = async (tableApiParams?: TableAPIParams) => {
 
 //#region Life circle
 onMounted(() => {
-  getCategories();
+  getItems();
 });
 //#endregion
 </script>
 
 <template>
   <section>
-    <BasePageHeader title="Category" />
+    <BasePageHeader title="Item" />
     <BaseFilter
       class="mb-3"
-      searchPlaceholder="Search by name or description"
+      searchPlaceholder="Search by name"
       :actions="filterActions"
       @onSearch="handleSearch"
     />
     <BaseTable
       v-model:pagination="pagination"
-      :columns="categoryColumns"
+      :columns="itemColumns"
       :dataSource
       :loading
       :scroll="{
@@ -159,7 +159,7 @@ onMounted(() => {
         <div v-if="column.key === 'status'">
           <BaseTag
             :label="record.status"
-            :color="categoryStatusColor[record.status as CategoryStatus]"
+            :color="itemStatusColor[record.status as ItemStatus]"
           >
             {{ capitalize(record.status) }}
           </BaseTag>
@@ -178,11 +178,11 @@ onMounted(() => {
       </template>
     </BaseTable>
     <!-- Modal -->
-    <InventoryCategoryUpsertModal
+    <InventoryItemUpsertModal
       v-model="isOpenUpsertModal"
-      :id="categoryId"
+      :id="itemId"
       :state="formState"
-      @onSuccess="getCategories()"
+      @onSuccess="getItems()"
     />
   </section>
 </template>

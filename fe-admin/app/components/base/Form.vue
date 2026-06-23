@@ -3,6 +3,7 @@ import type { FormProps } from "ant-design-vue";
 import Input from "./Input.vue";
 import InputPassword from "./InputPassword.vue";
 import TextArea from "./TextArea.vue";
+import Select from "./Select.vue";
 
 //#region Props & emits
 export interface BaseFormProps extends /* @vue-ignore */ FormProps {
@@ -47,6 +48,7 @@ const componentMappers = {
   [FormFieldType.TEXT]: Input,
   [FormFieldType.PASSWORD]: InputPassword,
   [FormFieldType.AREA]: TextArea,
+  [FormFieldType.SELECT]: Select,
 };
 
 props.fields.forEach((field) => {

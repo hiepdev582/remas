@@ -6,6 +6,7 @@ const ROUTES = {
   },
   INVENTORY: {
     CATEGORY: "/inventory/category",
+    ITEM: "/inventory/item",
   },
 } as const;
 
