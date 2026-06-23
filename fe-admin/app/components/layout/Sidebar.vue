@@ -12,6 +12,11 @@ const menuItems = [
     path: ROUTES.INVENTORY.CATEGORY,
     icon: "material-symbols:category-rounded",
   },
+  {
+    label: "Items",
+    path: ROUTES.INVENTORY.ITEM,
+    icon: "material-symbols:inventory-2-rounded",
+  },
 ];
 </script>
 

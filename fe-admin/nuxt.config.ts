@@ -57,6 +57,11 @@ export default defineNuxtConfig({
       prefix: "InventoryCategory",
       pathPrefix: false,
     },
+    {
+      path: "~/features/inventory/item/components",
+      prefix: "InventoryItem",
+      pathPrefix: false,
+    },
   ],
   imports: {
     dirs: [
