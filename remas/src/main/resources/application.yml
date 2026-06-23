@@ -2,7 +2,7 @@ spring:
   application:
     name: remas
   datasource:
-    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   jpa:

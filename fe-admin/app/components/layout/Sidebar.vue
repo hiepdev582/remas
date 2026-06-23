@@ -27,7 +27,7 @@ const menuItems = [
     }"
   >
     <section
-      class="flex items-center pt-3 pb-4 px-6 overflow-hidden whitespace-nowrap"
+      class="flex items-center pt-3 pb-4 px-6 overflow-hidden whitespace-nowrap select-none"
     >
       <NuxtLink :to="ROUTES.INVENTORY.CATEGORY" class="flex items-center">
         <NuxtImg
@@ -46,11 +46,11 @@ const menuItems = [
       </NuxtLink>
     </section>
 
-    <nav class="px-3">
+    <nav class="px-3 select-none">
       <ul class="space-y-1">
         <li v-for="item in menuItems" :key="item.path">
           <NuxtLink
-            class="flex items-center gap-2 px-3 py-2.5 rounded text-[#b9cbe7] hover:text-white hover:bg-white/5 transition-all duration-200 select-none overflow-hidden whitespace-nowrap"
+            class="flex items-center gap-2 px-3 py-2.5 rounded text-[#b9cbe7] hover:text-white hover:bg-white/5 transition-all duration-200 overflow-hidden whitespace-nowrap"
             active-class="active-menu-item"
             :to="item.path"
             :class="isCollapsed ? 'justify-center' : ''"

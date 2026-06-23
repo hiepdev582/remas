@@ -62,9 +62,9 @@ const categoryFieldNames = {
 } as const;
 
 const categoryStatusColor = {
-  [CategoryStatus.ACTIVE]: "#52c41a",
-  [CategoryStatus.INACTIVE]: "#ff4d4f",
-  [CategoryStatus.DELETED]: "#948f8f",
+  [CategoryStatus.ACTIVE]: "success",
+  [CategoryStatus.INACTIVE]: "error",
+  [CategoryStatus.DELETED]: "default",
 } as const;
 //#endregion
 

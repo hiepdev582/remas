@@ -121,6 +121,12 @@ const getCategories = async (tableApiParams?: TableAPIParams) => {
     const response = await categoryService.getList(params);
     dataSource.value = response.data;
     pagination.value.total = response.total ?? 0;
+
+    // Nếu trang hiện tại không có dữ liệu và không phải là trang đầu tiên, tự động lùi về trang trước
+    if (dataSource.value.length === 0 && pagination.value.current > 1) {
+      pagination.value.current = Math.max(1, pagination.value.current - 1);
+      await getCategories(tableApiParams);
+    }
   } finally {
     loading.value = false;
   }
