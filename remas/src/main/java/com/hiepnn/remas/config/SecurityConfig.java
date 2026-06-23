@@ -70,12 +70,14 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html")
+                                "/swagger-ui.html",
+                                "/error")
                         .permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
                         .requestMatchers("/api/v1/client/**").hasAuthority(RoleName.CUSTOMER.getValue())
-                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority(RoleName.SUPER_ADMIN.getValue(), RoleName.ADMIN.getValue())
+                        .requestMatchers("/api/v1/admin/**")
+                        .hasAnyAuthority(RoleName.SUPER_ADMIN.getValue(), RoleName.ADMIN.getValue())
                         .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

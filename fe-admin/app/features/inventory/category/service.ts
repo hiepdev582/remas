@@ -10,6 +10,11 @@ export const useCategoryService = () => {
   const api = useApi();
 
   return {
+    getAll() {
+      return api<PagingResponse<Category[]>>(`${CATEGORY_FEATURE}`, {
+        method: HTTP_METHOD.GET,
+      });
+    },
     getList(params: TableAPIParams) {
       return api<PagingResponse<Category[]>>(`${CATEGORY_FEATURE}/list`, {
         method: HTTP_METHOD.GET,

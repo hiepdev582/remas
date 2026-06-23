@@ -53,7 +53,7 @@ export default defineNuxtConfig({
     { path: "~/components/others", prefix: "App", pathPrefix: false },
     { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
     {
-      path: "~/features/inventory/components/category",
+      path: "~/features/inventory/category/components",
       prefix: "InventoryCategory",
       pathPrefix: false,
     },
@@ -64,6 +64,9 @@ export default defineNuxtConfig({
       "~/features/*/store.ts",
       "~/features/*/service.ts",
       "~/features/*/constants.ts",
+      "~/features/*/*/store.ts",
+      "~/features/*/*/service.ts",
+      "~/features/*/*/constants.ts",
     ],
   },
 });
