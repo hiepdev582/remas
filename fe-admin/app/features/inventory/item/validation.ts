@@ -23,14 +23,30 @@ export const upsertItemFieldSchema = {
       "Contain only letters, numbers, spaces, dots, underscores, or dashes",
     ),
   categoryId: zod
-    .number({ required_error: errorMessages.required(itemFieldLabels.categoryId) })
+    .number({
+      required_error: errorMessages.required(itemFieldLabels.categoryId),
+    })
     .positive(errorMessages.required(itemFieldLabels.categoryId)),
+  description: zod
+    .string()
+    .trim()
+    .max(
+      ITEM_DESCRIPTION_MAX_CHAR,
+      errorMessages.maxLength(
+        itemFieldLabels.description,
+        ITEM_DESCRIPTION_MAX_CHAR,
+      ),
+    )
+    .optional()
+    .nullable()
+    .or(zod.literal("")),
   status: zod.string().optional(),
 
   getSchema() {
     return zod.object({
       name: this.name,
       categoryId: this.categoryId,
+      description: this.description,
       status: this.status,
     });
   },

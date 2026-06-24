@@ -13,8 +13,50 @@ enum ItemStatus {
 const ITEM_FEATURE = "item";
 const ITEM_NAME_MIN_CHAR = 2;
 const ITEM_NAME_MAX_CHAR = 50;
+const ITEM_DESCRIPTION_MAX_CHAR = 255;
 
-const itemColumns: ColumnType[] = [
+const superadminItemColumns: ColumnType[] = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    sorter: true,
+    ellipsis: true,
+    width: "25%",
+  },
+  {
+    title: "Category",
+    dataIndex: "categoryName",
+    key: "categoryName",
+    ellipsis: true,
+    width: "20%",
+  },
+  {
+    title: "Owner",
+    dataIndex: "username",
+    key: "username",
+    ellipsis: true,
+    width: "20%",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    width: "15%",
+    filters: [
+      { text: "Available", value: ItemStatus.AVAILABLE },
+      { text: "Rented", value: ItemStatus.RENTED },
+      { text: "Maintenance", value: ItemStatus.MAINTENANCE },
+      { text: "Deleted", value: ItemStatus.DELETED },
+    ],
+  },
+  {
+    title: "Action",
+    key: "action",
+  },
+];
+
+const adminItemColumns: ColumnType[] = [
   {
     title: "Name",
     dataIndex: "name",
@@ -53,12 +95,14 @@ const itemColumns: ColumnType[] = [
 //#region Objects
 const itemFieldLabels = {
   name: "Name",
+  description: "Description",
   categoryId: "Category",
   status: "Status",
 } as const;
 
 const itemFieldNames = {
   name: "name",
+  description: "description",
   categoryId: "categoryId",
   status: "status",
 } as const;
@@ -75,7 +119,9 @@ export {
   ITEM_FEATURE,
   ITEM_NAME_MIN_CHAR,
   ITEM_NAME_MAX_CHAR,
-  itemColumns,
+  ITEM_DESCRIPTION_MAX_CHAR,
+  superadminItemColumns,
+  adminItemColumns,
   itemFieldLabels,
   itemFieldNames,
   ItemStatus,

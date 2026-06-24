@@ -64,6 +64,16 @@ const upsertItemFields = computed<FormFieldConfig[]>(() => {
         disabled: props.state === FormState.VIEW,
       } as BaseSelectProps,
     },
+    {
+      type: FormFieldType.AREA,
+      name: itemFieldNames.description,
+      label: itemFieldLabels.description,
+      required: false,
+      config: {
+        placeholder: placeholders.enter(itemFieldLabels.description),
+        disabled: props.state === FormState.VIEW,
+      } as any,
+    },
   ];
 
   if (props.state !== FormState.ADD) {
@@ -142,6 +152,7 @@ watch(
       const item = await itemService.get(props.id);
       formRef.value?.setValues({
         name: item.name,
+        description: item.description,
         categoryId: item.categoryId,
         status: item.status,
       });

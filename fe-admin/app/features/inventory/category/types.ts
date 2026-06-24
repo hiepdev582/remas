@@ -10,3 +10,8 @@ export type Category = {
 export type AddCategoryRequest = Omit<Category, "id">;
 
 export type EditCategoryRequest = Omit<Category, "id">;
+
+export type DisplayCategoryStatus = Exclude<
+  CategoryStatus,
+  CategoryStatus.DELETED
+>;

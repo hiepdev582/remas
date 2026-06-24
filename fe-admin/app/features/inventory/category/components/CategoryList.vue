@@ -6,8 +6,8 @@ import type {
   TableAPIParams,
   TableFilterParam,
 } from "~/types/table";
-import type { Category } from "../types";
-import type { CategoryStatus } from "#imports";
+import type { Category, DisplayCategoryStatus } from "../types";
+import { CategoryStatus } from "#imports";
 
 //#region Config
 const dataSource = ref<Category[]>([]);
@@ -52,6 +52,25 @@ const onEdit = (record: Category) => {
   isOpenUpsertModal.value = true;
 };
 
+const onToggleStatus = async (record: Category) => {
+  try {
+    await categoryService.updateStatus(record.id!, {
+      status:
+        record.status === CategoryStatus.ACTIVE
+          ? CategoryStatus.INACTIVE
+          : CategoryStatus.ACTIVE,
+    });
+    toast.success(
+      `${record.status === CategoryStatus.ACTIVE ? "Deactivated" : "Activated"} successfully!`,
+    );
+    getCategories();
+  } catch (error: any) {
+    const errorMessage =
+      error.response?._data?.message || "Update category status failed!";
+    toast.error(errorMessage);
+  }
+};
+
 const confirmRemove = async (record: Category) => {
   if (!record.id) {
     toast.errorOccured();
@@ -77,20 +96,53 @@ const onRemove = async (record: Category) => {
   );
 };
 
-const tableActions: TableAction[] = [
-  {
-    key: "edit",
-    icon: tableAction.edit,
-    title: "Edit",
-    onClick: onEdit,
+const { isSuperAdmin } = usePermission();
+
+const actionValues = {
+  [CategoryStatus.ACTIVE]: {
+    icon: tableAction.inactive,
+    title: "Deactivate",
+    color: color.warning,
   },
-  {
-    key: "remove",
-    icon: tableAction.remove,
-    title: "Remove",
-    onClick: onRemove,
+  [CategoryStatus.INACTIVE]: {
+    icon: tableAction.active,
+    title: "Activate",
+    color: color.success,
   },
-];
+};
+
+const tableActions = computed<TableAction[]>(() => {
+  let actions: TableAction[] = [
+    {
+      key: "edit",
+      icon: tableAction.edit,
+      title: "Edit",
+      onClick: onEdit,
+    },
+  ];
+
+  if (isSuperAdmin.value) {
+    actions = [
+      ...actions,
+      {
+        key: "update-status",
+        icon: "",
+        title: "",
+        color: "",
+        onClick: onToggleStatus,
+      },
+      {
+        key: "remove",
+        icon: tableAction.remove,
+        title: "Remove",
+        color: color.error,
+        onClick: onRemove,
+      },
+    ];
+  }
+
+  return actions;
+});
 
 const handleTableChange = (_: any, filters: any, sorter: any, __: any) => {
   getCategories({
@@ -169,8 +221,21 @@ onMounted(() => {
             <BaseTableAction
               v-for="action of tableActions"
               :key="action.key"
-              :title="action.title"
-              :icon="action.icon"
+              :title="
+                action.key === 'update-status'
+                  ? actionValues[record.status as DisplayCategoryStatus].title
+                  : action.title
+              "
+              :icon="
+                action.key === 'update-status'
+                  ? actionValues[record.status as DisplayCategoryStatus].icon
+                  : action.icon
+              "
+              :color="
+                action.key === 'update-status'
+                  ? actionValues[record.status as DisplayCategoryStatus].color
+                  : action.color
+              "
               @click="() => action.onClick(record)"
             />
           </div>

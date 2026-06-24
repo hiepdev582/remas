@@ -54,22 +54,25 @@ const menuItems = [
     <nav class="px-3 select-none">
       <ul class="space-y-1">
         <li v-for="item in menuItems" :key="item.path">
-          <NuxtLink
-            class="flex items-center gap-2 px-3 py-2.5 rounded text-[#b9cbe7] hover:text-white hover:bg-white/5 transition-all duration-200 overflow-hidden whitespace-nowrap"
-            active-class="active-menu-item"
-            :to="item.path"
-            :class="isCollapsed ? 'justify-center' : ''"
-          >
-            <Icon
-              :name="item.icon"
-              :size="20"
-              class="shrink-0"
-              :title="isCollapsed ? item.label : ''"
-            />
-            <span v-show="!isCollapsed" class="transition-opacity duration-300">
+          <BaseTooltip :placement="TooltipPlacement.RIGHT">
+            <template #title v-if="isCollapsed">
               {{ item.label }}
-            </span>
-          </NuxtLink>
+            </template>
+            <NuxtLink
+              class="flex items-center gap-2 px-3 py-2.5 rounded text-[#b9cbe7] hover:text-white hover:bg-white/5 transition-all duration-200 overflow-hidden whitespace-nowrap"
+              active-class="active-menu-item"
+              :to="item.path"
+              :class="isCollapsed ? 'justify-center' : ''"
+            >
+              <Icon :name="item.icon" :size="20" class="shrink-0" />
+              <span
+                v-show="!isCollapsed"
+                class="transition-opacity duration-300"
+              >
+                {{ item.label }}
+              </span>
+            </NuxtLink>
+          </BaseTooltip>
         </li>
       </ul>
     </nav>

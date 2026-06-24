@@ -29,7 +29,8 @@ public class CategoryService {
   // #region Get all
   @Transactional(readOnly = true)
   public PagingResponse<Category> getAllCategories() {
-    List<Category> list = categoryRepository.findAllByStatus(CategoryStatus.ACTIVE, Sort.by(Sort.Direction.DESC, "updatedAt"));
+    List<Category> list = categoryRepository.findAllByStatus(CategoryStatus.ACTIVE,
+        Sort.by(Sort.Direction.DESC, "updatedAt"));
     return PagingResponse.<Category>builder()
         .data(list)
         .total(list.size())
@@ -39,20 +40,27 @@ public class CategoryService {
   }
   // #endregion
 
-  //#region Paging & filter
+  // #region Paging & filter
   @Transactional(readOnly = true)
-  public PagingResponse<Category> getCategoriesWithFilter(int page, int pageSize, String search, String sortField, String sortOrder) {
+  public PagingResponse<Category> getCategoriesWithFilter(int page, int pageSize, String search, String sortField,
+      String sortOrder, List<CategoryStatus> status) {
     Specification<Category> spec = (root, query, cb) -> {
-      Predicate notDeleted = cb.notEqual(root.get("status"), CategoryStatus.DELETED);
-      if (search == null || search.trim().isEmpty()) {
-        return notDeleted;
+      Predicate p = cb.conjunction();
+
+      if (status != null && !status.isEmpty()) {
+        p = cb.and(p, root.get("status").in(status));
+      } else {
+        p = cb.and(p, cb.notEqual(root.get("status"), CategoryStatus.DELETED));
       }
-      String searchPattern = "%" + search.trim().toLowerCase() + "%";
-      Predicate searchPredicate = cb.or(
-          cb.like(cb.lower(root.get("name")), searchPattern),
-          cb.like(cb.lower(root.get("description")), searchPattern)
-      );
-      return cb.and(notDeleted, searchPredicate);
+
+      if (search != null && !search.trim().isEmpty()) {
+        String searchPattern = "%" + search.trim().toLowerCase() + "%";
+        Predicate searchPredicate = cb.or(
+            cb.like(cb.lower(root.get("name")), searchPattern),
+            cb.like(cb.lower(root.get("description")), searchPattern));
+        p = cb.and(p, searchPredicate);
+      }
+      return p;
     };
 
     Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
@@ -73,13 +81,18 @@ public class CategoryService {
         .page(page)
         .pageSize(pageSize)
         .build();
-  } 
-  //#endregion
+  }
+  // #endregion
 
   // #region Get by id
   @Transactional(readOnly = true)
   public Category getCategoryById(Integer id) {
-    return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+    Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+    if (category.getStatus() == CategoryStatus.DELETED) {
+      throw new ResourceNotFoundException("Category not found!");
+    }
+    return category;
   }
   // #endregion
 
@@ -100,10 +113,14 @@ public class CategoryService {
   }
   // #endregion
 
-  //#region Update
+  // #region Update
   @Transactional
   public Category updateCategory(Integer id, CategoryRequest request) {
-    Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+    Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+    if (category.getStatus() == CategoryStatus.DELETED) {
+      throw new ResourceNotFoundException("Category not found!");
+    }
 
     if (categoryRepository.existsByNameAndIdNot(request.getName(), id)) {
       throw new BadRequestException("Category name already exists!");
@@ -114,15 +131,31 @@ public class CategoryService {
 
     return categoryRepository.save(category);
   }
-  //#endregion
+  // #endregion
 
-  //#region Delete
+  // #region Update
+  @Transactional
+  public Category updateCategoryStatus(Integer id, CategoryStatus status) {
+    Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+    if (category.getStatus() == CategoryStatus.DELETED) {
+      throw new ResourceNotFoundException("Category not found!");
+    }
+
+    category.setStatus(status);
+
+    return categoryRepository.save(category);
+  }
+  // #endregion
+
+  // #region Delete
   @Transactional
   public void deleteCategory(Integer id) {
-    Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+    Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
 
     category.setStatus(CategoryStatus.DELETED);
     categoryRepository.save(category);
   }
-  //#endregion
+  // #endregion
 }

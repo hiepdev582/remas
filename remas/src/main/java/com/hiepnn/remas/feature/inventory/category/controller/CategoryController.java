@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+import com.hiepnn.remas.common.constant.CategoryStatus;
 import com.hiepnn.remas.common.dto.PagingResponse;
 import com.hiepnn.remas.entity.Category;
 import com.hiepnn.remas.feature.inventory.category.model.CategoryRequest;
+import com.hiepnn.remas.feature.inventory.category.model.CategoryStatusRequest;
 import com.hiepnn.remas.feature.inventory.category.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,8 +49,9 @@ public class CategoryController {
       @RequestParam(defaultValue = "10") int pageSize,
       @RequestParam(required = false) String search,
       @RequestParam(required = false) String sortField,
-      @RequestParam(required = false) String sortOrder) {
-    return ResponseEntity.ok(categoryService.getCategoriesWithFilter(page, pageSize, search, sortField, sortOrder));
+      @RequestParam(required = false) String sortOrder,
+      @RequestParam(required = false) List<CategoryStatus> status) {
+    return ResponseEntity.ok(categoryService.getCategoriesWithFilter(page, pageSize, search, sortField, sortOrder, status));
   }
 
   @GetMapping("/{id}")
@@ -56,7 +61,7 @@ public class CategoryController {
   }
 
   @PostMapping
-  @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
+  @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
   @Operation(summary = "Tạo danh mục", description = "Thêm mới danh mục")
   public ResponseEntity<Category> create(@Valid @RequestBody CategoryRequest request) {
     Category response = categoryService.createCategory(request);
@@ -64,14 +69,21 @@ public class CategoryController {
   }
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
+  @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
   @Operation(summary = "Cập nhật danh mục", description = "Cập nhật danh mục")
   public ResponseEntity<Category> update(@PathVariable Integer id, @Valid @RequestBody CategoryRequest request) {
     return ResponseEntity.ok(categoryService.updateCategory(id, request));
   }
 
+  @PutMapping("/update-status/{id}")
+  @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+  @Operation(summary = "Cập nhật trạng thái danh mục", description = "Cập nhật trạng thái danh mục")
+  public ResponseEntity<Category> updateStatus(@PathVariable Integer id, @Valid @RequestBody CategoryStatusRequest request) {
+    return ResponseEntity.ok(categoryService.updateCategoryStatus(id, CategoryStatus.valueOf(request.getStatus())));
+  }
+
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('SUPER_ADMIN')")
+  @PreAuthorize("hasAuthority('SUPER_ADMIN')")
   @Operation(summary = "Xóa danh mục", description = "Xóa danh mục")
   public ResponseEntity<Void> delete(@PathVariable Integer id) {
     categoryService.deleteCategory(id);
