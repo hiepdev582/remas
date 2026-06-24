@@ -33,7 +33,7 @@ const emit = defineEmits(["onSubmit"]);
 
 //#region State
 const initialValues = props.fields.reduce((acc, field) => {
-  acc[field.name] = "";
+  acc[field.name] = field.type === FormFieldType.SELECT ? undefined : "";
   return acc;
 }, {} as Record<string, any>);
 

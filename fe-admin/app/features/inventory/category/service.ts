@@ -2,6 +2,7 @@ import type { TableAPIParams } from "~/types/table";
 import type {
   AddCategoryRequest,
   Category,
+  DisplayCategoryStatus,
   EditCategoryRequest,
 } from "./types";
 import type { PagingResponse } from "~/types/api";
@@ -18,7 +19,7 @@ export const useCategoryService = () => {
     getList(params: TableAPIParams) {
       return api<PagingResponse<Category[]>>(`${CATEGORY_FEATURE}/list`, {
         method: HTTP_METHOD.GET,
-        params,
+        params: formatTableParams(params),
       });
     },
     get(id: number) {
@@ -34,6 +35,12 @@ export const useCategoryService = () => {
     },
     edit(id: number, data: EditCategoryRequest) {
       return api<string>(`${CATEGORY_FEATURE}/${id}`, {
+        method: HTTP_METHOD.PUT,
+        body: data,
+      });
+    },
+    updateStatus(id: number, data: { status: DisplayCategoryStatus }) {
+      return api<string>(`${CATEGORY_FEATURE}/update-status/${id}`, {
         method: HTTP_METHOD.PUT,
         body: data,
       });

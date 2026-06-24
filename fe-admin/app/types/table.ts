@@ -38,6 +38,7 @@ export type TableAPIParams = {
 export type TableAction = {
   key: string;
   icon: string;
+  color?: string;
   title: string;
   onClick: Function;
 };

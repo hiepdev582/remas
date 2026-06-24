@@ -17,7 +17,7 @@ const emit = defineEmits(["onSearch"]);
 
 <template>
   <section class="flex items-center justify-between">
-    <section>
+    <section class="flex items-center gap-x-2">
       <BasePopover
         v-if="useAdvancedFilter"
         class="flex gap-2"

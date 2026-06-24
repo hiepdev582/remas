@@ -18,7 +18,7 @@ export const useItemService = () => {
     getList(params: TableAPIParams) {
       return api<PagingResponse<Item[]>>(`${ITEM_FEATURE}/list`, {
         method: HTTP_METHOD.GET,
-        params,
+        params: formatTableParams(params),
       });
     },
     get(id: number) {

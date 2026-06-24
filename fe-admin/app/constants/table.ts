@@ -2,6 +2,8 @@
 const tableAction = {
   edit: "ic:baseline-edit",
   remove: "material-symbols:delete",
+  active: "nrk:check-active",
+  inactive: "nrk:close-active",
 } as const;
 
 const tablePaginationDefault = {

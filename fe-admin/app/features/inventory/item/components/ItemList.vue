@@ -17,6 +17,10 @@ const pagination = ref<TablePagination>({ ...tablePaginationDefault });
 const loading = ref(false);
 //#endregion
 
+//#region Permission
+const { isSuperAdmin } = usePermission();
+//#endregion
+
 //#region Filters
 const isOpenUpsertModal = ref(false);
 const searchValue = ref<string>("");
@@ -77,7 +81,7 @@ const onRemove = async (record: Item) => {
   );
 };
 
-const tableActions: TableAction[] = [
+const tableActions = computed<TableAction[]>(() => [
   {
     key: "edit",
     icon: tableAction.edit,
@@ -88,9 +92,10 @@ const tableActions: TableAction[] = [
     key: "remove",
     icon: tableAction.remove,
     title: "Remove",
+    color: color.error,
     onClick: onRemove,
   },
-];
+]);
 
 const handleTableChange = (_: any, filters: any, sorter: any, __: any) => {
   getItems({
@@ -143,11 +148,12 @@ onMounted(() => {
       class="mb-3"
       searchPlaceholder="Search by name"
       :actions="filterActions"
+      :useAdvancedFilter="true"
       @onSearch="handleSearch"
     />
     <BaseTable
       v-model:pagination="pagination"
-      :columns="itemColumns"
+      :columns="isSuperAdmin ? superadminItemColumns : adminItemColumns"
       :dataSource
       :loading
       :scroll="{
@@ -171,6 +177,7 @@ onMounted(() => {
               :key="action.key"
               :title="action.title"
               :icon="action.icon"
+              :color="action.color"
               @click="() => action.onClick(record)"
             />
           </div>
