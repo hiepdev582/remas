@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ButtonProps } from "ant-design-vue";
 
-interface BaseButtonProps extends /* @vue-ignore */ ButtonProps {
+export interface BaseButtonProps extends /* @vue-ignore */ ButtonProps {
   block?: boolean;
   danger?: boolean;
   disabled?: boolean;
@@ -22,6 +22,9 @@ const props = withDefaults(defineProps<BaseButtonProps>(), {
 
 <template>
   <a-button v-bind="{ ...$attrs, ...props }">
-    <slot></slot>
+    <template #icon>
+      <slot name="icon" />
+    </template>
+    <slot />
   </a-button>
 </template>

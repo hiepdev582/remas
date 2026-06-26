@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormItemProps } from "ant-design-vue";
 
-interface BaseFormItemProps extends /* @vue-ignore */ FormItemProps {
+export interface BaseFormItemProps extends /* @vue-ignore */ FormItemProps {
   name: string;
   label?: string;
   colon?: boolean;

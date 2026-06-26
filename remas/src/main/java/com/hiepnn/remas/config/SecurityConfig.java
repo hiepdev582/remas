@@ -15,7 +15,10 @@ import com.hiepnn.remas.common.constant.RoleName;
 import com.hiepnn.remas.feature.auth.filter.JwtAuthenticationFilter;
 import com.hiepnn.remas.feature.auth.repository.InvalidatedTokenRepository;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,16 +27,15 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig {
+    private final JwtProperties jwtProperties;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
-
-    SecurityConfig(InvalidatedTokenRepository invalidatedTokenRepository) {
-        this.invalidatedTokenRepository = invalidatedTokenRepository;
-    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(invalidatedTokenRepository);
+        return new JwtAuthenticationFilter(jwtProperties, invalidatedTokenRepository);
     }
 
     @Bean
@@ -70,12 +72,14 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html")
+                                "/swagger-ui.html",
+                                "/error")
                         .permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
                         .requestMatchers("/api/v1/client/**").hasAuthority(RoleName.CUSTOMER.getValue())
-                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority(RoleName.SUPER_ADMIN.getValue(), RoleName.ADMIN.getValue())
+                        .requestMatchers("/api/v1/admin/**")
+                        .hasAnyAuthority(RoleName.SUPER_ADMIN.getValue(), RoleName.ADMIN.getValue())
                         .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

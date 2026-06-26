@@ -3,7 +3,8 @@ package com.hiepnn.remas.common.constant;
 public enum ItemStatus {
     AVAILABLE("AVAILABLE"), // Sẵn sàng cho thuê
     RENTED("RENTED"), // Đang cho thuê
-    MAINTENANCE("MAINTENANCE"); // Bảo trì
+    MAINTENANCE("MAINTENANCE"), // Bảo trì
+    DELETED("DELETED"); // Đã xóa
 
     private final String value;
 

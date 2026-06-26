@@ -2,6 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      apiBase: "http://localhost:8080/api/v1",
+    },
+  },
   modules: [
     "@nuxtjs/tailwindcss",
     "@ant-design-vue/nuxt",
@@ -44,7 +49,20 @@ export default defineNuxtConfig({
   },
   components: [
     { path: "~/components/base", prefix: "Base", pathPrefix: false },
+    { path: "~/components/layout", prefix: "App", pathPrefix: false },
+    { path: "~/components/others", prefix: "App", pathPrefix: false },
     { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
+    { path: "~/features/user/components", prefix: "User", pathPrefix: false },
+    {
+      path: "~/features/inventory/category/components",
+      prefix: "InventoryCategory",
+      pathPrefix: false,
+    },
+    {
+      path: "~/features/inventory/item/components",
+      prefix: "InventoryItem",
+      pathPrefix: false,
+    },
   ],
   imports: {
     dirs: [
@@ -52,6 +70,9 @@ export default defineNuxtConfig({
       "~/features/*/store.ts",
       "~/features/*/service.ts",
       "~/features/*/constants.ts",
+      "~/features/*/*/store.ts",
+      "~/features/*/*/service.ts",
+      "~/features/*/*/constants.ts",
     ],
   },
 });

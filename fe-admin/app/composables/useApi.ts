@@ -1,4 +1,3 @@
-import { message } from "ant-design-vue";
 import type { AuthResponse } from "~/features/auth/types";
 
 export const useApi = () => {
@@ -32,7 +31,8 @@ export const useApi = () => {
       // If 401 error (Access Token expired) and not on refresh page
       if (
         response.status === 401 &&
-        !request.toString().includes("auth/refresh")
+        !request.toString().includes("auth/refresh") &&
+        !request.toString().includes("auth/login")
       ) {
         try {
           // Call refresh token API
@@ -43,7 +43,7 @@ export const useApi = () => {
           });
 
           // Update Access Token
-          authStore.updateToken(refreshRes.token);
+          authStore.setAuth(refreshRes);
 
           // Resend request with new token
           options.headers = options.headers || {};
@@ -68,7 +68,7 @@ export const useApi = () => {
           return $fetch(request, options as any);
         } catch (error) {
           // If error (Refresh Token in cookie is also expired) -> Logout
-          message.error("Session expired, please login again.");
+          toast.error("Session expired, please login again!");
           authStore.clearAuth();
         }
       }

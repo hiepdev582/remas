@@ -16,16 +16,13 @@ import com.hiepnn.remas.feature.auth.model.UserPrincipal;
 import com.hiepnn.remas.feature.auth.repository.UserRepository;
 import com.hiepnn.remas.feature.auth.repository.UserRoleRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-
-    public CustomUserDetailsService(UserRepository userRepository,
-            UserRoleRepository userRoleRepository) {
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

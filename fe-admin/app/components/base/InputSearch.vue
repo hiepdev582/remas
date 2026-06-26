@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { InputProps } from "ant-design-vue";
 
-interface BaseInputSearchProps extends /* @vue-ignore */ InputProps {
+export interface BaseInputSearchProps extends /* @vue-ignore */ InputProps {
   modelValue?: string | number;
   placeholder?: string;
   addonAfter?: string;
@@ -13,6 +13,7 @@ interface BaseInputSearchProps extends /* @vue-ignore */ InputProps {
   showCount?: boolean;
   status?: InputStatus;
   size?: InputSize;
+  readonly?: boolean;
 }
 
 const props = withDefaults(defineProps<BaseInputSearchProps>(), {
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<BaseInputSearchProps>(), {
   disabled: false,
   showCount: false,
   size: InputSize.MIDDLE,
+  readonly: false,
 });
 
 const emit = defineEmits(["update:modelValue"]);

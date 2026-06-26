@@ -1,3 +1,5 @@
+@import url(./lib.css);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,7 +14,9 @@
   --color-info: #1677ff;
   --color-success: #52c41a;
   --color-warning: #faad14;
+  --color-deleted: #948f8f;
   --border-radius: 6px;
+  --color-primary-active: #cfdbf3;
 }
 
 body {
@@ -22,4 +26,26 @@ body {
 ::selection {
   background-color: var(--color-primary);
   color: white;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d1d1d1;
+  border-radius: var(--border-radius);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #bdbdbd;
 }

@@ -1,9 +1,14 @@
 const ROUTES = {
+  DASHBOARD: "/",
   AUTH: {
     LOGIN: "/login",
     REGISTER: "/register",
   },
-  DASHBOARD: "/",
+  INVENTORY: {
+    CATEGORY: "/inventory/category",
+    ITEM: "/inventory/item",
+  },
+  USER: "/user",
 } as const;
 
 export { ROUTES };
