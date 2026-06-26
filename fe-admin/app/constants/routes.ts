@@ -8,6 +8,7 @@ const ROUTES = {
     CATEGORY: "/inventory/category",
     ITEM: "/inventory/item",
   },
+  USER: "/user",
 } as const;
 
 export { ROUTES };

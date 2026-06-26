@@ -43,7 +43,18 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   // Already have token in RAM -> Don't allow back to login page
-  if (authStore.isLoggedIn && isPublicPage) {
-    return navigateTo(ROUTES.DASHBOARD);
+  if (authStore.isLoggedIn) {
+    if (isPublicPage) {
+      return navigateTo(ROUTES.DASHBOARD);
+    }
+    if (to.path === ROUTES.USER) {
+      const { isSuperAdmin } = usePermission();
+      if (!isSuperAdmin.value) {
+        if (import.meta.client) {
+          toast.error("You don't have permission to access this page!");
+        }
+        return navigateTo(ROUTES.DASHBOARD);
+      }
+    }
   }
 });

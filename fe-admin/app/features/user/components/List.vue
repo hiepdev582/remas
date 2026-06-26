@@ -1,57 +1,25 @@
 <script setup lang="ts">
-import {
-  AdvancedFilterFieldType,
-  type AdvancedFilterConfig,
-  type FilterAction,
-} from "~/types/filter";
+import type { FilterAction } from "~/types/filter";
 import type { TablePagination } from "~/types/pagination";
 import type {
   TableAction,
   TableAPIParams,
   TableFilterParam,
 } from "~/types/table";
-import type { Item } from "../types";
-import type { ItemStatus } from "#imports";
-import type { BaseSelectOption } from "~/components/base/Select.vue";
+import type { User } from "../types";
+import { userColumns } from "../constants";
 
 //#region Config
-const dataSource = ref<Item[]>([]);
+const dataSource = ref<User[]>([]);
 
 const pagination = ref<TablePagination>({ ...tablePaginationDefault });
 
 const loading = ref(false);
-
-const categoryOptions = ref<BaseSelectOption[]>([]);
-const ownerOptions = ref<BaseSelectOption[]>([]);
-
-const itemFiltersConfig = computed<AdvancedFilterConfig[]>(() => [
-  {
-    key: "categoryId",
-    label: itemFieldLabels.categoryId,
-    type: AdvancedFilterFieldType.SELECT,
-    placeholder: placeholders.select(itemFieldLabels.categoryId),
-    options: categoryOptions.value,
-    defaultValue: undefined,
-  },
-  {
-    key: "ownerId",
-    label: itemFieldLabels.ownerId,
-    type: AdvancedFilterFieldType.SELECT,
-    placeholder: placeholders.select(itemFieldLabels.ownerId),
-    options: ownerOptions.value,
-    defaultValue: undefined,
-  },
-]);
-//#endregion
-
-//#region Permission
-const { isSuperAdmin } = usePermission();
 //#endregion
 
 //#region Filters
 const isOpenUpsertModal = ref(false);
 const searchValue = ref<string>("");
-const filterValues = ref<Record<string, any>>({});
 
 const handleClickAdd = () => {
   formState.value = FormState.ADD;
@@ -69,50 +37,54 @@ const filterActions: FilterAction[] = [
 
 const handleSearch = (value: string) => {
   searchValue.value = value;
-  getItems();
-};
-
-const handleFilterChange = (values: Record<string, any>) => {
-  filterValues.value = values;
-  getItems();
+  getUsers();
 };
 //#endregion
 
 //#region Table actions
-const itemService = useItemService();
-const categoryService = useCategoryService();
+const userService = useUserService();
 const formState = ref<FormState>(FormState.ADD);
-const itemId = ref<number | undefined>(undefined);
+const userId = ref<number | undefined>(undefined);
 
-const onEdit = (record: Item) => {
-  itemId.value = record.id;
+const onEdit = (record: User) => {
+  userId.value = record.id;
   formState.value = FormState.EDIT;
   isOpenUpsertModal.value = true;
 };
 
-const confirmRemove = async (record: Item) => {
+const onToggleStatus = async (record: User) => {
   if (!record.id) {
     toast.errorOccured();
     return;
   }
 
   try {
-    await itemService.remove(record.id);
-    toast.success("Remove item successfully!");
-    getItems();
+    const newStatus = !record.isActive;
+    await userService.updateStatus(record.id, {
+      isActive: newStatus,
+    });
+    toast.success(
+      `${newStatus ? "Activated" : "Deactivated"} user successfully!`,
+    );
+    getUsers();
   } catch (error: any) {
     const errorMessage =
-      error.response?._data?.message || "Remove item failed!";
+      error.response?._data?.message || "Update user status failed!";
     toast.error(errorMessage);
   }
 };
 
-const onRemove = async (record: Item) => {
-  confirmModal.showDeleteConfirm(
-    "Remove Item",
-    `Are you sure remove item "${record.name}"?`,
-    () => confirmRemove(record),
-  );
+const actionValues = {
+  active: {
+    icon: tableAction.inactive,
+    title: "Deactivate",
+    color: color.warning,
+  },
+  inactive: {
+    icon: tableAction.active,
+    title: "Activate",
+    color: color.success,
+  },
 };
 
 const tableActions = computed<TableAction[]>(() => [
@@ -123,16 +95,16 @@ const tableActions = computed<TableAction[]>(() => [
     onClick: onEdit,
   },
   {
-    key: "remove",
-    icon: tableAction.remove,
-    title: "Remove",
-    color: color.error,
-    onClick: onRemove,
+    key: "update-status",
+    icon: "",
+    title: "",
+    color: "",
+    onClick: onToggleStatus,
   },
 ]);
 
 const handleTableChange = (_: any, filters: any, sorter: any, __: any) => {
-  getItems({
+  getUsers({
     sortField: sorter.order ? sorter.field : "",
     sortOrder: sorter.order,
     filters: Object.entries(filters).map(([key, value]) => ({
@@ -142,7 +114,7 @@ const handleTableChange = (_: any, filters: any, sorter: any, __: any) => {
   });
 };
 
-const getItems = async (tableApiParams?: TableAPIParams) => {
+const getUsers = async (tableApiParams?: TableAPIParams) => {
   try {
     loading.value = true;
 
@@ -153,55 +125,40 @@ const getItems = async (tableApiParams?: TableAPIParams) => {
       pageSize: pagination.value.pageSize,
     };
 
-    const response = await itemService.getList(params);
+    const response = await userService.getList(params);
     dataSource.value = response.data;
     pagination.value.total = response.total ?? 0;
 
     // Nếu trang hiện tại không có dữ liệu và không phải là trang đầu tiên, tự động lùi về trang trước
     if (dataSource.value.length === 0 && pagination.value.current > 1) {
       pagination.value.current = Math.max(1, pagination.value.current - 1);
-      await getItems(tableApiParams);
+      await getUsers(tableApiParams);
     }
   } finally {
     loading.value = false;
-  }
-};
-
-const getAllCategories = async () => {
-  try {
-    const res = await categoryService.getAll();
-    categoryOptions.value = res.data.map((c) => ({
-      label: c.name,
-      value: c.id,
-    }));
-  } catch (error) {
-    console.error("Failed to load categories", error);
   }
 };
 //#endregion
 
 //#region Life circle
 onMounted(() => {
-  Promise.allSettled([getAllCategories(), getItems()]);
+  getUsers();
 });
 //#endregion
 </script>
 
 <template>
   <section>
-    <BasePageHeader title="Item" />
+    <BasePageHeader title="User Management" />
     <BaseFilter
       class="mb-3"
-      searchPlaceholder="Search by name"
-      :useAdvancedFilter="true"
+      searchPlaceholder="Search by username, name or email"
       :actions="filterActions"
-      :filtersConfig="itemFiltersConfig"
       @onSearch="handleSearch"
-      @onFilterChange="handleFilterChange"
     />
     <BaseTable
       v-model:pagination="pagination"
-      :columns="isSuperAdmin ? superadminItemColumns : adminItemColumns"
+      :columns="userColumns"
       :dataSource
       :loading
       :scroll="{
@@ -210,22 +167,55 @@ onMounted(() => {
       @change="handleTableChange"
     >
       <template #bodyCell="{ column, record }">
-        <div v-if="column.key === 'status'">
+        <!-- Render Roles -->
+        <div v-if="column.key === 'roles'" class="flex flex-wrap gap-1">
           <BaseTag
-            :label="record.status"
-            :color="itemStatusColor[record.status as ItemStatus]"
+            v-for="role in record.roles"
+            :key="role"
+            :label="role"
+            :color="
+              role === authRoles.superAdmin
+                ? color.primary
+                : role === authRoles.admin
+                  ? color.info
+                  : color.deleted
+            "
           >
-            {{ capitalize(record.status) }}
+            {{ role }}
           </BaseTag>
         </div>
+
+        <!-- Render Status -->
+        <div v-if="column.key === 'isActive'">
+          <BaseTag
+            :label="record.isActive ? 'Active' : 'Inactive'"
+            :color="record.isActive ? 'success' : 'error'"
+          >
+            {{ record.isActive ? "Active" : "Inactive" }}
+          </BaseTag>
+        </div>
+
+        <!-- Render Actions -->
         <div v-if="column.key === 'action'">
           <div class="flex items-center gap-1">
             <BaseTableAction
               v-for="action of tableActions"
               :key="action.key"
-              :title="action.title"
-              :icon="action.icon"
-              :color="action.color"
+              :title="
+                action.key === 'update-status'
+                  ? actionValues[record.isActive ? 'active' : 'inactive'].title
+                  : action.title
+              "
+              :icon="
+                action.key === 'update-status'
+                  ? actionValues[record.isActive ? 'active' : 'inactive'].icon
+                  : action.icon
+              "
+              :color="
+                action.key === 'update-status'
+                  ? actionValues[record.isActive ? 'active' : 'inactive'].color
+                  : action.color
+              "
               @click="() => action.onClick(record)"
             />
           </div>
@@ -233,11 +223,11 @@ onMounted(() => {
       </template>
     </BaseTable>
     <!-- Modal -->
-    <InventoryItemUpsertModal
+    <UserUpsertModal
       v-model="isOpenUpsertModal"
-      :id="itemId"
+      :id="userId"
       :state="formState"
-      @onSuccess="getItems()"
+      @onSuccess="getUsers()"
     />
   </section>
 </template>

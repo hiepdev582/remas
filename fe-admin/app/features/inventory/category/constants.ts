@@ -39,7 +39,6 @@ const categoryColumns: ColumnType[] = [
     filters: [
       { text: "Active", value: CategoryStatus.ACTIVE },
       { text: "Inactive", value: CategoryStatus.INACTIVE },
-      { text: "Deleted", value: CategoryStatus.DELETED },
     ],
   },
   {

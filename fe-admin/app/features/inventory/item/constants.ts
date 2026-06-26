@@ -22,21 +22,28 @@ const superadminItemColumns: ColumnType[] = [
     key: "name",
     sorter: true,
     ellipsis: true,
-    width: "25%",
+    width: "20%",
   },
   {
     title: "Category",
     dataIndex: "categoryName",
     key: "categoryName",
     ellipsis: true,
-    width: "20%",
+    width: "15%",
   },
   {
     title: "Owner",
     dataIndex: "username",
     key: "username",
     ellipsis: true,
-    width: "20%",
+    width: "15%",
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    ellipsis: true,
+    width: "15%",
   },
   {
     title: "Status",
@@ -47,7 +54,6 @@ const superadminItemColumns: ColumnType[] = [
       { text: "Available", value: ItemStatus.AVAILABLE },
       { text: "Rented", value: ItemStatus.RENTED },
       { text: "Maintenance", value: ItemStatus.MAINTENANCE },
-      { text: "Deleted", value: ItemStatus.DELETED },
     ],
   },
   {
@@ -63,7 +69,7 @@ const adminItemColumns: ColumnType[] = [
     key: "name",
     sorter: true,
     ellipsis: true,
-    width: "35%",
+    width: "25%",
   },
   {
     title: "Category",
@@ -71,18 +77,24 @@ const adminItemColumns: ColumnType[] = [
     key: "categoryName",
     sorter: true,
     ellipsis: true,
-    width: "25%",
+    width: "20%",
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    ellipsis: true,
+    width: "20%",
   },
   {
     title: "Status",
     dataIndex: "status",
     key: "status",
-    width: "20%",
+    width: "15%",
     filters: [
       { text: "Available", value: ItemStatus.AVAILABLE },
       { text: "Rented", value: ItemStatus.RENTED },
       { text: "Maintenance", value: ItemStatus.MAINTENANCE },
-      { text: "Deleted", value: ItemStatus.DELETED },
     ],
   },
   {
@@ -97,6 +109,7 @@ const itemFieldLabels = {
   name: "Name",
   description: "Description",
   categoryId: "Category",
+  ownerId: "Owner",
   status: "Status",
 } as const;
 
