@@ -1,23 +1,38 @@
 <script setup lang="ts">
-const isCollapsed = ref(false);
+import type { SidebarItem } from "~/types/sidebar";
 
-const menuItems = [
-  {
-    label: "Dashboard",
-    path: ROUTES.DASHBOARD,
-    icon: "material-symbols:dashboard-rounded",
-  },
-  {
-    label: "Categories",
-    path: ROUTES.INVENTORY.CATEGORY,
-    icon: "material-symbols:category-rounded",
-  },
-  {
-    label: "Items",
-    path: ROUTES.INVENTORY.ITEM,
-    icon: "material-symbols:inventory-2-rounded",
-  },
-];
+const isCollapsed = ref(false);
+const { isSuperAdmin } = usePermission();
+
+const menuItems = computed(() => {
+  const defaultSidebars: SidebarItem[] = [
+    {
+      label: "Dashboard",
+      path: ROUTES.DASHBOARD,
+      icon: "material-symbols:dashboard-rounded",
+    },
+    {
+      label: "Categories",
+      path: ROUTES.INVENTORY.CATEGORY,
+      icon: "material-symbols:category-rounded",
+    },
+    {
+      label: "Items",
+      path: ROUTES.INVENTORY.ITEM,
+      icon: "material-symbols:inventory-2-rounded",
+    },
+  ];
+
+  if (isSuperAdmin.value) {
+    defaultSidebars.push({
+      label: "Users",
+      path: ROUTES.USER,
+      icon: "material-symbols:group-rounded",
+    });
+  }
+
+  return defaultSidebars;
+});
 </script>
 
 <template>

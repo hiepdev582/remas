@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import type { TableProps } from "ant-design-vue";
 
 //#region Props
@@ -20,6 +21,23 @@ const pagination = defineModel<any>("pagination");
 
 const emit = defineEmits(["change"]);
 
+const computedColumns = computed(() => {
+  const indexCol = {
+    title: "#",
+    key: "index",
+    width: "60px",
+    align: "center",
+  };
+  return [indexCol, ...props.columns];
+});
+
+const getRowIndex = (index: number) => {
+  if (pagination.value && pagination.value.current && pagination.value.pageSize) {
+    return (pagination.value.current - 1) * pagination.value.pageSize + index + 1;
+  }
+  return index + 1;
+};
+
 const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
   if (pagination.value) {
     pagination.value = {
@@ -33,7 +51,7 @@ const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
 </script>
 
 <template>
-  <a-table v-bind="{ ...$attrs, ...props }" :pagination @change="onChange">
+  <a-table v-bind="{ ...$attrs, ...props }" :columns="computedColumns" :pagination @change="onChange">
     <template #title v-if="$slots.title">
       <slot name="title" />
     </template>
@@ -44,8 +62,13 @@ const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
       </span>
     </template>
 
-    <template #bodyCell="{ column, record }">
-      <slot name="bodyCell" :column="column" :record="record" />
+    <template #bodyCell="{ column, record, index }">
+      <template v-if="column.key === 'index'">
+        {{ getRowIndex(index) }}
+      </template>
+      <template v-else>
+        <slot name="bodyCell" :column="column" :record="record" :index="index" />
+      </template>
     </template>
 
     <template #footer v-if="$slots.footer">
