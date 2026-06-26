@@ -74,6 +74,7 @@ const handleSearch = (value: string) => {
 
 const handleFilterChange = (values: Record<string, any>) => {
   filterValues.value = values;
+  console.log(filterValues.value);
   getItems();
 };
 //#endregion
@@ -81,6 +82,7 @@ const handleFilterChange = (values: Record<string, any>) => {
 //#region Table actions
 const itemService = useItemService();
 const categoryService = useCategoryService();
+const ownerService = useUserService();
 const formState = ref<FormState>(FormState.ADD);
 const itemId = ref<number | undefined>(undefined);
 
@@ -151,6 +153,7 @@ const getItems = async (tableApiParams?: TableAPIParams) => {
       search: searchValue.value,
       page: pagination.value.current,
       pageSize: pagination.value.pageSize,
+      ...filterValues.value,
     };
 
     const response = await itemService.getList(params);
@@ -178,11 +181,23 @@ const getAllCategories = async () => {
     console.error("Failed to load categories", error);
   }
 };
+
+const getAllOwners = async () => {
+  try {
+    const res = await ownerService.getAll();
+    ownerOptions.value = res.data.map((c) => ({
+      label: c.username,
+      value: c.id,
+    }));
+  } catch (error) {
+    console.error("Failed to load owners", error);
+  }
+};
 //#endregion
 
 //#region Life circle
 onMounted(() => {
-  Promise.allSettled([getAllCategories(), getItems()]);
+  Promise.allSettled([getAllCategories(), getAllOwners(), getItems()]);
 });
 //#endregion
 </script>
