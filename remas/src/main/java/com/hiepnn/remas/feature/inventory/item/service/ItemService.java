@@ -77,7 +77,7 @@ public class ItemService {
   // #region Paging & filter
   @Transactional(readOnly = true)
   public PagingResponse<ItemResponse> getItemsWithFilter(int page, int pageSize, String search, String sortField,
-      String sortOrder, List<ItemStatus> status) {
+      String sortOrder, List<ItemStatus> status, Integer categoryId, Integer ownerId) {
     boolean isSuperAdmin = SecurityUtils.isSuperAdmin();
     String username = SecurityUtils.getCurrentUsername();
 
@@ -94,6 +94,14 @@ public class ItemService {
         p = cb.and(p, root.get("status").in(status));
       } else {
         p = cb.and(p, cb.notEqual(root.get("status"), ItemStatus.DELETED));
+      }
+
+      if (categoryId != null) {
+        p = cb.and(p, cb.equal(root.get("category").get("id"), categoryId));
+      }
+
+      if (ownerId != null) {
+        p = cb.and(p, cb.equal(root.get("user").get("id"), ownerId));
       }
 
       if (!isSuperAdmin && username != null) {

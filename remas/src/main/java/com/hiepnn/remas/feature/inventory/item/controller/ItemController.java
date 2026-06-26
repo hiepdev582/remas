@@ -49,8 +49,10 @@ public class ItemController {
       @RequestParam(required = false) String search,
       @RequestParam(required = false) String sortField,
       @RequestParam(required = false) String sortOrder,
-      @RequestParam(required = false) List<ItemStatus> status) {
-    return ResponseEntity.ok(itemService.getItemsWithFilter(page, pageSize, search, sortField, sortOrder, status));
+      @RequestParam(required = false) List<ItemStatus> status,
+      @RequestParam(required = false) Integer categoryId,
+      @RequestParam(required = false) Integer ownerId) {
+    return ResponseEntity.ok(itemService.getItemsWithFilter(page, pageSize, search, sortField, sortOrder, status, categoryId, ownerId));
   }
 
   @GetMapping("/{id}")
