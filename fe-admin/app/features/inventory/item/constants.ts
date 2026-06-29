@@ -22,6 +22,7 @@ const superadminItemColumns: ColumnType[] = [
     key: "name",
     sorter: true,
     ellipsis: true,
+    fixed: TableFixed.LEFT,
     width: "20%",
   },
   {
@@ -59,6 +60,7 @@ const superadminItemColumns: ColumnType[] = [
   {
     title: "Action",
     key: "action",
+    fixed: TableFixed.RIGHT,
   },
 ];
 

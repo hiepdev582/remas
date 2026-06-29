@@ -27,13 +27,20 @@ const computedColumns = computed(() => {
     key: "index",
     width: "60px",
     align: "center",
+    fixed: TableFixed.LEFT,
   };
   return [indexCol, ...props.columns];
 });
 
 const getRowIndex = (index: number) => {
-  if (pagination.value && pagination.value.current && pagination.value.pageSize) {
-    return (pagination.value.current - 1) * pagination.value.pageSize + index + 1;
+  if (
+    pagination.value &&
+    pagination.value.current &&
+    pagination.value.pageSize
+  ) {
+    return (
+      (pagination.value.current - 1) * pagination.value.pageSize + index + 1
+    );
   }
   return index + 1;
 };
@@ -51,7 +58,12 @@ const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
 </script>
 
 <template>
-  <a-table v-bind="{ ...$attrs, ...props }" :columns="computedColumns" :pagination @change="onChange">
+  <a-table
+    v-bind="{ ...$attrs, ...props }"
+    :columns="computedColumns"
+    :pagination
+    @change="onChange"
+  >
     <template #title v-if="$slots.title">
       <slot name="title" />
     </template>
@@ -67,7 +79,12 @@ const onChange = (pag: any, filters: any, sorter: any, extra: any) => {
         {{ getRowIndex(index) }}
       </template>
       <template v-else>
-        <slot name="bodyCell" :column="column" :record="record" :index="index" />
+        <slot
+          name="bodyCell"
+          :column="column"
+          :record="record"
+          :index="index"
+        />
       </template>
     </template>
 
