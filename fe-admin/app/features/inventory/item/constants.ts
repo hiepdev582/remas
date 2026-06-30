@@ -113,6 +113,7 @@ const itemFieldLabels = {
   categoryId: "Category",
   ownerId: "Owner",
   status: "Status",
+  pictures: "Pictures",
 } as const;
 
 const itemFieldNames = {
@@ -120,6 +121,7 @@ const itemFieldNames = {
   description: "description",
   categoryId: "categoryId",
   status: "status",
+  pictures: "pictures",
 } as const;
 
 const itemStatusColor = {

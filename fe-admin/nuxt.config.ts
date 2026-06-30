@@ -42,6 +42,21 @@ export default defineNuxtConfig({
   },
   // Cấu hình bảo mật cơ bản cho Nuxt Security
   security: {
+    headers: {
+      contentSecurityPolicy: {
+        "img-src": [
+          "'self'",
+          "data:",
+          "blob:",
+          "http://localhost:8080",
+          "https://*",
+        ],
+        "connect-src": [
+          "'self'",
+          "http://localhost:8080",
+        ],
+      },
+    },
     corsHandler: {
       origin: ["http://localhost:8080"],
       methods: ["GET", "POST", "PUT", "DELETE"],

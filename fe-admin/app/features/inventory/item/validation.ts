@@ -19,7 +19,7 @@ export const upsertItemFieldSchema = {
       errorMessages.maxLength(itemFieldLabels.name, ITEM_NAME_MAX_CHAR),
     )
     .regex(
-      /^[a-zA-Z0-9._\s-]+$/,
+      /^[\p{L}\p{N}._\s-]+$/u,
       "Contain only letters, numbers, spaces, dots, underscores, or dashes",
     ),
   categoryId: zod
@@ -41,6 +41,7 @@ export const upsertItemFieldSchema = {
     .nullable()
     .or(zod.literal("")),
   status: zod.string().optional(),
+  pictures: zod.array(zod.any()).optional(),
 
   getSchema() {
     return zod.object({
@@ -48,6 +49,7 @@ export const upsertItemFieldSchema = {
       categoryId: this.categoryId,
       description: this.description,
       status: this.status,
+      pictures: this.pictures,
     });
   },
 } as const;
