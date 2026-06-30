@@ -25,6 +25,11 @@ import com.hiepnn.remas.feature.inventory.item.model.ItemResponse;
 import com.hiepnn.remas.feature.inventory.item.repository.ItemRepository;
 import com.hiepnn.remas.util.SecurityUtils;
 
+import com.hiepnn.remas.entity.ItemImage;
+import com.hiepnn.remas.feature.inventory.item.model.ItemImageRequest;
+import com.hiepnn.remas.feature.inventory.item.model.ItemImageResponse;
+import com.hiepnn.remas.feature.inventory.item.repository.ItemImageRepository;
+import com.hiepnn.remas.feature.upload.repository.TemporaryUploadRepository;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
@@ -35,8 +40,18 @@ public class ItemService {
   private final ItemRepository itemRepository;
   private final CategoryRepository categoryRepository;
   private final UserRepository userRepository;
+  private final ItemImageRepository itemImageRepository;
+  private final TemporaryUploadRepository temporaryUploadRepository;
 
   private ItemResponse mapToResponse(Item item) {
+    List<ItemImage> images = itemImageRepository.findByItemId(item.getId());
+    List<ItemImageResponse> pictures = images.stream()
+        .map(img -> ItemImageResponse.builder()
+            .url(img.getImageUrl())
+            .note(img.getNote())
+            .build())
+        .toList();
+
     return ItemResponse.builder()
         .id(item.getId())
         .name(item.getName())
@@ -48,6 +63,7 @@ public class ItemService {
         .status(item.getStatus())
         .createdAt(item.getCreatedAt())
         .updatedAt(item.getUpdatedAt())
+        .pictures(pictures)
         .build();
   }
 
@@ -184,7 +200,10 @@ public class ItemService {
         .status(ItemStatus.AVAILABLE)
         .build();
 
-    return mapToResponse(itemRepository.save(item));
+    Item savedItem = itemRepository.save(item);
+    saveItemImages(savedItem, request.getPictures());
+
+    return mapToResponse(savedItem);
   }
   // #endregion
 
@@ -210,7 +229,30 @@ public class ItemService {
       item.setStatus(request.getStatus());
     }
 
-    return mapToResponse(itemRepository.save(item));
+    Item savedItem = itemRepository.save(item);
+
+    // Delete old images and save new ones
+    itemImageRepository.deleteByItemId(id);
+    saveItemImages(savedItem, request.getPictures());
+
+    return mapToResponse(savedItem);
+  }
+
+  private void saveItemImages(Item item, List<ItemImageRequest> pictures) {
+    if (pictures != null) {
+      for (int i = 0; i < pictures.size(); i++) {
+        ItemImageRequest pic = pictures.get(i);
+        ItemImage image = ItemImage.builder()
+            .item(item)
+            .imageUrl(pic.getUrl())
+            .isThumbnail(i == 0)
+            .note(pic.getNote())
+            .build();
+        itemImageRepository.save(image);
+
+        temporaryUploadRepository.findByImageUrl(pic.getUrl()).ifPresent(temporaryUploadRepository::delete);
+      }
+    }
   }
   // #endregion
 

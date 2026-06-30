@@ -86,6 +86,12 @@ const ownerService = useUserService();
 const formState = ref<FormState>(FormState.ADD);
 const itemId = ref<number | undefined>(undefined);
 
+const onView = (record: Item) => {
+  itemId.value = record.id;
+  formState.value = FormState.VIEW;
+  isOpenUpsertModal.value = true;
+};
+
 const onEdit = (record: Item) => {
   itemId.value = record.id;
   formState.value = FormState.EDIT;
@@ -118,6 +124,13 @@ const onRemove = async (record: Item) => {
 };
 
 const tableActions = computed<TableAction[]>(() => [
+  {
+    key: "view",
+    icon: tableAction.view,
+    title: "View Detail",
+    color: color.info,
+    onClick: onView,
+  },
   {
     key: "edit",
     icon: tableAction.edit,

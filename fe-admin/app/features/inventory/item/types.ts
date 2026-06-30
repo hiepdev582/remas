@@ -9,8 +9,20 @@ export type Item = {
   userId?: number;
   username?: string;
   status: ItemStatus;
+  pictures?: ItemImageDto[];
 };
 
-export type AddItemRequest = Omit<Item, "id" | "categoryName" | "userId" | "username">;
+export type ItemImageDto = {
+  url: string;
+  note?: string;
+};
 
-export type EditItemRequest = Omit<Item, "id" | "categoryName" | "userId" | "username">;
+export type AddItemRequest = Omit<
+  Item,
+  "id" | "categoryName" | "userId" | "username"
+>;
+
+export type EditItemRequest = Omit<
+  Item,
+  "id" | "categoryName" | "userId" | "username"
+>;

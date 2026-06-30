@@ -2,6 +2,7 @@ import type { BaseInputProps } from "~/components/base/Input.vue";
 import type { BaseInputPasswordProps } from "~/components/base/InputPassword.vue";
 import type { BaseTextAreaProps } from "~/components/base/TextArea.vue";
 import type { BaseSelectProps } from "~/components/base/Select.vue";
+import type { BaseUploadPicturesProps } from "~/components/base/UploadPictures.vue";
 
 //#region Enum
 export enum FormFieldType {
@@ -9,6 +10,7 @@ export enum FormFieldType {
   PASSWORD = "password",
   AREA = "area",
   SELECT = "select",
+  UPLOAD_PICTURES = "upload-pictures",
 }
 
 export enum FormLayout {
@@ -40,6 +42,7 @@ export type FormFieldConfigMap = {
   [FormFieldType.PASSWORD]: BaseInputPasswordProps;
   [FormFieldType.AREA]: BaseTextAreaProps;
   [FormFieldType.SELECT]: BaseSelectProps;
+  [FormFieldType.UPLOAD_PICTURES]: BaseUploadPicturesProps;
 };
 
 export type FormFieldConfig = {
@@ -56,5 +59,6 @@ export const componentNames = {
   password: "BaseInputPassword",
   area: "BaseTextArea",
   select: "BaseSelect",
+  uploadPictures: "BaseUploadPictures",
 } as const;
 //#endregion

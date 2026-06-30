@@ -74,6 +74,15 @@ const upsertItemFields = computed<FormFieldConfig[]>(() => {
         disabled: props.state === FormState.VIEW,
       } as any,
     },
+    {
+      type: FormFieldType.UPLOAD_PICTURES,
+      name: itemFieldNames.pictures,
+      label: itemFieldLabels.pictures,
+      required: false,
+      config: {
+        disabled: props.state === FormState.VIEW,
+      } as any,
+    },
   ];
 
   if (props.state !== FormState.ADD) {
@@ -103,7 +112,12 @@ const upsertItemSchema = toTypedSchema(upsertItemFieldSchema.getSchema());
 //#region Services
 const formInfo = computed(() => {
   return {
-    modalTitle: props.state === FormState.ADD ? "Add Item" : "Edit Item",
+    modalTitle:
+      props.state === FormState.ADD
+        ? "Add Item"
+        : props.state === FormState.EDIT
+          ? "Edit Item"
+          : "Item Detail",
     successMessage:
       props.state === FormState.ADD
         ? "Add item successfully!"
@@ -113,18 +127,36 @@ const formInfo = computed(() => {
   };
 });
 
+const isPicturesUploading = computed(() => {
+  const pictures = formRef.value?.formValues?.pictures;
+  if (!pictures || !Array.isArray(pictures)) return false;
+  return pictures.some((file: any) => file.status === "uploading");
+});
+
 const handleConfirmUpsertItem = async (
   values: AddItemRequest | EditItemRequest,
 ) => {
   isLoading.value = true;
 
+  const payload = {
+    ...values,
+    pictures: values.pictures
+      ? values.pictures
+          .map((file: any) => ({
+            url: file.response?.url || file.url,
+            note: file.note || "",
+          }))
+          .filter((pic: any) => pic.url)
+      : [],
+  };
+
   try {
     if (props.state === FormState.ADD) {
-      await itemService.add(values as AddItemRequest);
+      await itemService.add(payload as AddItemRequest);
       toast.success(formInfo.value.successMessage);
       emit("onSuccess");
     } else if (props.id) {
-      await itemService.edit(props.id, values as EditItemRequest);
+      await itemService.edit(props.id, payload as EditItemRequest);
       toast.success(formInfo.value.successMessage);
       emit("onSuccess");
     } else {
@@ -155,6 +187,15 @@ watch(
         description: item.description,
         categoryId: item.categoryId,
         status: item.status,
+        pictures: item.pictures
+          ? item.pictures.map((pic: any, index: number) => ({
+              uid: `-${index}`,
+              name: pic.url.substring(pic.url.lastIndexOf("/") + 1),
+              status: "done",
+              url: pic.url,
+              note: pic.note,
+            }))
+          : [],
       });
     }
   },
@@ -167,8 +208,9 @@ watch(
     v-model="isOpen"
     wrapClassName="upsert-item-wrapper"
     confirmText="Save"
-    :confirmLoading="isLoading"
+    :confirmLoading="isLoading || isPicturesUploading"
     :title="formInfo.modalTitle"
+    :footer="props.state === FormState.VIEW ? null : undefined"
     @onConfirm="handleConfirm"
   >
     <BaseForm
