@@ -21,6 +21,11 @@ const menuItems = computed(() => {
       path: ROUTES.INVENTORY.ITEM,
       icon: "material-symbols:inventory-2-rounded",
     },
+    {
+      label: "Customers",
+      path: ROUTES.CUSTOMER,
+      icon: "material-symbols:person-search-rounded",
+    },
   ];
 
   if (isSuperAdmin.value) {

@@ -11,9 +11,7 @@ import { CategoryStatus } from "#imports";
 
 //#region Config
 const dataSource = ref<Category[]>([]);
-
 const pagination = ref<TablePagination>({ ...tablePaginationDefault });
-
 const loading = ref(false);
 //#endregion
 

@@ -34,6 +34,7 @@ public class ItemPricingService {
                 .build();
     }
 
+    //#region All by item
     @Transactional(readOnly = true)
     public List<ItemPricingResponse> getPricingsByItemId(Integer itemId) {
         if (!itemRepository.existsById(itemId)) {
@@ -43,7 +44,9 @@ public class ItemPricingService {
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+    //#endregion
 
+    //#region Create
     @Transactional
     public ItemPricingResponse addPricing(Integer itemId, ItemPricingRequest request) {
         Item item = itemRepository.findById(itemId)
@@ -64,7 +67,9 @@ public class ItemPricingService {
         ItemPricing saved = itemPricingRepository.save(pricing);
         return mapToResponse(saved);
     }
+    //#endregion
 
+    //#region Update
     @Transactional
     public ItemPricingResponse updatePricing(Integer itemId, Integer pricingId, ItemPricingRequest request) {
         if (!itemRepository.existsById(itemId)) {
@@ -88,7 +93,9 @@ public class ItemPricingService {
         ItemPricing saved = itemPricingRepository.save(pricing);
         return mapToResponse(saved);
     }
+    //#endregion
 
+    //#region Delete
     @Transactional
     public void deletePricing(Integer itemId, Integer pricingId) {
         if (!itemRepository.existsById(itemId)) {
@@ -100,4 +107,5 @@ public class ItemPricingService {
 
         itemPricingRepository.delete(pricing);
     }
+    //#endregion
 }
