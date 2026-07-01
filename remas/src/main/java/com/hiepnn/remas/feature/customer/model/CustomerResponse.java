@@ -1,0 +1,21 @@
+package com.hiepnn.remas.feature.customer.model;
+
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CustomerResponse {
+    private Integer id;
+    private String name;
+    private String phone;
+    private String identityCard;
+    private String driverLicense;
+    private Integer trustScore;
+    private List<CustomerDocumentResponse> documents;
+}

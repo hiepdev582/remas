@@ -51,10 +51,7 @@ export default defineNuxtConfig({
           "http://localhost:8080",
           "https://*",
         ],
-        "connect-src": [
-          "'self'",
-          "http://localhost:8080",
-        ],
+        "connect-src": ["'self'", "http://localhost:8080"],
       },
     },
     corsHandler: {
@@ -68,6 +65,11 @@ export default defineNuxtConfig({
     { path: "~/components/others", prefix: "App", pathPrefix: false },
     { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
     { path: "~/features/user/components", prefix: "User", pathPrefix: false },
+    {
+      path: "~/features/customer/components",
+      prefix: "Customer",
+      pathPrefix: false,
+    },
     {
       path: "~/features/inventory/category/components",
       prefix: "InventoryCategory",

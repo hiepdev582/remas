@@ -5,6 +5,7 @@ import type { BaseSelectProps } from "~/components/base/Select.vue";
 import type { BaseUploadPicturesProps } from "~/components/base/UploadPictures.vue";
 import type { BaseInputNumberProps } from "~/components/base/InputNumber.vue";
 import type { BaseSwitchProps } from "~/components/base/Switch.vue";
+import type { BaseUploadDocumentsProps } from "~/components/base/UploadDocuments.vue";
 
 //#region Enum
 export enum FormFieldType {
@@ -15,6 +16,7 @@ export enum FormFieldType {
   UPLOAD_PICTURES = "upload-pictures",
   NUMBER = "number",
   SWITCH = "switch",
+  UPLOAD_DOCUMENTS = "upload-documents",
 }
 
 export enum FormLayout {
@@ -49,6 +51,7 @@ export type FormFieldConfigMap = {
   [FormFieldType.UPLOAD_PICTURES]: BaseUploadPicturesProps;
   [FormFieldType.NUMBER]: BaseInputNumberProps;
   [FormFieldType.SWITCH]: BaseSwitchProps;
+  [FormFieldType.UPLOAD_DOCUMENTS]: BaseUploadDocumentsProps;
 };
 
 export type FormFieldConfig = {
@@ -68,5 +71,6 @@ export const componentNames = {
   uploadPictures: "BaseUploadPictures",
   number: "BaseInputNumber",
   switch: "BaseSwitch",
+  uploadDocuments: "BaseUploadDocuments",
 } as const;
 //#endregion
