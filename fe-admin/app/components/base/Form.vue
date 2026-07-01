@@ -5,6 +5,8 @@ import InputPassword from "./InputPassword.vue";
 import TextArea from "./TextArea.vue";
 import Select from "./Select.vue";
 import UploadPictures from "./UploadPictures.vue";
+import InputNumber from "./InputNumber.vue";
+import Switch from "./Switch.vue";
 
 //#region Props & emits
 export interface BaseFormProps extends /* @vue-ignore */ FormProps {
@@ -39,6 +41,10 @@ const getInitValues = (fieldType: FormFieldType) => {
       return [];
     case FormFieldType.SELECT:
       return undefined;
+    case FormFieldType.NUMBER:
+      return undefined;
+    case FormFieldType.SWITCH:
+      return true;
     default:
       return "";
   }
@@ -65,6 +71,8 @@ const componentMappers = {
   [FormFieldType.AREA]: TextArea,
   [FormFieldType.SELECT]: Select,
   [FormFieldType.UPLOAD_PICTURES]: UploadPictures,
+  [FormFieldType.NUMBER]: InputNumber,
+  [FormFieldType.SWITCH]: Switch,
 };
 
 props.fields.forEach((field) => {

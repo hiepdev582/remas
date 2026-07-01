@@ -1,4 +1,4 @@
-import type { ItemStatus } from "./constants";
+import { ItemStatus, PriceType } from "./constants";
 
 export type Item = {
   id: number;
@@ -26,3 +26,19 @@ export type EditItemRequest = Omit<
   Item,
   "id" | "categoryName" | "userId" | "username"
 >;
+
+export type ItemPricing = {
+  id: number;
+  itemId: number;
+  priceType: PriceType;
+  price: number;
+  suggestedDeposit?: number;
+  isActive: boolean;
+};
+
+export type ItemPricingRequest = {
+  priceType: PriceType;
+  price: number;
+  suggestedDeposit?: number;
+  isActive?: boolean;
+};

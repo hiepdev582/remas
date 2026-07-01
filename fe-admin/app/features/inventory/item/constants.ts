@@ -7,6 +7,15 @@ enum ItemStatus {
   MAINTENANCE = "MAINTENANCE",
   DELETED = "DELETED",
 }
+
+enum PriceType {
+  HOURLY = "HOURLY",
+  DAILY = "DAILY",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+  WEEKEND = "WEEKEND",
+  HOLIDAY = "HOLIDAY",
+}
 //#endregion
 
 //#region CONSTANTS
@@ -23,7 +32,7 @@ const superadminItemColumns: ColumnType[] = [
     sorter: true,
     ellipsis: true,
     fixed: TableFixed.LEFT,
-    width: "20%",
+    width: "15%",
   },
   {
     title: "Category",
@@ -61,6 +70,7 @@ const superadminItemColumns: ColumnType[] = [
     title: "Action",
     key: "action",
     fixed: TableFixed.RIGHT,
+    width: "25%",
   },
 ];
 
@@ -71,7 +81,8 @@ const adminItemColumns: ColumnType[] = [
     key: "name",
     sorter: true,
     ellipsis: true,
-    width: "25%",
+    fixed: TableFixed.LEFT,
+    width: "20%",
   },
   {
     title: "Category",
@@ -102,6 +113,37 @@ const adminItemColumns: ColumnType[] = [
   {
     title: "Action",
     key: "action",
+    fixed: TableFixed.RIGHT,
+    width: "25%",
+  },
+];
+
+const itemPricingColumns = [
+  {
+    title: "Price Type",
+    dataIndex: "priceType",
+    key: "priceType",
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+  },
+  {
+    title: "Suggested Deposit",
+    dataIndex: "suggestedDeposit",
+    key: "suggestedDeposit",
+  },
+  {
+    title: "Status",
+    dataIndex: "isActive",
+    key: "isActive",
+    width: 100,
+  },
+  {
+    title: "Actions",
+    key: "action",
+    width: 120,
   },
 ];
 //#endregion
@@ -130,6 +172,39 @@ const itemStatusColor = {
   [ItemStatus.MAINTENANCE]: "warning",
   [ItemStatus.DELETED]: "default",
 } as const;
+
+const priceTypeLabels: Record<PriceType, string> = {
+  [PriceType.HOURLY]: "Hourly",
+  [PriceType.DAILY]: "Daily",
+  [PriceType.WEEKLY]: "Weekly",
+  [PriceType.MONTHLY]: "Monthly",
+  [PriceType.WEEKEND]: "Weekend",
+  [PriceType.HOLIDAY]: "Holiday",
+} as const;
+//#endregion
+
+//#region Array
+const priceTypeOptions = [
+  { label: "Hourly", value: PriceType.HOURLY },
+  { label: "Daily", value: PriceType.DAILY },
+  { label: "Weekly", value: PriceType.WEEKLY },
+  { label: "Monthly", value: PriceType.MONTHLY },
+  { label: "Weekend", value: PriceType.WEEKEND },
+  { label: "Holiday", value: PriceType.HOLIDAY },
+];
+
+const itemPricingFieldLabels = {
+  priceType: "Price Type",
+  price: "Price",
+  suggestedDeposit: "Suggested Deposit",
+} as const;
+
+const itemPricingFieldNames = {
+  priceType: "priceType",
+  price: "price",
+  suggestedDeposit: "suggestedDeposit",
+  isActive: "isActive",
+} as const;
 //#endregion
 
 export {
@@ -143,4 +218,10 @@ export {
   itemFieldNames,
   ItemStatus,
   itemStatusColor,
+  PriceType,
+  itemPricingColumns,
+  priceTypeOptions,
+  priceTypeLabels,
+  itemPricingFieldLabels,
+  itemPricingFieldNames,
 };

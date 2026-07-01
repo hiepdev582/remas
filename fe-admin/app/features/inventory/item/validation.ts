@@ -3,6 +3,8 @@ import {
   ITEM_NAME_MIN_CHAR,
   ITEM_NAME_MAX_CHAR,
   itemFieldLabels,
+  PriceType,
+  itemPricingFieldLabels,
 } from "./constants";
 
 export const upsertItemFieldSchema = {
@@ -53,3 +55,21 @@ export const upsertItemFieldSchema = {
     });
   },
 } as const;
+
+export const upsertItemPricingSchema = zod.object({
+  priceType: zod.nativeEnum(PriceType, {
+    required_error: errorMessages.required(itemPricingFieldLabels.priceType),
+  }),
+  price: zod
+    .number({
+      required_error: errorMessages.required(itemPricingFieldLabels.price),
+      invalid_type_error: errorMessages.required(itemPricingFieldLabels.price),
+    })
+    .positive("Price must be greater than 0"),
+  suggestedDeposit: zod
+    .number()
+    .min(0, "Suggested deposit must be greater than or equal to 0")
+    .optional()
+    .nullable(),
+  isActive: zod.boolean().optional(),
+});
