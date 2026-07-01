@@ -3,6 +3,8 @@ import type {
   AddItemRequest,
   Item,
   EditItemRequest,
+  ItemPricing,
+  ItemPricingRequest,
 } from "./types";
 import type { PagingResponse } from "~/types/api";
 
@@ -40,6 +42,28 @@ export const useItemService = () => {
     },
     remove(id: number) {
       return api<void>(`${ITEM_FEATURE}/${id}`, {
+        method: HTTP_METHOD.DELETE,
+      });
+    },
+    getPricings(itemId: number) {
+      return api<ItemPricing[]>(`${ITEM_FEATURE}/${itemId}/pricing`, {
+        method: HTTP_METHOD.GET,
+      });
+    },
+    addPricing(itemId: number, data: ItemPricingRequest) {
+      return api<ItemPricing>(`${ITEM_FEATURE}/${itemId}/pricing`, {
+        method: HTTP_METHOD.POST,
+        body: data,
+      });
+    },
+    editPricing(itemId: number, pricingId: number, data: ItemPricingRequest) {
+      return api<ItemPricing>(`${ITEM_FEATURE}/${itemId}/pricing/${pricingId}`, {
+        method: HTTP_METHOD.PUT,
+        body: data,
+      });
+    },
+    removePricing(itemId: number, pricingId: number) {
+      return api<void>(`${ITEM_FEATURE}/${itemId}/pricing/${pricingId}`, {
         method: HTTP_METHOD.DELETE,
       });
     },

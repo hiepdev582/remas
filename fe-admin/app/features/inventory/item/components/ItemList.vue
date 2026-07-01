@@ -85,6 +85,13 @@ const categoryService = useCategoryService();
 const ownerService = useUserService();
 const formState = ref<FormState>(FormState.ADD);
 const itemId = ref<number | undefined>(undefined);
+const isOpenPricingModal = ref(false);
+const selectedItem = ref<Item | undefined>(undefined);
+
+const onPricing = (record: Item) => {
+  selectedItem.value = record;
+  isOpenPricingModal.value = true;
+};
 
 const onView = (record: Item) => {
   itemId.value = record.id;
@@ -130,6 +137,13 @@ const tableActions = computed<TableAction[]>(() => [
     title: "View Detail",
     color: color.info,
     onClick: onView,
+  },
+  {
+    key: "pricing",
+    icon: tableAction.pricing,
+    title: "Pricing Configuration",
+    color: color.success,
+    onClick: onPricing,
   },
   {
     key: "edit",
@@ -266,6 +280,10 @@ onMounted(() => {
       :id="itemId"
       :state="formState"
       @onSuccess="getItems()"
+    />
+    <InventoryItemPricingModal
+      v-model="isOpenPricingModal"
+      :item="selectedItem"
     />
   </section>
 </template>

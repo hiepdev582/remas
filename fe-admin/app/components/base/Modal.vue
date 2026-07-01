@@ -35,12 +35,20 @@ const isOpen = defineModel<boolean>();
 </script>
 
 <template>
-  <a-modal v-bind="{ ...$attrs, ...props }" v-model:open="isOpen" :closable="!confirmLoading" :maskClosable="!confirmLoading">
+  <a-modal
+    v-bind="{ ...$attrs, ...props }"
+    v-model:open="isOpen"
+    :closable="!confirmLoading"
+    :maskClosable="!confirmLoading"
+  >
     <slot />
     <template #footer>
-      <BaseButton :type="ButtonType.DEFAULT" :disabled="confirmLoading" @click="handleCancel">{{
-        cancelText
-      }}</BaseButton>
+      <BaseButton
+        :type="ButtonType.DEFAULT"
+        :disabled="confirmLoading"
+        @click="handleCancel"
+        >{{ cancelText }}</BaseButton
+      >
       <BaseButton :loading="confirmLoading" @click="handleOk">{{
         confirmText
       }}</BaseButton>
