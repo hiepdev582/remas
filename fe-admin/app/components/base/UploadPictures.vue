@@ -140,10 +140,9 @@ watch(
         </div>
       </div>
       <div class="p-1 border-t border-gray-100 bg-gray-50">
-        <a-input
-          v-model:value="file.note"
+        <BaseInput
+          v-model="file.note"
           placeholder="Ghi chú..."
-          size="small"
           class="text-xs rounded border-none bg-white hover:bg-white focus:bg-white shadow-none text-center"
           :disabled="disabled"
           @change="handleNoteChange(file)"

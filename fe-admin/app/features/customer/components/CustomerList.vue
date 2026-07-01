@@ -164,20 +164,19 @@ onMounted(() => {
       @change="handleTableChange"
     >
       <template #bodyCell="{ column, record }">
-        <div v-if="column.key === 'trustScore'" class="flex items-center gap-2">
-          <a-badge
-            :count="record.trustScore"
-            :overflow-count="100"
-            :number-style="{
-              backgroundColor:
-                record.trustScore >= 80
-                  ? '#52c41a'
-                  : record.trustScore >= 50
-                    ? '#faad14'
-                    : '#f5222d',
-            }"
-          />
-          <span class="text-xs font-semibold text-gray-500">/ 100</span>
+        <div v-if="column.key === 'trustScore'">
+          <BaseTag
+            :color="
+              record.trustScore >= 80
+                ? 'success'
+                : record.trustScore >= 50
+                  ? 'warning'
+                  : 'error'
+            "
+            class="font-semibold text-xs py-0.5 px-2"
+          >
+            {{ record.trustScore }} / 100
+          </BaseTag>
         </div>
 
         <div v-if="column.key === 'action'">

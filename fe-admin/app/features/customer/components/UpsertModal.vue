@@ -205,10 +205,28 @@ watch(
     wrapClassName="upsert-customer-wrapper"
     confirmText="Save"
     :confirmLoading="isLoading"
-    :title="formInfo.modalTitle"
     :footer="props.state === FormState.VIEW ? null : undefined"
     @onConfirm="handleConfirm"
   >
+    <template #title>
+      <div class="flex items-center gap-2">
+        <span>{{ formInfo.modalTitle }}</span>
+        <BaseTag
+          v-if="props.state === FormState.VIEW && customerData"
+          :color="
+            customerData.trustScore >= 80
+              ? 'success'
+              : customerData.trustScore >= 50
+                ? 'warning'
+                : 'error'
+          "
+          class="font-semibold py-0.5 px-2"
+        >
+          Score: {{ customerData.trustScore }}
+        </BaseTag>
+      </div>
+    </template>
+
     <BaseForm
       ref="formRef"
       hide-submit-button

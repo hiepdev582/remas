@@ -5,7 +5,7 @@ const tableAction = {
   active: "nrk:check-active",
   inactive: "nrk:close-active",
   view: "material-symbols:visibility-outline-rounded",
-  pricing: "material-symbols:attach-money-rounded",
+  pricing: "material-symbols:attach-money",
 } as const;
 
 const tablePaginationDefault = {
