@@ -3,7 +3,7 @@ import type { ModalProps } from "ant-design-vue";
 import type { CSSProperties } from "vue";
 
 export interface BaseModalProps extends /* @vue-ignore */ ModalProps {
-  title: string;
+  title?: string;
   wrapClassName?: string;
   bodyStyle?: CSSProperties;
   cancelText?: string;
@@ -38,9 +38,13 @@ const isOpen = defineModel<boolean>();
   <a-modal
     v-bind="{ ...$attrs, ...props }"
     v-model:open="isOpen"
+    :title="$slots.title ? undefined : title || undefined"
     :closable="!confirmLoading"
     :maskClosable="!confirmLoading"
   >
+    <template #title v-if="$slots.title">
+      <slot name="title" />
+    </template>
     <slot />
     <template #footer>
       <BaseButton
