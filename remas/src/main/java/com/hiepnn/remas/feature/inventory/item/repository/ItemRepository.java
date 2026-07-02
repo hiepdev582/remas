@@ -17,4 +17,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer>, JpaSpecifi
     List<Item> findAllByStatus(ItemStatus status, Sort sort);
 
     List<Item> findAllByStatusAndUserUsername(ItemStatus status, String username, Sort sort);
+
+    List<Item> findAllByCategoryIdAndStatusNot(Integer categoryId, ItemStatus status, Sort sort);
 }

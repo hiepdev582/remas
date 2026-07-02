@@ -2,9 +2,7 @@
 
 <template>
   <a-layout>
-    <AppSidebar />
     <a-layout>
-      <AppHeader />
       <AppContent>
         <slot />
       </AppContent>

@@ -32,6 +32,8 @@ import com.hiepnn.remas.feature.inventory.item.repository.ItemImageRepository;
 import com.hiepnn.remas.feature.upload.repository.TemporaryUploadRepository;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import com.hiepnn.remas.feature.inventory.item.model.ItemPricingResponse;
+import com.hiepnn.remas.feature.inventory.item.repository.ItemPricingRepository;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -42,6 +44,7 @@ public class ItemService {
   private final UserRepository userRepository;
   private final ItemImageRepository itemImageRepository;
   private final TemporaryUploadRepository temporaryUploadRepository;
+  private final ItemPricingRepository itemPricingRepository;
 
   private ItemResponse mapToResponse(Item item) {
     List<ItemImage> images = itemImageRepository.findByItemId(item.getId());
@@ -49,6 +52,17 @@ public class ItemService {
         .map(img -> ItemImageResponse.builder()
             .url(img.getImageUrl())
             .note(img.getNote())
+            .build())
+        .toList();
+
+    List<ItemPricingResponse> pricings = itemPricingRepository.findByItemId(item.getId()).stream()
+        .map(pricing -> ItemPricingResponse.builder()
+            .id(pricing.getId())
+            .itemId(item.getId())
+            .priceType(pricing.getPriceType())
+            .price(pricing.getPrice())
+            .suggestedDeposit(pricing.getSuggestedDeposit())
+            .isActive(pricing.getIsActive())
             .build())
         .toList();
 
@@ -64,6 +78,7 @@ public class ItemService {
         .createdAt(item.getCreatedAt())
         .updatedAt(item.getUpdatedAt())
         .pictures(pictures)
+        .pricings(pricings)
         .build();
   }
 
@@ -80,6 +95,20 @@ public class ItemService {
       list = itemRepository.findAllByStatusAndUserUsername(ItemStatus.AVAILABLE, username,
           Sort.by(Sort.Direction.DESC, "updatedAt"));
     }
+    List<ItemResponse> content = list.stream().map(this::mapToResponse).toList();
+    return PagingResponse.<ItemResponse>builder()
+        .data(content)
+        .total(content.size())
+        .page(1)
+        .pageSize(content.size())
+        .build();
+  }
+  // #endregion
+
+  // #region Get all by category
+  @Transactional(readOnly = true)
+  public PagingResponse<ItemResponse> getAllItemsByCategory(Integer categoryId) {
+    List<Item> list = itemRepository.findAllByCategoryIdAndStatusNot(categoryId, ItemStatus.DELETED, Sort.by(Sort.Direction.DESC, "createdAt"));
     List<ItemResponse> content = list.stream().map(this::mapToResponse).toList();
     return PagingResponse.<ItemResponse>builder()
         .data(content)
