@@ -25,4 +25,5 @@ public class ItemResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<ItemImageResponse> pictures;
+    private List<ItemPricingResponse> pricings;
 }

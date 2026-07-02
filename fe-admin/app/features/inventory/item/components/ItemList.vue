@@ -74,7 +74,6 @@ const handleSearch = (value: string) => {
 
 const handleFilterChange = (values: Record<string, any>) => {
   filterValues.value = values;
-  console.log(filterValues.value);
   getItems();
 };
 //#endregion

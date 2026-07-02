@@ -45,6 +45,7 @@ const categoryColumns: ColumnType[] = [
     title: "Action",
     key: "action",
     fixed: TableFixed.RIGHT,
+    width: "20%",
   },
 ];
 //#endregion

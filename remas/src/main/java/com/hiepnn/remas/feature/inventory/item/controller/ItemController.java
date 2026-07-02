@@ -41,6 +41,12 @@ public class ItemController {
     return ResponseEntity.ok(itemService.getAllItems());
   }
 
+  @GetMapping("/by-category/{categoryId}")
+  @Operation(summary = "Danh sách tất cả đồ cho thuê theo danh mục", description = "Lấy tất cả đồ cho thuê theo danh mục")
+  public ResponseEntity<PagingResponse<ItemResponse>> getAllByCategory(@PathVariable Integer categoryId) {
+    return ResponseEntity.ok(itemService.getAllItemsByCategory(categoryId));
+  }
+
   @GetMapping("/list")
   @Operation(summary = "Danh sách đồ cho thuê theo bộ lọc", description = "Lấy đồ cho thuê theo bộ lọc")
   public ResponseEntity<PagingResponse<ItemResponse>> getList(
