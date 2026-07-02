@@ -42,6 +42,18 @@ export default defineNuxtConfig({
   },
   // Cấu hình bảo mật cơ bản cho Nuxt Security
   security: {
+    headers: {
+      contentSecurityPolicy: {
+        "img-src": [
+          "'self'",
+          "data:",
+          "blob:",
+          "http://localhost:8080",
+          "https://*",
+        ],
+        "connect-src": ["'self'", "http://localhost:8080"],
+      },
+    },
     corsHandler: {
       origin: ["http://localhost:8080"],
       methods: ["GET", "POST", "PUT", "DELETE"],
@@ -53,6 +65,11 @@ export default defineNuxtConfig({
     { path: "~/components/others", prefix: "App", pathPrefix: false },
     { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
     { path: "~/features/user/components", prefix: "User", pathPrefix: false },
+    {
+      path: "~/features/customer/components",
+      prefix: "Customer",
+      pathPrefix: false,
+    },
     {
       path: "~/features/inventory/category/components",
       prefix: "InventoryCategory",

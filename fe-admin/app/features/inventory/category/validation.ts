@@ -14,8 +14,8 @@ export const upsertCategoryFieldSchema = {
       errorMessages.maxLength(categoryFieldLabels.name, CATEGORY_NAME_MAX_CHAR),
     )
     .regex(
-      /^[a-zA-Z0-9._]+$/,
-      "Contain only letters, numbers, dots, or underscores",
+      /^[\p{L}\p{N}._\s-]+$/u,
+      "Contain only letters, numbers, spaces, dots, underscores, or dashes",
     ),
   description: zod
     .string()

@@ -4,6 +4,10 @@ import Input from "./Input.vue";
 import InputPassword from "./InputPassword.vue";
 import TextArea from "./TextArea.vue";
 import Select from "./Select.vue";
+import UploadPictures from "./UploadPictures.vue";
+import InputNumber from "./InputNumber.vue";
+import Switch from "./Switch.vue";
+import UploadDocuments from "./UploadDocuments.vue";
 
 //#region Props & emits
 export interface BaseFormProps extends /* @vue-ignore */ FormProps {
@@ -32,10 +36,29 @@ const emit = defineEmits(["onSubmit"]);
 //#endregion
 
 //#region State
-const initialValues = props.fields.reduce((acc, field) => {
-  acc[field.name] = field.type === FormFieldType.SELECT ? undefined : "";
-  return acc;
-}, {} as Record<string, any>);
+const getInitValues = (fieldType: FormFieldType) => {
+  switch (fieldType) {
+    case FormFieldType.UPLOAD_PICTURES:
+    case FormFieldType.UPLOAD_DOCUMENTS:
+      return [];
+    case FormFieldType.SELECT:
+      return undefined;
+    case FormFieldType.NUMBER:
+      return undefined;
+    case FormFieldType.SWITCH:
+      return true;
+    default:
+      return "";
+  }
+};
+
+const initialValues = props.fields.reduce(
+  (acc, field) => {
+    acc[field.name] = getInitValues(field.type);
+    return acc;
+  },
+  {} as Record<string, any>,
+);
 
 const { handleSubmit, resetForm, setValues } = useForm({
   validationSchema: props.validationSchema,
@@ -49,6 +72,10 @@ const componentMappers = {
   [FormFieldType.PASSWORD]: InputPassword,
   [FormFieldType.AREA]: TextArea,
   [FormFieldType.SELECT]: Select,
+  [FormFieldType.UPLOAD_PICTURES]: UploadPictures,
+  [FormFieldType.NUMBER]: InputNumber,
+  [FormFieldType.SWITCH]: Switch,
+  [FormFieldType.UPLOAD_DOCUMENTS]: UploadDocuments,
 };
 
 props.fields.forEach((field) => {
@@ -62,6 +89,7 @@ defineExpose({
   onSubmit,
   resetForm,
   setValues,
+  formValues,
 });
 //#endregion
 

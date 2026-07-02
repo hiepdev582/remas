@@ -9,6 +9,7 @@ const ROUTES = {
     ITEM: "/inventory/item",
   },
   USER: "/user",
+  CUSTOMER: "/customer",
 } as const;
 
 export { ROUTES };

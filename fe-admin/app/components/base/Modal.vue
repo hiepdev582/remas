@@ -3,7 +3,7 @@ import type { ModalProps } from "ant-design-vue";
 import type { CSSProperties } from "vue";
 
 export interface BaseModalProps extends /* @vue-ignore */ ModalProps {
-  title: string;
+  title?: string;
   wrapClassName?: string;
   bodyStyle?: CSSProperties;
   cancelText?: string;
@@ -35,12 +35,24 @@ const isOpen = defineModel<boolean>();
 </script>
 
 <template>
-  <a-modal v-bind="{ ...$attrs, ...props }" v-model:open="isOpen">
+  <a-modal
+    v-bind="{ ...$attrs, ...props }"
+    v-model:open="isOpen"
+    :title="$slots.title ? undefined : title || undefined"
+    :closable="!confirmLoading"
+    :maskClosable="!confirmLoading"
+  >
+    <template #title v-if="$slots.title">
+      <slot name="title" />
+    </template>
     <slot />
     <template #footer>
-      <BaseButton :type="ButtonType.DEFAULT" @click="handleCancel">{{
-        cancelText
-      }}</BaseButton>
+      <BaseButton
+        :type="ButtonType.DEFAULT"
+        :disabled="confirmLoading"
+        @click="handleCancel"
+        >{{ cancelText }}</BaseButton
+      >
       <BaseButton :loading="confirmLoading" @click="handleOk">{{
         confirmText
       }}</BaseButton>
