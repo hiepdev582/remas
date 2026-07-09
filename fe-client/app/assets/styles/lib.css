@@ -1,0 +1,29 @@
+/* Region Dropdown menu */
+.ant-dropdown
+  .ant-dropdown-menu
+  .ant-dropdown-menu-item
+  + .ant-dropdown-menu-item {
+  margin-top: 3px;
+}
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover,
+.ant-dropdown
+  .ant-dropdown-menu
+  .ant-dropdown-menu-item.ant-dropdown-menu-item-selected {
+  background-color: var(--color-primary-active);
+}
+
+.ant-select-dropdown
+  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: var(--color-primary-active);
+}
+
+/* Region Button */
+.ant-btn-link {
+  color: var(--color-primary);
+}
+
+/* Icon */
+.anticon {
+  vertical-align: middle;
+}

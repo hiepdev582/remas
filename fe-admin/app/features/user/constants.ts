@@ -52,6 +52,7 @@ const userColumns: ColumnType[] = [
     title: "Action",
     key: "action",
     fixed: TableFixed.RIGHT,
+    width: "20%",
   },
 ];
 

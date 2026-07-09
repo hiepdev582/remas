@@ -40,7 +40,7 @@ const customerColumns: ColumnType[] = [
     dataIndex: "identityCard",
     key: "identityCard",
     ellipsis: true,
-    width: "20%",
+    width: "15%",
   },
   {
     title: "Driver License",
@@ -60,7 +60,7 @@ const customerColumns: ColumnType[] = [
     title: "Action",
     key: "action",
     fixed: TableFixed.RIGHT,
-    width: "15%",
+    width: "20%",
   },
 ];
 

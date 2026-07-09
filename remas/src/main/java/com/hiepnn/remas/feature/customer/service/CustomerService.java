@@ -105,6 +105,34 @@ public class CustomerService {
                 .total(customerPage.getTotalElements())
                 .build();
     }
+
+    //#region All
+    @Transactional(readOnly = true)
+    public PagingResponse<CustomerResponse> getAllCustomers() {
+        boolean isSuperAdmin = SecurityUtils.isSuperAdmin();
+        String username = SecurityUtils.getCurrentUsername();
+
+        Specification<Customer> spec = (root, query, cb) -> {
+            Predicate p = cb.conjunction();
+            p = cb.and(p, cb.equal(root.get("isDeleted"), false));
+
+            if (!isSuperAdmin && username != null) {
+                p = cb.and(p, cb.equal(root.get("createdBy"), username));
+            }
+            return p;
+        };
+
+        List<Customer> list = customerRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        List<CustomerResponse> content = list.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+
+        return PagingResponse.<CustomerResponse>builder()
+                .data(content)
+                .total(content.size())
+                .build();
+    }
+    //#endregion
     //#endregion
 
     //#region Detail

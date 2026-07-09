@@ -43,7 +43,7 @@ const value = computed({
 </script>
 
 <template>
-  <a-input-password v-bind="{ ...$attrs, ...props }" v-model:value="value">
+  <a-input-password v-bind="{ ...$attrs, ...props, placeholder: props.disabled ? '' : props.placeholder }" v-model:value="value">
     <template v-if="$slots.prefix" #prefix>
       <slot name="prefix" />
     </template>

@@ -71,6 +71,11 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     {
+      path: "~/features/contract/components",
+      prefix: "Contract",
+      pathPrefix: false,
+    },
+    {
       path: "~/features/inventory/category/components",
       prefix: "InventoryCategory",
       pathPrefix: false,
