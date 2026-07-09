@@ -32,6 +32,12 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @GetMapping
+    @Operation(summary = "Danh sách tất cả khách hàng", description = "Lấy tất cả khách hàng")
+    public ResponseEntity<PagingResponse<CustomerResponse>> getAll() {
+        return ResponseEntity.ok(customerService.getAllCustomers());
+    }
+
     @GetMapping("/list")
     @Operation(summary = "Danh sách khách hàng theo bộ lọc", description = "Lấy danh sách khách hàng theo bộ lọc")
     public ResponseEntity<PagingResponse<CustomerResponse>> getList(

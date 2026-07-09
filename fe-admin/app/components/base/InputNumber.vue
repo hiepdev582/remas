@@ -28,7 +28,7 @@ const value = computed({
 
 <template>
   <a-input-number
-    v-bind="{ ...$attrs, ...props }"
+    v-bind="{ ...$attrs, ...props, placeholder: props.disabled ? '' : props.placeholder }"
     v-model:value="value"
     class="w-full"
     @change="(val: any) => emit('change', val)"
