@@ -39,5 +39,5 @@ const value = computed({
 </script>
 
 <template>
-  <a-textarea v-bind="{ ...$attrs, ...props }" v-model:value="value" />
+  <a-textarea v-bind="{ ...$attrs, ...props, placeholder: props.disabled ? '' : props.placeholder }" v-model:value="value" />
 </template>

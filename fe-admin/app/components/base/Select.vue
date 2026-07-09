@@ -44,7 +44,7 @@ const filterOption = (input: string, option: any) => {
 
 <template>
   <a-select
-    v-bind="{ ...$attrs, ...props }"
+    v-bind="{ ...$attrs, ...props, placeholder: props.disabled ? '' : props.placeholder }"
     v-model:value="value"
     :filterOption="filterOption"
     @change="(val: any) => emit('change', val)"

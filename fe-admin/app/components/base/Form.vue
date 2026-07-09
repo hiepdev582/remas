@@ -8,6 +8,7 @@ import UploadPictures from "./UploadPictures.vue";
 import InputNumber from "./InputNumber.vue";
 import Switch from "./Switch.vue";
 import UploadDocuments from "./UploadDocuments.vue";
+import DatePicker from "./DatePicker.vue";
 
 //#region Props & emits
 export interface BaseFormProps extends /* @vue-ignore */ FormProps {
@@ -76,6 +77,7 @@ const componentMappers = {
   [FormFieldType.NUMBER]: InputNumber,
   [FormFieldType.SWITCH]: Switch,
   [FormFieldType.UPLOAD_DOCUMENTS]: UploadDocuments,
+  [FormFieldType.DATE]: DatePicker,
 };
 
 props.fields.forEach((field) => {

@@ -11,6 +11,11 @@ export const useCustomerService = () => {
   const api = useApi();
 
   return {
+    getAll() {
+      return api<PagingResponse<Customer[]>>(`${CUSTOMER_FEATURE}`, {
+        method: HTTP_METHOD.GET,
+      });
+    },
     getList(params: TableAPIParams) {
       return api<PagingResponse<Customer[]>>(`${CUSTOMER_FEATURE}/list`, {
         method: HTTP_METHOD.GET,

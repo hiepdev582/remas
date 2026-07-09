@@ -26,6 +26,11 @@ const menuItems = computed(() => {
       path: ROUTES.CUSTOMER,
       icon: "material-symbols:person-search-rounded",
     },
+    {
+      label: "Contracts",
+      path: ROUTES.CONTRACT,
+      icon: "material-symbols:contract-edit-rounded",
+    },
   ];
 
   if (isSuperAdmin.value) {
