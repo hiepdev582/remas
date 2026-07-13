@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<BaseFormProps>(), {
   colon: true,
   disabled: false,
   layout: FormLayout.VERTICAL,
-  scrollToFirstError: false,
+  scrollToFirstError: true,
   hideSubmitButton: false,
 });
 
@@ -62,7 +62,7 @@ const initialValues = props.fields.reduce(
 );
 
 const { handleSubmit, resetForm, setValues } = useForm({
-  validationSchema: props.validationSchema,
+  validationSchema: computed(() => props.validationSchema),
   initialValues,
 });
 
@@ -85,7 +85,36 @@ props.fields.forEach((field) => {
   formValues.value[field.name] = value;
 });
 
-const onSubmit = handleSubmit((values) => emit("onSubmit", values));
+const onSubmit = handleSubmit(
+  (values) => emit("onSubmit", values),
+  ({ errors }) => {
+    if (props.scrollToFirstError && errors && Object.keys(errors).length > 0) {
+      const firstErrorField = Object.keys(errors)[0];
+      nextTick(() => {
+        const formEl = formRef.value?.$el;
+        if (formEl) {
+          const fieldContainer = formEl.querySelector(
+            `[data-field-name="${firstErrorField}"]`,
+          );
+          if (fieldContainer) {
+            const element = fieldContainer.querySelector(
+              "input:not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly]), .ant-select-selection-search-input",
+            );
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth", block: "center" });
+              (element as HTMLElement).focus?.();
+            } else {
+              fieldContainer.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }
+          }
+        }
+      });
+    }
+  },
+);
 
 defineExpose({
   onSubmit,
@@ -159,17 +188,19 @@ onMounted(() => {
     @keydown="handleKeyDown"
   >
     <template v-for="field in fields" :key="field.name">
-      <BaseFormItem
-        :name="field.name"
-        :label="field.label"
-        :required="field.required"
-      >
-        <component
-          v-bind="{ ...field.config }"
-          v-model="formValues[field.name]"
-          :is="componentMappers[field.type]"
-        />
-      </BaseFormItem>
+      <div :data-field-name="field.name">
+        <BaseFormItem
+          :name="field.name"
+          :label="field.label"
+          :required="field.required"
+        >
+          <component
+            v-bind="field.config as any"
+            v-model="formValues[field.name]"
+            :is="componentMappers[field.type]"
+          />
+        </BaseFormItem>
+      </div>
     </template>
     <!-- Action -->
     <slot name="actions" :submit="onSubmit" :loading="loading">

@@ -1,5 +1,8 @@
 package com.hiepnn.remas.feature.customer.service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +49,13 @@ public class CustomerService {
                         .build())
                 .collect(Collectors.toList());
 
+        Integer age = customer.getDob() != null 
+                ? Period.between(customer.getDob(), LocalDate.now()).getYears() 
+                : null;
+        Long daysSinceLastInteraction = customer.getLastInteractionDate() != null 
+                ? ChronoUnit.DAYS.between(customer.getLastInteractionDate().toLocalDate(), LocalDate.now()) 
+                : null;
+
         return CustomerResponse.builder()
                 .id(customer.getId())
                 .name(customer.getName())
@@ -53,6 +63,14 @@ public class CustomerService {
                 .identityCard(customer.getIdentityCard())
                 .driverLicense(customer.getDriverLicense())
                 .trustScore(customer.getTrustScore())
+                .gender(customer.getGender())
+                .dob(customer.getDob())
+                .age(age)
+                .address(customer.getAddress())
+                .lastInteractionDate(customer.getLastInteractionDate())
+                .daysSinceLastInteraction(daysSinceLastInteraction)
+                .note(customer.getNote())
+                .link(customer.getLink())
                 .documents(docResponses)
                 .build();
     }
@@ -172,6 +190,12 @@ public class CustomerService {
                 .phone(request.getPhone())
                 .identityCard(request.getIdentityCard())
                 .driverLicense(request.getDriverLicense())
+                .gender(request.getGender())
+                .dob(request.getDob())
+                .address(request.getAddress())
+                .lastInteractionDate(request.getLastInteractionDate())
+                .note(request.getNote())
+                .link(request.getLink())
                 .trustScore(request.getTrustScore() != null ? request.getTrustScore() : 100)
                 .build();
 
@@ -213,6 +237,12 @@ public class CustomerService {
         customer.setPhone(request.getPhone());
         customer.setIdentityCard(request.getIdentityCard());
         customer.setDriverLicense(request.getDriverLicense());
+        customer.setGender(request.getGender());
+        customer.setDob(request.getDob());
+        customer.setAddress(request.getAddress());
+        customer.setLastInteractionDate(request.getLastInteractionDate());
+        customer.setNote(request.getNote());
+        customer.setLink(request.getLink());
         if (request.getTrustScore() != null) {
             customer.setTrustScore(request.getTrustScore());
         }

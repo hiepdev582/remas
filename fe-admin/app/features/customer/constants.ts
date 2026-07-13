@@ -1,3 +1,4 @@
+import type { BaseSelectOption } from "~/components/base/Select.vue";
 import type { ColumnType } from "~/types/table";
 
 //#region Enum
@@ -25,7 +26,13 @@ const customerColumns: ColumnType[] = [
     sorter: true,
     ellipsis: true,
     fixed: TableFixed.LEFT,
-    width: "20%",
+    width: "17%",
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age",
+    width: "8%",
   },
   {
     title: "Phone",
@@ -33,34 +40,39 @@ const customerColumns: ColumnType[] = [
     key: "phone",
     sorter: true,
     ellipsis: true,
+    width: "10%",
+  },
+  {
+    title: "Last Interaction",
+    key: "lastInteraction",
     width: "15%",
   },
   {
-    title: "Identity Card",
-    dataIndex: "identityCard",
-    key: "identityCard",
+    title: "Note",
+    dataIndex: "note",
+    key: "note",
     ellipsis: true,
     width: "15%",
   },
   {
-    title: "Driver License",
-    dataIndex: "driverLicense",
-    key: "driverLicense",
+    title: "Link",
+    dataIndex: "link",
+    key: "link",
     ellipsis: true,
-    width: "15%",
+    width: "10%",
   },
   {
     title: "Trust Score",
     dataIndex: "trustScore",
     key: "trustScore",
     sorter: true,
-    width: "15%",
+    width: "10%",
   },
   {
     title: "Action",
     key: "action",
     fixed: TableFixed.RIGHT,
-    width: "20%",
+    width: "15%",
   },
 ];
 
@@ -71,6 +83,12 @@ export const docTypeOptions = [
   { label: "Driver License Back", value: "DRIVER_LICENSE_BACK" },
   { label: "Other", value: "OTHER" },
 ] as const;
+
+export const genderOptions: BaseSelectOption[] = [
+  { label: "Male", value: "Male" },
+  { label: "Female", value: "Female" },
+  { label: "Other", value: "Other" },
+] as const;
 //#endregion
 
 //#region Objects
@@ -80,6 +98,12 @@ const customerFieldLabels = {
   identityCard: "Identity Card (CCCD)",
   driverLicense: "Driver License",
   trustScore: "Trust Score",
+  gender: "Gender",
+  dob: "Date of Birth",
+  address: "Address",
+  lastInteractionDate: "Last Interaction Date",
+  note: "Note",
+  link: "Link",
   documents: "Documents",
 } as const;
 
@@ -89,6 +113,12 @@ const customerFieldNames = {
   identityCard: "identityCard",
   driverLicense: "driverLicense",
   trustScore: "trustScore",
+  gender: "gender",
+  dob: "dob",
+  address: "address",
+  lastInteractionDate: "lastInteractionDate",
+  note: "note",
+  link: "link",
   documents: "documents",
 } as const;
 
@@ -111,6 +141,9 @@ const documentTypeOptions = [
 ];
 //#endregion
 
+const CUSTOMER_DATE_FORMAT = "YYYY-MM-DD";
+const CUSTOMER_DATETIME_FORMAT = "YYYY-MM-DD HH:mm";
+
 export {
   CUSTOMER_FEATURE,
   DocumentType,
@@ -123,4 +156,6 @@ export {
   CUSTOMER_NAME_MAX_CHAR,
   CUSTOMER_IDENTITY_CARD_MAX_CHAR,
   CUSTOMER_DRIVER_LICENSE_MAX_CHAR,
+  CUSTOMER_DATE_FORMAT,
+  CUSTOMER_DATETIME_FORMAT,
 };

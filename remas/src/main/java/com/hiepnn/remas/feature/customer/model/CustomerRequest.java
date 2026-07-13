@@ -10,6 +10,9 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class CustomerRequest {
@@ -23,6 +26,18 @@ public class CustomerRequest {
     private String identityCard;
 
     private String driverLicense;
+
+    private String gender;
+
+    private LocalDate dob;
+
+    private String address;
+
+    private LocalDateTime lastInteractionDate;
+
+    private String note;
+
+    private String link;
 
     @Min(value = 0, message = "Trust score must be at least 0")
     @Max(value = 100, message = "Trust score cannot exceed 100")

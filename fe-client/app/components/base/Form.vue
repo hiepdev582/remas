@@ -56,7 +56,7 @@ const initialValues = props.fields.reduce(
 );
 
 const { handleSubmit, resetForm, setValues } = useForm({
-  validationSchema: props.validationSchema,
+  validationSchema: computed(() => props.validationSchema),
   initialValues,
 });
 

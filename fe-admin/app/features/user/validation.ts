@@ -51,12 +51,19 @@ export const upsertUserFieldSchema = {
     return zod.object({
       username: this.username,
       password: isEdit
-        ? zod.union([
-            zod.literal(""),
-            zod.literal(null),
-            zod.literal(undefined),
-            this.password,
-          ]).optional()
+        ? zod
+            .string()
+            .optional()
+            .nullable()
+            .or(zod.literal(""))
+            .superRefine((val, ctx) => {
+              if (val && val.trim().length > 0) {
+                const res = this.password.safeParse(val);
+                if (!res.success) {
+                  res.error.issues.forEach((issue) => ctx.addIssue(issue));
+                }
+              }
+            })
         : this.password,
       email: this.email,
       fullName: this.fullName,
