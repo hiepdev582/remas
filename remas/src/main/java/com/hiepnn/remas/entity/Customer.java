@@ -1,6 +1,7 @@
 package com.hiepnn.remas.entity;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +48,24 @@ public class Customer {
     // Số GPLX để tra cứu nhanh
     @Column(name = "driver_license", length = 20, unique = true)
     private String driverLicense;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "dob")
+    private LocalDate dob;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "last_interaction_date")
+    private LocalDateTime lastInteractionDate;
+
+    @Column(name = "note", length = 1000)
+    private String note;
+
+    @Column(name = "link")
+    private String link;
 
     // Điểm uy tín của khách hàng
     @Column(name = "trust_score", nullable = false)
