@@ -13,6 +13,8 @@ export type Customer = {
   daysSinceLastInteraction?: number;
   note?: string;
   link?: string;
+  revenue?: number;
+  rentalCount?: number;
   documents?: CustomerDocument[];
 };
 
@@ -27,10 +29,10 @@ export type CustomerDocument = {
   preview?: string;
 };
 
-export type AddCustomerRequest = Omit<Customer, "id" | "documents" | "age" | "daysSinceLastInteraction"> & {
+export type AddCustomerRequest = Omit<Customer, "id" | "documents" | "age" | "daysSinceLastInteraction" | "revenue" | "rentalCount"> & {
   documents?: Omit<CustomerDocument, "id" | "customerId">[];
 };
 
-export type EditCustomerRequest = Omit<Customer, "id" | "documents" | "age" | "daysSinceLastInteraction"> & {
+export type EditCustomerRequest = Omit<Customer, "id" | "documents" | "age" | "daysSinceLastInteraction" | "revenue" | "rentalCount"> & {
   documents?: Omit<CustomerDocument, "id" | "customerId">[];
 };

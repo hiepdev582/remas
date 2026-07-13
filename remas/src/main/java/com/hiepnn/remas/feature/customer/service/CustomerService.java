@@ -26,6 +26,8 @@ import com.hiepnn.remas.feature.customer.model.CustomerResponse;
 import com.hiepnn.remas.feature.customer.repository.CustomerDocumentRepository;
 import com.hiepnn.remas.feature.customer.repository.CustomerRepository;
 import com.hiepnn.remas.util.SecurityUtils;
+import com.hiepnn.remas.common.constant.ContractStatus;
+import com.hiepnn.remas.feature.contract.repository.ContractRepository;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerDocumentRepository customerDocumentRepository;
+    private final ContractRepository contractRepository;
 
     private CustomerResponse mapToResponse(Customer customer) {
         List<CustomerDocument> docs = customerDocumentRepository.findByCustomerId(customer.getId());
@@ -56,6 +59,9 @@ public class CustomerService {
                 ? ChronoUnit.DAYS.between(customer.getLastInteractionDate().toLocalDate(), LocalDate.now()) 
                 : null;
 
+        java.math.BigDecimal revenue = contractRepository.sumFinalAmountByCustomerIdAndStatusNot(customer.getId(), ContractStatus.CANCELLED);
+        Long rentalCount = contractRepository.countByCustomerIdAndStatusNot(customer.getId(), ContractStatus.CANCELLED);
+
         return CustomerResponse.builder()
                 .id(customer.getId())
                 .name(customer.getName())
@@ -71,6 +77,8 @@ public class CustomerService {
                 .daysSinceLastInteraction(daysSinceLastInteraction)
                 .note(customer.getNote())
                 .link(customer.getLink())
+                .revenue(revenue)
+                .rentalCount(rentalCount)
                 .documents(docResponses)
                 .build();
     }

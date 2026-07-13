@@ -26,13 +26,13 @@ const customerColumns: ColumnType[] = [
     sorter: true,
     ellipsis: true,
     fixed: TableFixed.LEFT,
-    width: "17%",
+    width: "10%",
   },
   {
     title: "Age",
     dataIndex: "age",
     key: "age",
-    width: "8%",
+    width: "6%",
   },
   {
     title: "Phone",
@@ -52,13 +52,27 @@ const customerColumns: ColumnType[] = [
     dataIndex: "note",
     key: "note",
     ellipsis: true,
-    width: "15%",
+    width: "12%",
   },
   {
     title: "Link",
     dataIndex: "link",
     key: "link",
     ellipsis: true,
+    width: "8%",
+  },
+  {
+    title: "Rentals",
+    dataIndex: "rentalCount",
+    key: "rentalCount",
+    sorter: true,
+    width: "9%",
+  },
+  {
+    title: "Revenue",
+    dataIndex: "revenue",
+    key: "revenue",
+    sorter: true,
     width: "10%",
   },
   {
@@ -72,7 +86,7 @@ const customerColumns: ColumnType[] = [
     title: "Action",
     key: "action",
     fixed: TableFixed.RIGHT,
-    width: "15%",
+    width: "12%",
   },
 ];
 
