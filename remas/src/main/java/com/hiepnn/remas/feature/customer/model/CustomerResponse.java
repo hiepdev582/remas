@@ -1,5 +1,6 @@
 package com.hiepnn.remas.feature.customer.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,5 +28,7 @@ public class CustomerResponse {
     private Long daysSinceLastInteraction;
     private String note;
     private String link;
+    private BigDecimal revenue;
+    private Long rentalCount;
     private List<CustomerDocumentResponse> documents;
 }

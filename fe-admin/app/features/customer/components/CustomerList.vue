@@ -201,6 +201,16 @@ onMounted(() => {
           <span v-else>-</span>
         </div>
 
+        <div v-else-if="column.key === 'rentalCount'">
+          <span class="font-semibold">{{ record.rentalCount || 0 }}</span>
+        </div>
+
+        <div v-else-if="column.key === 'revenue'">
+          <span class="font-semibold text-emerald-600">
+            {{ record.revenue != null ? record.revenue.toLocaleString() + 'đ' : '0đ' }}
+          </span>
+        </div>
+
         <div v-else-if="column.key === 'trustScore'">
           <BaseTag
             :color="
