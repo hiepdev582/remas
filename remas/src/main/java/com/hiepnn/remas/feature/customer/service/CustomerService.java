@@ -3,6 +3,8 @@ package com.hiepnn.remas.feature.customer.service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,26 +112,69 @@ public class CustomerService {
             return p;
         };
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
-        if (sortField != null && !sortField.trim().isEmpty()) {
-            Sort.Direction direction = "descend".equalsIgnoreCase(sortOrder) || "desc".equalsIgnoreCase(sortOrder)
+        int pageIndex = Math.max(0, page - 1);
+        boolean isCalculatedSort = "rentalCount".equalsIgnoreCase(sortField) || "revenue".equalsIgnoreCase(sortField);
+
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (sortOrder != null) {
+            direction = "descend".equalsIgnoreCase(sortOrder) || "desc".equalsIgnoreCase(sortOrder)
                 ? Sort.Direction.DESC
                 : Sort.Direction.ASC;
-            sort = Sort.by(direction, sortField);
         }
 
-        int pageIndex = Math.max(0, page - 1);
-        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-        Page<Customer> customerPage = customerRepository.findAll(spec, pageable);
+        if (isCalculatedSort) {
+            List<Customer> allCustomers = customerRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedAt"));
+            List<CustomerResponse> responses = allCustomers.stream()
+                    .map(this::mapToResponse)
+                    .collect(Collectors.toList());
 
-        List<CustomerResponse> content = customerPage.getContent().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+            if ("rentalCount".equalsIgnoreCase(sortField)) {
+                if (direction == Sort.Direction.ASC) {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRentalCount));
+                } else {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRentalCount).reversed());
+                }
+            } else if ("revenue".equalsIgnoreCase(sortField)) {
+                if (direction == Sort.Direction.ASC) {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRevenue, 
+                            Comparator.nullsFirst(Comparator.naturalOrder())));
+                } else {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRevenue, 
+                            Comparator.nullsLast(Comparator.naturalOrder())).reversed());
+                }
+            }
 
-        return PagingResponse.<CustomerResponse>builder()
-                .data(content)
-                .total(customerPage.getTotalElements())
-                .build();
+            int total = responses.size();
+            int fromIndex = pageIndex * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, total);
+            
+            List<CustomerResponse> pagedContent = new ArrayList<>();
+            if (fromIndex < total) {
+                pagedContent = responses.subList(fromIndex, toIndex);
+            }
+
+            return PagingResponse.<CustomerResponse>builder()
+                    .data(pagedContent)
+                    .total((long) total)
+                    .build();
+        } else {
+            Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
+            if (sortField != null && !sortField.trim().isEmpty()) {
+                sort = Sort.by(direction, sortField);
+            }
+
+            Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+            Page<Customer> customerPage = customerRepository.findAll(spec, pageable);
+
+            List<CustomerResponse> content = customerPage.getContent().stream()
+                    .map(this::mapToResponse)
+                    .collect(Collectors.toList());
+
+            return PagingResponse.<CustomerResponse>builder()
+                    .data(content)
+                    .total(customerPage.getTotalElements())
+                    .build();
+        }
     }
 
     //#region All
