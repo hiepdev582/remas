@@ -6,6 +6,7 @@ import type {
 } from "~/components/base/Select.vue";
 import { upsertItemFieldSchema } from "../validation";
 import type { AddItemRequest, EditItemRequest } from "../types";
+import { ItemStatus } from "../constants";
 
 const props = defineProps<{
   id?: number;
