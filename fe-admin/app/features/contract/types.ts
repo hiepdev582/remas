@@ -1,9 +1,9 @@
+import type { PriceType } from "@/features/inventory/item/constants";
 import type {
   ContractStatus,
   CollateralStatus,
   CollateralType,
   CollateralItemStatus,
-  PriceType,
   FeeType,
 } from "./constants";
 
