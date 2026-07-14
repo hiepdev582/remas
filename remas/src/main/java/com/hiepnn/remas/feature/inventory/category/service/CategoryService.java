@@ -11,12 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hiepnn.remas.common.constant.CategoryStatus;
+import com.hiepnn.remas.common.constant.RoleName;
 import com.hiepnn.remas.common.dto.PagingResponse;
 import com.hiepnn.remas.entity.Category;
 import com.hiepnn.remas.exception.BadRequestException;
 import com.hiepnn.remas.exception.ResourceNotFoundException;
 import com.hiepnn.remas.feature.inventory.category.model.CategoryRequest;
 import com.hiepnn.remas.feature.inventory.category.repository.CategoryRepository;
+import com.hiepnn.remas.feature.auth.repository.UserRepository;
+import com.hiepnn.remas.feature.auth.repository.UserRoleRepository;
+import com.hiepnn.remas.entity.UserRole;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
@@ -25,12 +31,36 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CategoryService {
   private final CategoryRepository categoryRepository;
+  private final UserRepository userRepository;
+  private final UserRoleRepository userRoleRepository;
+
+  private boolean isSuperAdminUser(String username) {
+    if (username == null) {
+      return false;
+    }
+    return userRepository.findByUsername(username)
+        .map(user -> {
+          List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+          return userRoles.stream()
+              .anyMatch(ur -> ur.getRole().getName().getValue().equals(RoleName.SUPER_ADMIN.getValue()));
+        })
+        .orElse(false);
+  }
+
+  private void populateCreatedBySuperAdmin(Category category) {
+    if (category.getCreatedBy() != null) {
+      category.setCreatedBySuperAdmin(isSuperAdminUser(category.getCreatedBy()));
+    } else {
+      category.setCreatedBySuperAdmin(false);
+    }
+  }
 
   // #region Get all
   @Transactional(readOnly = true)
   public PagingResponse<Category> getAllCategories() {
     List<Category> list = categoryRepository.findAllByStatus(CategoryStatus.ACTIVE,
         Sort.by(Sort.Direction.DESC, "updatedAt"));
+    list.forEach(this::populateCreatedBySuperAdmin);
     return PagingResponse.<Category>builder()
         .data(list)
         .total(list.size())
@@ -74,6 +104,7 @@ public class CategoryService {
     int pageIndex = Math.max(0, page - 1);
     Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
     Page<Category> categoryPage = categoryRepository.findAll(spec, pageable);
+    categoryPage.getContent().forEach(this::populateCreatedBySuperAdmin);
 
     return PagingResponse.<Category>builder()
         .data(categoryPage.getContent())
@@ -92,6 +123,7 @@ public class CategoryService {
     if (category.getStatus() == CategoryStatus.DELETED) {
       throw new ResourceNotFoundException("Category not found!");
     }
+    populateCreatedBySuperAdmin(category);
     return category;
   }
   // #endregion
@@ -109,7 +141,9 @@ public class CategoryService {
         .status(CategoryStatus.INACTIVE)
         .build();
 
-    return categoryRepository.save(category);
+    Category saved = categoryRepository.save(category);
+    populateCreatedBySuperAdmin(saved);
+    return saved;
   }
   // #endregion
 
@@ -122,6 +156,18 @@ public class CategoryService {
       throw new ResourceNotFoundException("Category not found!");
     }
 
+    // Check if category is created by super admin and current user is not super admin
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    boolean isCurrentSuperAdmin = authentication != null && authentication.getAuthorities().stream()
+        .anyMatch(a -> a.getAuthority().equals(RoleName.SUPER_ADMIN.getValue()));
+    
+    if (!isCurrentSuperAdmin && category.getCreatedBy() != null) {
+      boolean isCreatorSuperAdmin = isSuperAdminUser(category.getCreatedBy());
+      if (isCreatorSuperAdmin) {
+        throw new BadRequestException("You do not have permission to edit this category because it was created by a Super Admin.");
+      }
+    }
+
     if (categoryRepository.existsByNameAndIdNot(request.getName(), id)) {
       throw new BadRequestException("Category name already exists!");
     }
@@ -129,7 +175,9 @@ public class CategoryService {
     category.setName(request.getName());
     category.setDescription(request.getDescription());
 
-    return categoryRepository.save(category);
+    Category saved = categoryRepository.save(category);
+    populateCreatedBySuperAdmin(saved);
+    return saved;
   }
   // #endregion
 
@@ -144,7 +192,9 @@ public class CategoryService {
 
     category.setStatus(status);
 
-    return categoryRepository.save(category);
+    Category saved = categoryRepository.save(category);
+    populateCreatedBySuperAdmin(saved);
+    return saved;
   }
   // #endregion
 

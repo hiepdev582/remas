@@ -60,7 +60,10 @@ public class AuthController {
     @Operation(summary = "Đăng xuất hệ thống", description = "Đưa token hiện tại vào danh sách đen (Blacklist) để vô hiệu hóa")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
         String result = authService.logout(authHeader);
-        return ResponseEntity.ok(result);
+        ResponseCookie cookie = CookieUtils.deleteRefreshTokenCookie();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(result);
     }
 
 }

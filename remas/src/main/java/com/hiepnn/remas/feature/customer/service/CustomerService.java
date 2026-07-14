@@ -3,6 +3,8 @@ package com.hiepnn.remas.feature.customer.service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,26 +112,69 @@ public class CustomerService {
             return p;
         };
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
-        if (sortField != null && !sortField.trim().isEmpty()) {
-            Sort.Direction direction = "descend".equalsIgnoreCase(sortOrder) || "desc".equalsIgnoreCase(sortOrder)
+        int pageIndex = Math.max(0, page - 1);
+        boolean isCalculatedSort = "rentalCount".equalsIgnoreCase(sortField) || "revenue".equalsIgnoreCase(sortField);
+
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (sortOrder != null) {
+            direction = "descend".equalsIgnoreCase(sortOrder) || "desc".equalsIgnoreCase(sortOrder)
                 ? Sort.Direction.DESC
                 : Sort.Direction.ASC;
-            sort = Sort.by(direction, sortField);
         }
 
-        int pageIndex = Math.max(0, page - 1);
-        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-        Page<Customer> customerPage = customerRepository.findAll(spec, pageable);
+        if (isCalculatedSort) {
+            List<Customer> allCustomers = customerRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedAt"));
+            List<CustomerResponse> responses = allCustomers.stream()
+                    .map(this::mapToResponse)
+                    .collect(Collectors.toList());
 
-        List<CustomerResponse> content = customerPage.getContent().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+            if ("rentalCount".equalsIgnoreCase(sortField)) {
+                if (direction == Sort.Direction.ASC) {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRentalCount));
+                } else {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRentalCount).reversed());
+                }
+            } else if ("revenue".equalsIgnoreCase(sortField)) {
+                if (direction == Sort.Direction.ASC) {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRevenue, 
+                            Comparator.nullsFirst(Comparator.naturalOrder())));
+                } else {
+                    responses.sort(Comparator.comparing(CustomerResponse::getRevenue, 
+                            Comparator.nullsLast(Comparator.naturalOrder())).reversed());
+                }
+            }
 
-        return PagingResponse.<CustomerResponse>builder()
-                .data(content)
-                .total(customerPage.getTotalElements())
-                .build();
+            int total = responses.size();
+            int fromIndex = pageIndex * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, total);
+            
+            List<CustomerResponse> pagedContent = new ArrayList<>();
+            if (fromIndex < total) {
+                pagedContent = responses.subList(fromIndex, toIndex);
+            }
+
+            return PagingResponse.<CustomerResponse>builder()
+                    .data(pagedContent)
+                    .total((long) total)
+                    .build();
+        } else {
+            Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
+            if (sortField != null && !sortField.trim().isEmpty()) {
+                sort = Sort.by(direction, sortField);
+            }
+
+            Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+            Page<Customer> customerPage = customerRepository.findAll(spec, pageable);
+
+            List<CustomerResponse> content = customerPage.getContent().stream()
+                    .map(this::mapToResponse)
+                    .collect(Collectors.toList());
+
+            return PagingResponse.<CustomerResponse>builder()
+                    .data(content)
+                    .total(customerPage.getTotalElements())
+                    .build();
+        }
     }
 
     //#region All
@@ -159,7 +204,6 @@ public class CustomerService {
                 .build();
     }
     //#endregion
-    //#endregion
 
     //#region Detail
     @Transactional(readOnly = true)
@@ -184,20 +228,25 @@ public class CustomerService {
         if (customerRepository.existsByPhoneAndIsDeletedFalse(request.getPhone())) {
             throw new BadRequestException("Phone number already exists!");
         }
-        if (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty() &&
-            customerRepository.existsByIdentityCardAndIsDeletedFalse(request.getIdentityCard())) {
+        String identityCard = (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty())
+                ? request.getIdentityCard().trim()
+                : null;
+        String driverLicense = (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty())
+                ? request.getDriverLicense().trim()
+                : null;
+
+        if (identityCard != null && customerRepository.existsByIdentityCardAndIsDeletedFalse(identityCard)) {
             throw new BadRequestException("Identity Card already exists!");
         }
-        if (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty() &&
-            customerRepository.existsByDriverLicenseAndIsDeletedFalse(request.getDriverLicense())) {
+        if (driverLicense != null && customerRepository.existsByDriverLicenseAndIsDeletedFalse(driverLicense)) {
             throw new BadRequestException("Driver License already exists!");
         }
 
         Customer customer = Customer.builder()
                 .name(request.getName())
                 .phone(request.getPhone())
-                .identityCard(request.getIdentityCard())
-                .driverLicense(request.getDriverLicense())
+                .identityCard(identityCard)
+                .driverLicense(driverLicense)
                 .gender(request.getGender())
                 .dob(request.getDob())
                 .address(request.getAddress())
@@ -229,22 +278,27 @@ public class CustomerService {
             throw new ResourceNotFoundException("Customer not found!");
         }
 
+        String identityCard = (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty())
+                ? request.getIdentityCard().trim()
+                : null;
+        String driverLicense = (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty())
+                ? request.getDriverLicense().trim()
+                : null;
+
         if (customerRepository.existsByPhoneAndIdNotAndIsDeletedFalse(request.getPhone(), id)) {
             throw new BadRequestException("Phone number already exists!");
         }
-        if (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty() &&
-            customerRepository.existsByIdentityCardAndIdNotAndIsDeletedFalse(request.getIdentityCard(), id)) {
+        if (identityCard != null && customerRepository.existsByIdentityCardAndIdNotAndIsDeletedFalse(identityCard, id)) {
             throw new BadRequestException("Identity Card already exists!");
         }
-        if (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty() &&
-            customerRepository.existsByDriverLicenseAndIdNotAndIsDeletedFalse(request.getDriverLicense(), id)) {
+        if (driverLicense != null && customerRepository.existsByDriverLicenseAndIdNotAndIsDeletedFalse(driverLicense, id)) {
             throw new BadRequestException("Driver License already exists!");
         }
 
         customer.setName(request.getName());
         customer.setPhone(request.getPhone());
-        customer.setIdentityCard(request.getIdentityCard());
-        customer.setDriverLicense(request.getDriverLicense());
+        customer.setIdentityCard(identityCard);
+        customer.setDriverLicense(driverLicense);
         customer.setGender(request.getGender());
         customer.setDob(request.getDob());
         customer.setAddress(request.getAddress());

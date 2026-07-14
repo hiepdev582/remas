@@ -12,4 +12,14 @@ public class CookieUtils {
                 .sameSite("Lax")
                 .build();
     }
+
+    public static ResponseCookie deleteRefreshTokenCookie() {
+        return ResponseCookie.from("refresh_token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+    }
 }

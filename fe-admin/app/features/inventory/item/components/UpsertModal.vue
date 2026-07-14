@@ -6,6 +6,7 @@ import type {
 } from "~/components/base/Select.vue";
 import { upsertItemFieldSchema } from "../validation";
 import type { AddItemRequest, EditItemRequest } from "../types";
+import { ItemStatus } from "../constants";
 
 const props = defineProps<{
   id?: number;
@@ -177,6 +178,7 @@ watch(
   async () => {
     if (!isOpen.value) return;
 
+    await nextTick();
     formRef.value?.resetForm();
     await getAllCategories();
 
@@ -214,6 +216,7 @@ watch(
     @onConfirm="handleConfirm"
   >
     <BaseForm
+      v-if="isOpen"
       ref="formRef"
       hide-submit-button
       :fields="upsertItemFields"

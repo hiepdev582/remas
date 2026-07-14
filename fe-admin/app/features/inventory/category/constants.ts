@@ -14,7 +14,49 @@ const CATEGORY_NAME_MIN_CHAR = 2;
 const CATEGORY_NAME_MAX_CHAR = 50;
 const CATEGORY_DESCRIPTION_MAX_CHAR = 255;
 
-const categoryColumns: ColumnType[] = [
+const superadminCategoryColumns: ColumnType[] = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    sorter: true,
+    ellipsis: true,
+    fixed: TableFixed.LEFT,
+    width: "20%",
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    ellipsis: true,
+    width: "25%",
+  },
+  {
+    title: "Owner",
+    dataIndex: "createdBy",
+    key: "createdBy",
+    ellipsis: true,
+    width: "15%",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    width: "20%",
+    filters: [
+      { text: "Active", value: CategoryStatus.ACTIVE },
+      { text: "Inactive", value: CategoryStatus.INACTIVE },
+    ],
+  },
+  {
+    title: "Action",
+    key: "action",
+    fixed: TableFixed.RIGHT,
+    width: "20%",
+  },
+];
+
+const adminCategoryColumns: ColumnType[] = [
   {
     title: "Name",
     dataIndex: "name",
@@ -73,7 +115,8 @@ export {
   CATEGORY_NAME_MIN_CHAR,
   CATEGORY_NAME_MAX_CHAR,
   CATEGORY_DESCRIPTION_MAX_CHAR,
-  categoryColumns,
+  superadminCategoryColumns,
+  adminCategoryColumns,
   categoryFieldLabels,
   categoryFieldNames,
   CategoryStatus,

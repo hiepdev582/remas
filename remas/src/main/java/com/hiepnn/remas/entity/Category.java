@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,6 +65,9 @@ public class Category {
     @LastModifiedBy
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @Transient
+    private Boolean createdBySuperAdmin;
 
     @PrePersist
     protected void onCreate() {
