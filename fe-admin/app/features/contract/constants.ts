@@ -32,15 +32,6 @@ export enum CollateralItemStatus {
   FORFEITED = "FORFEITED",
 }
 
-export enum PriceType {
-  HOURLY = "HOURLY",
-  DAILY = "DAILY",
-  WEEKLY = "WEEKLY",
-  MONTHLY = "MONTHLY",
-  WEEKEND = "WEEKEND",
-  HOLIDAY = "HOLIDAY",
-}
-
 export enum FeeType {
   DELIVERY = "DELIVERY",
   CLEANING = "CLEANING",
@@ -138,15 +129,6 @@ export const collateralItemStatusOptions: BaseSelectOption[] = [
   { label: "Holding", value: CollateralItemStatus.HOLDING },
   { label: "Returned", value: CollateralItemStatus.RETURNED },
   { label: "Forfeited", value: CollateralItemStatus.FORFEITED },
-];
-
-export const priceTypeOptions: BaseSelectOption[] = [
-  { label: "Hourly", value: PriceType.HOURLY },
-  { label: "Daily", value: PriceType.DAILY },
-  { label: "Weekly", value: PriceType.WEEKLY },
-  { label: "Monthly", value: PriceType.MONTHLY },
-  { label: "Weekend", value: PriceType.WEEKEND },
-  { label: "Holiday", value: PriceType.HOLIDAY },
 ];
 
 export const feeTypeOptions: BaseSelectOption[] = [

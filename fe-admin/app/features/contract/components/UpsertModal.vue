@@ -9,16 +9,13 @@ import {
   collateralStatusOptions,
   collateralTypeOptions,
   collateralItemStatusOptions,
-  priceTypeOptions,
   feeTypeOptions,
   ContractStatus,
   CollateralStatus,
   CollateralType,
   CollateralItemStatus,
-  PriceType,
   FeeType,
 } from "../constants";
-import dayjs from "dayjs";
 import { upsertContractFieldSchema } from "../validation";
 
 const props = defineProps<{

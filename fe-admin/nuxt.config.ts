@@ -65,11 +65,6 @@ export default defineNuxtConfig({
     { path: "~/components/others", prefix: "App", pathPrefix: false },
     { path: "~/features/auth/components", prefix: "Auth", pathPrefix: false },
     {
-      path: "~/features/contract/components",
-      prefix: "Contract",
-      pathPrefix: false,
-    },
-    {
       path: "~/features/customer/components",
       prefix: "Customer",
       pathPrefix: false,
@@ -87,6 +82,11 @@ export default defineNuxtConfig({
     {
       path: "~/features/inventory/item/components",
       prefix: "InventoryItem",
+      pathPrefix: false,
+    },
+    {
+      path: "~/features/contract/components",
+      prefix: "Contract",
       pathPrefix: false,
     },
     { path: "~/features/user/components", prefix: "User", pathPrefix: false },

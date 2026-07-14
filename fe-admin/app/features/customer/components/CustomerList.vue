@@ -59,7 +59,7 @@ const onEdit = (record: Customer) => {
   isOpenUpsertModal.value = true;
 };
 
-const onDelete = async (record: Customer) => {
+const confirmDelete = async (record: Customer) => {
   if (!record.id) {
     toast.errorOccured();
     return;
@@ -77,6 +77,14 @@ const onDelete = async (record: Customer) => {
   } finally {
     loading.value = false;
   }
+};
+
+const onDelete = async (record: Customer) => {
+  confirmModal.showDeleteConfirm(
+    "Delete Customer",
+    `Are you sure you want to delete customer "${record.name}"?`,
+    () => confirmDelete(record),
+  );
 };
 
 const tableActions = computed<TableAction[]>(() => [
