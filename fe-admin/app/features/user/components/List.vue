@@ -198,26 +198,27 @@ onMounted(() => {
         <!-- Render Actions -->
         <div v-if="column.key === 'action'">
           <div class="flex items-center gap-1">
-            <BaseTableAction
-              v-for="action of tableActions"
-              :key="action.key"
-              :title="
-                action.key === 'update-status'
-                  ? actionValues[record.isActive ? 'active' : 'inactive'].title
-                  : action.title
-              "
-              :icon="
-                action.key === 'update-status'
-                  ? actionValues[record.isActive ? 'active' : 'inactive'].icon
-                  : action.icon
-              "
-              :color="
-                action.key === 'update-status'
-                  ? actionValues[record.isActive ? 'active' : 'inactive'].color
-                  : action.color
-              "
-              @click="() => action.onClick(record)"
-            />
+            <template v-for="action of tableActions" :key="action.key">
+              <BaseTableAction
+                v-if="action.key !== 'update-status' || !record.roles?.includes(authRoles.superAdmin)"
+                :title="
+                  action.key === 'update-status'
+                    ? actionValues[record.isActive ? 'active' : 'inactive'].title
+                    : action.title
+                "
+                :icon="
+                  action.key === 'update-status'
+                    ? actionValues[record.isActive ? 'active' : 'inactive'].icon
+                    : action.icon
+                "
+                :color="
+                  action.key === 'update-status'
+                    ? actionValues[record.isActive ? 'active' : 'inactive'].color
+                    : action.color
+                "
+                @click="() => action.onClick(record)"
+              />
+            </template>
           </div>
         </div>
       </template>
