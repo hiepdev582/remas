@@ -5,6 +5,8 @@ export type Category = {
   name: string;
   description?: string;
   status: CategoryStatus;
+  createdBy?: string;
+  createdBySuperAdmin?: boolean;
 };
 
 export type AddCategoryRequest = Omit<Category, "id">;

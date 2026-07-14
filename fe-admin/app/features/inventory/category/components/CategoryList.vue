@@ -8,6 +8,7 @@ import type {
 } from "~/types/table";
 import type { Category, DisplayCategoryStatus } from "../types";
 import { CategoryStatus } from "#imports";
+import { superadminCategoryColumns, adminCategoryColumns } from "../constants";
 
 //#region Config
 const dataSource = ref<Category[]>([]);
@@ -197,7 +198,7 @@ onMounted(() => {
     />
     <BaseTable
       v-model:pagination="pagination"
-      :columns="categoryColumns"
+      :columns="isSuperAdmin ? superadminCategoryColumns : adminCategoryColumns"
       :dataSource
       :loading
       :scroll="{
@@ -216,26 +217,27 @@ onMounted(() => {
         </div>
         <div v-if="column.key === 'action'">
           <div class="flex items-center gap-1">
-            <BaseTableAction
-              v-for="action of tableActions"
-              :key="action.key"
-              :title="
-                action.key === 'update-status'
-                  ? actionValues[record.status as DisplayCategoryStatus].title
-                  : action.title
-              "
-              :icon="
-                action.key === 'update-status'
-                  ? actionValues[record.status as DisplayCategoryStatus].icon
-                  : action.icon
-              "
-              :color="
-                action.key === 'update-status'
-                  ? actionValues[record.status as DisplayCategoryStatus].color
-                  : action.color
-              "
-              @click="() => action.onClick(record)"
-            />
+            <template v-for="action of tableActions" :key="action.key">
+              <BaseTableAction
+                v-if="!(action.key === 'edit' && !isSuperAdmin && record.createdBySuperAdmin)"
+                :title="
+                  action.key === 'update-status'
+                    ? actionValues[record.status as DisplayCategoryStatus].title
+                    : action.title
+                "
+                :icon="
+                  action.key === 'update-status'
+                    ? actionValues[record.status as DisplayCategoryStatus].icon
+                    : action.icon
+                "
+                :color="
+                  action.key === 'update-status'
+                    ? actionValues[record.status as DisplayCategoryStatus].color
+                    : action.color
+                "
+                @click="() => action.onClick(record)"
+              />
+            </template>
           </div>
         </div>
       </template>
