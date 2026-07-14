@@ -59,7 +59,7 @@ const menuItems = computed(() => {
     <section
       class="flex items-center pt-3 pb-4 px-6 overflow-hidden whitespace-nowrap select-none"
     >
-      <NuxtLink :to="ROUTES.INVENTORY.CATEGORY" class="flex items-center">
+      <NuxtLink :to="ROUTES.DASHBOARD" class="flex items-center">
         <NuxtImg
           src="/images/logo_circle.png"
           alt="Logo"
