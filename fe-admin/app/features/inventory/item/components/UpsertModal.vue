@@ -178,6 +178,7 @@ watch(
   async () => {
     if (!isOpen.value) return;
 
+    await nextTick();
     formRef.value?.resetForm();
     await getAllCategories();
 
@@ -215,6 +216,7 @@ watch(
     @onConfirm="handleConfirm"
   >
     <BaseForm
+      v-if="isOpen"
       ref="formRef"
       hide-submit-button
       :fields="upsertItemFields"

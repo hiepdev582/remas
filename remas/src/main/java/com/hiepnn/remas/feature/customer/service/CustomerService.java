@@ -159,7 +159,6 @@ public class CustomerService {
                 .build();
     }
     //#endregion
-    //#endregion
 
     //#region Detail
     @Transactional(readOnly = true)
@@ -184,20 +183,25 @@ public class CustomerService {
         if (customerRepository.existsByPhoneAndIsDeletedFalse(request.getPhone())) {
             throw new BadRequestException("Phone number already exists!");
         }
-        if (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty() &&
-            customerRepository.existsByIdentityCardAndIsDeletedFalse(request.getIdentityCard())) {
+        String identityCard = (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty())
+                ? request.getIdentityCard().trim()
+                : null;
+        String driverLicense = (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty())
+                ? request.getDriverLicense().trim()
+                : null;
+
+        if (identityCard != null && customerRepository.existsByIdentityCardAndIsDeletedFalse(identityCard)) {
             throw new BadRequestException("Identity Card already exists!");
         }
-        if (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty() &&
-            customerRepository.existsByDriverLicenseAndIsDeletedFalse(request.getDriverLicense())) {
+        if (driverLicense != null && customerRepository.existsByDriverLicenseAndIsDeletedFalse(driverLicense)) {
             throw new BadRequestException("Driver License already exists!");
         }
 
         Customer customer = Customer.builder()
                 .name(request.getName())
                 .phone(request.getPhone())
-                .identityCard(request.getIdentityCard())
-                .driverLicense(request.getDriverLicense())
+                .identityCard(identityCard)
+                .driverLicense(driverLicense)
                 .gender(request.getGender())
                 .dob(request.getDob())
                 .address(request.getAddress())
@@ -229,22 +233,27 @@ public class CustomerService {
             throw new ResourceNotFoundException("Customer not found!");
         }
 
+        String identityCard = (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty())
+                ? request.getIdentityCard().trim()
+                : null;
+        String driverLicense = (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty())
+                ? request.getDriverLicense().trim()
+                : null;
+
         if (customerRepository.existsByPhoneAndIdNotAndIsDeletedFalse(request.getPhone(), id)) {
             throw new BadRequestException("Phone number already exists!");
         }
-        if (request.getIdentityCard() != null && !request.getIdentityCard().trim().isEmpty() &&
-            customerRepository.existsByIdentityCardAndIdNotAndIsDeletedFalse(request.getIdentityCard(), id)) {
+        if (identityCard != null && customerRepository.existsByIdentityCardAndIdNotAndIsDeletedFalse(identityCard, id)) {
             throw new BadRequestException("Identity Card already exists!");
         }
-        if (request.getDriverLicense() != null && !request.getDriverLicense().trim().isEmpty() &&
-            customerRepository.existsByDriverLicenseAndIdNotAndIsDeletedFalse(request.getDriverLicense(), id)) {
+        if (driverLicense != null && customerRepository.existsByDriverLicenseAndIdNotAndIsDeletedFalse(driverLicense, id)) {
             throw new BadRequestException("Driver License already exists!");
         }
 
         customer.setName(request.getName());
         customer.setPhone(request.getPhone());
-        customer.setIdentityCard(request.getIdentityCard());
-        customer.setDriverLicense(request.getDriverLicense());
+        customer.setIdentityCard(identityCard);
+        customer.setDriverLicense(driverLicense);
         customer.setGender(request.getGender());
         customer.setDob(request.getDob());
         customer.setAddress(request.getAddress());

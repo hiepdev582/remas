@@ -236,6 +236,7 @@ watch(
       return;
     }
 
+    await nextTick();
     formRef.value?.resetForm();
 
     if (props.state !== FormState.ADD && props.id) {
@@ -297,6 +298,7 @@ watch(
     </template>
 
     <BaseForm
+      v-if="isOpen"
       ref="formRef"
       hide-submit-button
       class="mt-4"
