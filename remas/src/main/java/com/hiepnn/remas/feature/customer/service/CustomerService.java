@@ -226,7 +226,7 @@ public class CustomerService {
 
     //#region Create
     @Transactional
-    @Auditable(action = AuditAction.CREATE_CUSTOMER, description = "'Tạo khách hàng mới: ' + #result.name + ' (' + #result.phone + ')'")
+    @Auditable(action = AuditAction.CREATE_CUSTOMER, description = "'Created new customer: ' + #result.name + ' (' + #result.phone + ')'")
     public CustomerResponse createCustomer(CustomerRequest request) {
         if (customerRepository.existsByPhoneAndIsDeletedFalse(request.getPhone())) {
             throw new BadRequestException("Phone number already exists!");
@@ -269,7 +269,7 @@ public class CustomerService {
 
     //#region Update
     @Transactional
-    @Auditable(action = AuditAction.UPDATE_CUSTOMER, description = "'Cập nhật khách hàng: ' + #result.name")
+    @Auditable(action = AuditAction.UPDATE_CUSTOMER, description = "'Updated customer: ' + #result.name")
     public CustomerResponse updateCustomer(Integer id, CustomerRequest request) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found!"));
@@ -325,7 +325,7 @@ public class CustomerService {
 
     //#region Delete
     @Transactional
-    @Auditable(action = AuditAction.DELETE_CUSTOMER, description = "'Xóa khách hàng số #' + #id")
+    @Auditable(action = AuditAction.DELETE_CUSTOMER, description = "'Deleted customer #' + #id")
     public void deleteCustomer(Integer id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found!"));

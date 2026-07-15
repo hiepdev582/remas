@@ -10,8 +10,7 @@ public enum AuditAction {
     CREATE_CUSTOMER("CREATE_CUSTOMER"), // Tạo khách hàng
     UPDATE_CUSTOMER("UPDATE_CUSTOMER"), // Cập nhật khách hàng
     DELETE_CUSTOMER("DELETE_CUSTOMER"), // Xóa khách hàng
-    LOGIN("LOGIN"), // Đăng nhập
-    LOGOUT("LOGOUT"); // Đăng xuất
+    LOGIN("LOGIN"); // Đăng nhập
 
     private final String value;
 

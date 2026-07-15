@@ -83,7 +83,7 @@ public class ItemController {
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+  @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
   @Operation(summary = "Xóa đồ cho thuê", description = "Xóa đồ cho thuê")
   public ResponseEntity<Void> delete(@PathVariable Integer id) {
     itemService.deleteItem(id);

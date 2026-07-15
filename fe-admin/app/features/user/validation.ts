@@ -44,7 +44,10 @@ export const upsertUserFieldSchema = {
     .nullable()
     .or(zod.literal("")),
   fullName: zod.string().trim().nullable(),
-  isActive: zod.boolean().optional(),
+  isActive: zod
+    .union([zod.boolean(), zod.string()])
+    .transform((val) => val === "true" || val === true)
+    .optional(),
   roles: zod.array(zod.string()).min(1, "At least one role is required"),
 
   getSchema(isEdit = false) {

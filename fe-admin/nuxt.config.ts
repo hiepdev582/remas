@@ -90,6 +90,11 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     { path: "~/features/user/components", prefix: "User", pathPrefix: false },
+    {
+      path: "~/features/audit/components",
+      prefix: "Audit",
+      pathPrefix: false,
+    },
   ],
   imports: {
     dirs: [

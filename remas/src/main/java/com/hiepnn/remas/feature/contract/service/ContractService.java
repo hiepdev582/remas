@@ -179,7 +179,7 @@ public class ContractService {
 
     //#region Create
     @Transactional
-    @Auditable(action = AuditAction.CREATE_CONTRACT, description = "'Tạo hợp đồng mới cho khách hàng: ' + #result.customerName")
+    @Auditable(action = AuditAction.CREATE_CONTRACT, description = "'Created new contract for customer: ' + #result.customerName")
     public ContractResponse createContract(ContractRequest request) {
         checkItemAvailability(request.getDetails(), request.getStartDate(), request.getExpectedReturnDate(), null);
 
@@ -213,7 +213,7 @@ public class ContractService {
 
     //#region Update
     @Transactional
-    @Auditable(action = AuditAction.UPDATE_CONTRACT, description = "'Cập nhật hợp đồng số #' + #id")
+    @Auditable(action = AuditAction.UPDATE_CONTRACT, description = "'Updated contract #' + #id")
     public ContractResponse updateContract(Integer id, ContractRequest request) {
         checkItemAvailability(request.getDetails(), request.getStartDate(), request.getExpectedReturnDate(), id);
 
@@ -260,7 +260,7 @@ public class ContractService {
 
     //#region Delete
     @Transactional
-    @Auditable(action = AuditAction.CANCEL_CONTRACT, description = "'Hủy hợp đồng số #' + #id")
+    @Auditable(action = AuditAction.CANCEL_CONTRACT, description = "'Cancelled contract #' + #id")
     public void deleteContract(Integer id) {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found!"));

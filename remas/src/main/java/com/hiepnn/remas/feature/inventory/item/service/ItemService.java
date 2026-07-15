@@ -211,7 +211,7 @@ public class ItemService {
 
   // #region Create
   @Transactional
-  @Auditable(action = AuditAction.CREATE_ITEM, description = "'Tạo thiết bị mới: ' + #result.name")
+  @Auditable(action = AuditAction.CREATE_ITEM, description = "'Created new item: ' + #result.name")
   public ItemResponse createItem(ItemRequest request) {
     if (itemRepository.existsByName(request.getName())) {
       throw new BadRequestException("Item name already exists!");
@@ -241,7 +241,7 @@ public class ItemService {
 
   // #region Update
   @Transactional
-  @Auditable(action = AuditAction.UPDATE_ITEM, description = "'Cập nhật thiết bị: ' + #result.name")
+  @Auditable(action = AuditAction.UPDATE_ITEM, description = "'Updated item: ' + #result.name")
   public ItemResponse updateItem(Integer id, ItemRequest request) {
     Item item = itemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Item not found!"));
     if (item.getStatus() == ItemStatus.DELETED) {
@@ -291,7 +291,7 @@ public class ItemService {
 
   // #region Delete
   @Transactional
-  @Auditable(action = AuditAction.DELETE_ITEM, description = "'Xóa thiết bị số #' + #id")
+  @Auditable(action = AuditAction.DELETE_ITEM, description = "'Deleted item #' + #id")
   public void deleteItem(Integer id) {
     Item item = itemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Item not found!"));
 
