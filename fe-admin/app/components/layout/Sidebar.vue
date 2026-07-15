@@ -39,6 +39,11 @@ const menuItems = computed(() => {
       path: ROUTES.USER,
       icon: "material-symbols:group-rounded",
     });
+    defaultSidebars.push({
+      label: "Audit Logs",
+      path: ROUTES.AUDIT,
+      icon: "material-symbols:history-rounded",
+    });
   }
 
   return defaultSidebars;
