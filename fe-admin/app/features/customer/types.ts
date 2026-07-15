@@ -5,6 +5,16 @@ export type Customer = {
   identityCard?: string;
   driverLicense?: string;
   trustScore: number;
+  gender?: string;
+  dob?: string;
+  age?: number;
+  address?: string;
+  lastInteractionDate?: string;
+  daysSinceLastInteraction?: number;
+  note?: string;
+  link?: string;
+  revenue?: number;
+  rentalCount?: number;
   documents?: CustomerDocument[];
 };
 
@@ -19,10 +29,10 @@ export type CustomerDocument = {
   preview?: string;
 };
 
-export type AddCustomerRequest = Omit<Customer, "id" | "documents"> & {
+export type AddCustomerRequest = Omit<Customer, "id" | "documents" | "age" | "daysSinceLastInteraction" | "revenue" | "rentalCount"> & {
   documents?: Omit<CustomerDocument, "id" | "customerId">[];
 };
 
-export type EditCustomerRequest = Omit<Customer, "id" | "documents"> & {
+export type EditCustomerRequest = Omit<Customer, "id" | "documents" | "age" | "daysSinceLastInteraction" | "revenue" | "rentalCount"> & {
   documents?: Omit<CustomerDocument, "id" | "customerId">[];
 };

@@ -76,8 +76,8 @@ const upsertUserFields = computed<any[]>(() => [
     config: {
       placeholder: placeholders.select(userFieldLabels.isActive),
       options: [
-        { label: "Active", value: true },
-        { label: "Inactive", value: false },
+        { label: "Active", value: "true" },
+        { label: "Inactive", value: "false" },
       ],
       disabled: props.state === FormState.VIEW,
     } as any,
@@ -156,17 +156,19 @@ watch(
   async () => {
     if (!isOpen.value) return;
 
+    await nextTick();
     formRef.value?.resetForm();
 
     if (props.state !== FormState.ADD && props.id) {
       const user = await userService.get(props.id);
       formRef.value?.setValues({
         ...user,
+        isActive: user.isActive ? "true" : "false",
         password: "",
       });
     } else {
       formRef.value?.setValues({
-        isActive: true,
+        isActive: "true",
         roles: [authRoles.customer],
       });
     }
@@ -185,6 +187,7 @@ watch(
     @onConfirm="handleConfirm"
   >
     <BaseForm
+      v-if="isOpen"
       ref="formRef"
       hide-submit-button
       :fields="upsertUserFields"

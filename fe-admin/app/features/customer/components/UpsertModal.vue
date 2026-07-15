@@ -2,7 +2,11 @@
 import type { BaseInputProps } from "~/components/base/Input.vue";
 import type { BaseInputNumberProps } from "~/components/base/InputNumber.vue";
 import type { BaseUploadDocumentsProps } from "~/components/base/UploadDocuments.vue";
+import type { BaseSelectProps } from "~/components/base/Select.vue";
+import type { BaseDatePickerProps } from "~/components/base/DatePicker.vue";
+import type { BaseTextAreaProps } from "~/components/base/TextArea.vue";
 import { upsertCustomerFieldSchema } from "../validation";
+import { genderOptions } from "../constants";
 import type {
   AddCustomerRequest,
   EditCustomerRequest,
@@ -66,6 +70,71 @@ const upsertCustomerFields = computed<FormFieldConfig[]>(() => {
       required: false,
       config: {
         placeholder: placeholders.enter(customerFieldLabels.driverLicense),
+        disabled: props.state === FormState.VIEW,
+      } as BaseInputProps,
+    },
+    {
+      type: FormFieldType.SELECT,
+      name: customerFieldNames.gender,
+      label: customerFieldLabels.gender,
+      required: false,
+      config: {
+        placeholder: placeholders.select(customerFieldLabels.gender),
+        options: genderOptions,
+        disabled: props.state === FormState.VIEW,
+      } as BaseSelectProps,
+    },
+    {
+      type: FormFieldType.DATE,
+      name: customerFieldNames.dob,
+      label: customerFieldLabels.dob,
+      required: false,
+      config: {
+        placeholder: placeholders.select(customerFieldLabels.dob),
+        showTime: false,
+        format: "YYYY-MM-DD",
+        valueFormat: "YYYY-MM-DD",
+        disabled: props.state === FormState.VIEW,
+      } as BaseDatePickerProps,
+    },
+    {
+      type: FormFieldType.TEXT,
+      name: customerFieldNames.address,
+      label: customerFieldLabels.address,
+      required: false,
+      config: {
+        placeholder: placeholders.enter(customerFieldLabels.address),
+        disabled: props.state === FormState.VIEW,
+      } as BaseInputProps,
+    },
+    {
+      type: FormFieldType.DATE,
+      name: customerFieldNames.lastInteractionDate,
+      label: customerFieldLabels.lastInteractionDate,
+      required: false,
+      config: {
+        placeholder: placeholders.select(customerFieldLabels.lastInteractionDate),
+        showTime: true,
+        disabled: props.state === FormState.VIEW,
+      } as BaseDatePickerProps,
+    },
+    {
+      type: FormFieldType.AREA,
+      name: customerFieldNames.note,
+      label: customerFieldLabels.note,
+      required: false,
+      config: {
+        placeholder: placeholders.enter(customerFieldLabels.note),
+        disabled: props.state === FormState.VIEW,
+      } as BaseTextAreaProps,
+    },
+    {
+      type: FormFieldType.TEXT,
+      name: customerFieldNames.link,
+      label: customerFieldLabels.link,
+      required: false,
+      config: {
+        placeholder: placeholders.enter(customerFieldLabels.link),
         disabled: props.state === FormState.VIEW,
       } as BaseInputProps,
     },
@@ -167,6 +236,7 @@ watch(
       return;
     }
 
+    await nextTick();
     formRef.value?.resetForm();
 
     if (props.state !== FormState.ADD && props.id) {
@@ -228,6 +298,7 @@ watch(
     </template>
 
     <BaseForm
+      v-if="isOpen"
       ref="formRef"
       hide-submit-button
       class="mt-4"

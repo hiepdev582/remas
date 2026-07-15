@@ -28,6 +28,8 @@ import com.hiepnn.remas.feature.auth.model.RegisterRequest;
 import com.hiepnn.remas.feature.auth.model.UserPrincipal;
 import com.hiepnn.remas.feature.auth.repository.InvalidatedTokenRepository;
 import com.hiepnn.remas.feature.auth.repository.UserRepository;
+import com.hiepnn.remas.common.annotation.Auditable;
+import com.hiepnn.remas.common.constant.AuditAction;
 import com.hiepnn.remas.feature.auth.repository.UserRoleRepository;
 import com.hiepnn.remas.feature.auth.util.JwtTokenProvider;
 
@@ -84,6 +86,7 @@ public class AuthService {
     // #endregion
 
     // #region Đăng nhập - Sinh token
+    @Auditable(action = AuditAction.LOGIN, description = "'User login: ' + #request.username")
     public LoginResult login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new BadCredentialsException("Invalid username or password!"));

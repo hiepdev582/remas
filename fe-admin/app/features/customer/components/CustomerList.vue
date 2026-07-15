@@ -8,6 +8,8 @@ import type {
 } from "~/types/table";
 import type { Customer } from "../types";
 import UpsertModal from "./UpsertModal.vue";
+import dayjs from "dayjs";
+import { CUSTOMER_DATETIME_FORMAT } from "../constants";
 
 //#region Config
 const dataSource = ref<Customer[]>([]);
@@ -57,7 +59,7 @@ const onEdit = (record: Customer) => {
   isOpenUpsertModal.value = true;
 };
 
-const onDelete = async (record: Customer) => {
+const confirmDelete = async (record: Customer) => {
   if (!record.id) {
     toast.errorOccured();
     return;
@@ -75,6 +77,14 @@ const onDelete = async (record: Customer) => {
   } finally {
     loading.value = false;
   }
+};
+
+const onDelete = async (record: Customer) => {
+  confirmModal.showDeleteConfirm(
+    "Delete Customer",
+    `Are you sure you want to delete customer "${record.name}"?`,
+    () => confirmDelete(record),
+  );
 };
 
 const tableActions = computed<TableAction[]>(() => [
@@ -164,7 +174,52 @@ onMounted(() => {
       @change="handleTableChange"
     >
       <template #bodyCell="{ column, record }">
-        <div v-if="column.key === 'trustScore'">
+        <div v-if="column.key === 'lastInteraction'">
+          <span class="text-xs">{{
+            record.lastInteractionDate
+              ? dayjs(record.lastInteractionDate).format(
+                  CUSTOMER_DATETIME_FORMAT,
+                )
+              : "-"
+          }}</span>
+          <div
+            v-if="
+              record.daysSinceLastInteraction !== null &&
+              record.daysSinceLastInteraction !== undefined
+            "
+            class="text-[11px] text-slate-400"
+          >
+            {{
+              record.daysSinceLastInteraction === 0
+                ? "Today"
+                : `${record.daysSinceLastInteraction} days ago`
+            }}
+          </div>
+        </div>
+
+        <div v-else-if="column.key === 'link'">
+          <a
+            v-if="record.link"
+            :href="record.link"
+            target="_blank"
+            class="text-blue-500 hover:underline text-xs"
+          >
+            Link
+          </a>
+          <span v-else>-</span>
+        </div>
+
+        <div v-else-if="column.key === 'rentalCount'">
+          <span class="font-semibold">{{ record.rentalCount || 0 }}</span>
+        </div>
+
+        <div v-else-if="column.key === 'revenue'">
+          <span class="font-semibold text-emerald-600">
+            {{ record.revenue != null ? record.revenue.toLocaleString() + 'đ' : '0đ' }}
+          </span>
+        </div>
+
+        <div v-else-if="column.key === 'trustScore'">
           <BaseTag
             :color="
               record.trustScore >= 80
@@ -179,7 +234,7 @@ onMounted(() => {
           </BaseTag>
         </div>
 
-        <div v-if="column.key === 'action'">
+        <div v-else-if="column.key === 'action'">
           <div class="flex items-center gap-1">
             <BaseTableAction
               v-for="action of tableActions"

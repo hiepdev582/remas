@@ -32,9 +32,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
+        String token = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+            token = authHeader.substring(7);
+        } else {
+            token = request.getParameter("token");
+        }
+
+        if (token != null) {
 
             boolean isInvalidated = invalidatedTokenRepository.existsById(token);
             if (isInvalidated) {

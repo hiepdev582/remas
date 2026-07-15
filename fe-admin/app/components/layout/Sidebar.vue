@@ -39,6 +39,11 @@ const menuItems = computed(() => {
       path: ROUTES.USER,
       icon: "material-symbols:group-rounded",
     });
+    defaultSidebars.push({
+      label: "Audit Logs",
+      path: ROUTES.AUDIT,
+      icon: "material-symbols:history-rounded",
+    });
   }
 
   return defaultSidebars;
@@ -59,7 +64,7 @@ const menuItems = computed(() => {
     <section
       class="flex items-center pt-3 pb-4 px-6 overflow-hidden whitespace-nowrap select-none"
     >
-      <NuxtLink :to="ROUTES.INVENTORY.CATEGORY" class="flex items-center">
+      <NuxtLink :to="ROUTES.DASHBOARD" class="flex items-center">
         <NuxtImg
           src="/images/logo_circle.png"
           alt="Logo"

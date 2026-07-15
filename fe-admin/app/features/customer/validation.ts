@@ -54,6 +54,12 @@ export const upsertCustomerFieldSchema = {
     .min(0, "Trust score must be at least 0")
     .max(100, "Trust score cannot exceed 100")
     .optional(),
+  gender: zod.string().optional().nullable().or(zod.literal("")),
+  dob: zod.string().optional().nullable().or(zod.literal("")),
+  address: zod.string().optional().nullable().or(zod.literal("")),
+  lastInteractionDate: zod.string().optional().nullable().or(zod.literal("")),
+  note: zod.string().optional().nullable().or(zod.literal("")),
+  link: zod.string().optional().nullable().or(zod.literal("")),
   documents: zod.array(zod.any()).optional(),
 
   getSchema() {
@@ -63,6 +69,12 @@ export const upsertCustomerFieldSchema = {
       identityCard: this.identityCard,
       driverLicense: this.driverLicense,
       trustScore: this.trustScore,
+      gender: this.gender,
+      dob: this.dob,
+      address: this.address,
+      lastInteractionDate: this.lastInteractionDate,
+      note: this.note,
+      link: this.link,
       documents: this.documents,
     });
   },

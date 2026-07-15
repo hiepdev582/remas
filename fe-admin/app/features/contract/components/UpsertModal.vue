@@ -9,16 +9,13 @@ import {
   collateralStatusOptions,
   collateralTypeOptions,
   collateralItemStatusOptions,
-  priceTypeOptions,
   feeTypeOptions,
   ContractStatus,
   CollateralStatus,
   CollateralType,
   CollateralItemStatus,
-  PriceType,
   FeeType,
 } from "../constants";
-import dayjs from "dayjs";
 import { upsertContractFieldSchema } from "../validation";
 
 const props = defineProps<{
@@ -421,8 +418,12 @@ const getDetailData = async () => {
 watch(
   () => isOpen.value,
   async () => {
-    if (!isOpen.value) resetForm();
+    if (!isOpen.value) {
+      resetForm();
+      return;
+    }
 
+    await nextTick();
     await getDetailData();
   },
 );
@@ -446,6 +447,7 @@ const modalTitle = computed(() => {
     @onConfirm="handleConfirm"
   >
     <BaseForm
+      v-if="isOpen"
       ref="formRef"
       hide-submit-button
       class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1"
