@@ -30,6 +30,8 @@ import com.hiepnn.remas.feature.customer.repository.CustomerRepository;
 import com.hiepnn.remas.util.SecurityUtils;
 import com.hiepnn.remas.common.constant.ContractStatus;
 import com.hiepnn.remas.feature.contract.repository.ContractRepository;
+import com.hiepnn.remas.common.annotation.Auditable;
+import com.hiepnn.remas.common.constant.AuditAction;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -224,6 +226,7 @@ public class CustomerService {
 
     //#region Create
     @Transactional
+    @Auditable(action = AuditAction.CREATE_CUSTOMER, description = "'Tạo khách hàng mới: ' + #result.name + ' (' + #result.phone + ')'")
     public CustomerResponse createCustomer(CustomerRequest request) {
         if (customerRepository.existsByPhoneAndIsDeletedFalse(request.getPhone())) {
             throw new BadRequestException("Phone number already exists!");
@@ -266,6 +269,7 @@ public class CustomerService {
 
     //#region Update
     @Transactional
+    @Auditable(action = AuditAction.UPDATE_CUSTOMER, description = "'Cập nhật khách hàng: ' + #result.name")
     public CustomerResponse updateCustomer(Integer id, CustomerRequest request) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found!"));
@@ -321,6 +325,7 @@ public class CustomerService {
 
     //#region Delete
     @Transactional
+    @Auditable(action = AuditAction.DELETE_CUSTOMER, description = "'Xóa khách hàng số #' + #id")
     public void deleteCustomer(Integer id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found!"));

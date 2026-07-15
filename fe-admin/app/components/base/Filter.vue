@@ -9,25 +9,27 @@ import {
 export interface BaseFilterProps {
   searchPlaceholder?: string;
   useAdvancedFilter?: boolean;
-  actions: FilterAction[];
+  actions?: FilterAction[];
   filtersConfig?: AdvancedFilterConfig[];
 }
 
 const props = withDefaults(defineProps<BaseFilterProps>(), {
   searchPlaceholder: placeholders.enterDefault,
   useAdvancedFilter: false,
+  actions: () => [],
   filtersConfig: () => [],
 });
 
 const emit = defineEmits(["onSearch", "onFilterChange"]);
 
-const getInitialValues = () => props.filtersConfig.reduce(
-  (acc, filter) => {
-    acc[filter.key] = filter.defaultValue;
-    return acc;
-  },
-  {} as Record<string, any>,
-);
+const getInitialValues = () =>
+  props.filtersConfig.reduce(
+    (acc, filter) => {
+      acc[filter.key] = filter.defaultValue;
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 
 const filterValues = ref<Record<string, any>>(getInitialValues());
 const submittedFilterValues = ref<Record<string, any>>(getInitialValues());
@@ -98,7 +100,11 @@ const handleSubmit = () => {
         <BaseButton>
           <div class="flex items-center justify-between gap-1">
             <Icon name="mdi:filter" :size="18" />
-            <span>Filter{{ activeFiltersCount > 0 ? ` (${activeFiltersCount})` : "" }}</span>
+            <span
+              >Filter{{
+                activeFiltersCount > 0 ? ` (${activeFiltersCount})` : ""
+              }}</span
+            >
           </div>
         </BaseButton>
       </BasePopover>

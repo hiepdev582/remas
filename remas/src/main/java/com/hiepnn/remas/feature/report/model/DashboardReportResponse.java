@@ -21,4 +21,7 @@ public class DashboardReportResponse {
     private BigDecimal rentalTimesPerCustomer;
     private List<TopCustomerReportItem> topRevenueCustomers;
     private List<TopCustomerReportItem> topCountCustomers;
+    private List<MonthlyRevenueItem> monthlyRevenue;
+    private List<TopItemReportItem> topRentedItems;
+    private BigDecimal cancellationRate;
 }

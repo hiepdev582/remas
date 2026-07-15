@@ -30,6 +30,8 @@ import com.hiepnn.remas.feature.customer.repository.CustomerRepository;
 import com.hiepnn.remas.feature.inventory.item.repository.ItemRepository;
 import com.hiepnn.remas.util.SecurityUtils;
 
+import com.hiepnn.remas.common.annotation.Auditable;
+import com.hiepnn.remas.common.constant.AuditAction;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -177,6 +179,7 @@ public class ContractService {
 
     //#region Create
     @Transactional
+    @Auditable(action = AuditAction.CREATE_CONTRACT, description = "'Tạo hợp đồng mới cho khách hàng: ' + #result.customerName")
     public ContractResponse createContract(ContractRequest request) {
         checkItemAvailability(request.getDetails(), request.getStartDate(), request.getExpectedReturnDate(), null);
 
@@ -210,6 +213,7 @@ public class ContractService {
 
     //#region Update
     @Transactional
+    @Auditable(action = AuditAction.UPDATE_CONTRACT, description = "'Cập nhật hợp đồng số #' + #id")
     public ContractResponse updateContract(Integer id, ContractRequest request) {
         checkItemAvailability(request.getDetails(), request.getStartDate(), request.getExpectedReturnDate(), id);
 
@@ -256,6 +260,7 @@ public class ContractService {
 
     //#region Delete
     @Transactional
+    @Auditable(action = AuditAction.CANCEL_CONTRACT, description = "'Hủy hợp đồng số #' + #id")
     public void deleteContract(Integer id) {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found!"));

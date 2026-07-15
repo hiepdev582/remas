@@ -5,6 +5,17 @@ export type TopCustomerReportItem = {
   value: number;
 };
 
+export type MonthlyRevenueItem = {
+  month: string;
+  revenue: number;
+};
+
+export type TopItemReportItem = {
+  id: number;
+  name: string;
+  rentCount: number;
+};
+
 export type DashboardReport = {
   totalCustomers: number;
   totalOrders: number;
@@ -15,4 +26,14 @@ export type DashboardReport = {
   rentalTimesPerCustomer: number;
   topRevenueCustomers: TopCustomerReportItem[];
   topCountCustomers: TopCustomerReportItem[];
+  monthlyRevenue?: MonthlyRevenueItem[];
+  topRentedItems?: TopItemReportItem[];
+  cancellationRate?: number;
+};
+
+export type StatsReportItem = {
+  id: number | string;
+  name: string;
+  subText?: string;
+  value: number;
 };

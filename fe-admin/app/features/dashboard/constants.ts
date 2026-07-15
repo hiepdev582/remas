@@ -37,4 +37,10 @@ export const indexReports = [
     title: "Avg number rentals",
     icon: "hugeicons:car-time",
   },
+  // Tỷ lệ hủy đơn
+  {
+    key: "cancellation-rate",
+    title: "Cancellation rate",
+    icon: "material-symbols:cancel-presentation-outline",
+  },
 ] as const;

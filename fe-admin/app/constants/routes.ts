@@ -11,6 +11,7 @@ const ROUTES = {
   USER: "/user",
   CUSTOMER: "/customer",
   CONTRACT: "/contract",
+  AUDIT: "/audit",
 } as const;
 
 export { ROUTES };
