@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import type { TopCustomerReportItem } from "../types";
+import type { StatsReportItem } from "../types";
 
 defineProps<{
   title: string;
   description: string;
   icon: string;
   iconClass?: string;
-  items?: TopCustomerReportItem[];
+  items?: StatsReportItem[];
   valueSuffix?: string;
   valueColorClass?: string;
   isCurrency?: boolean;
+  subTextIcon?: string;
 }>();
 </script>
 
@@ -55,9 +56,17 @@ defineProps<{
             <div class="text-sm font-semibold text-slate-700">
               {{ item.name }}
             </div>
-            <div class="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-              <Icon name="ph:phone-fill" size="10" class="mt-[2px]" />
-              {{ item.phone }}
+            <div
+              v-if="item.subText"
+              class="text-xs text-slate-400 flex items-center gap-1 mt-0.5"
+            >
+              <Icon
+                v-if="subTextIcon"
+                :name="subTextIcon"
+                size="10"
+                class="mt-[2px]"
+              />
+              {{ item.subText }}
             </div>
           </div>
         </div>
@@ -76,7 +85,7 @@ defineProps<{
         v-if="!items?.length"
         class="select-none text-center py-6 text-sm text-slate-400"
       >
-        No customers found
+        No data found
       </div>
     </div>
   </div>

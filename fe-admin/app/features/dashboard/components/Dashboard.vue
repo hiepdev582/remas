@@ -1,8 +1,43 @@
 <script setup lang="ts">
-import type { DashboardReport } from "../types";
+import { ref, onMounted, computed } from "vue";
+import type { DashboardReport, StatsReportItem } from "../types";
 
 const dashboardService = useDashboardService();
 const report = ref<DashboardReport | null>(null);
+
+const topRevenueCustomersMapped = computed<StatsReportItem[]>(() => {
+  return (report.value?.topRevenueCustomers || []).map((c) => ({
+    id: c.id,
+    name: c.name,
+    subText: c.phone,
+    value: c.value,
+  }));
+});
+
+const topCountCustomersMapped = computed<StatsReportItem[]>(() => {
+  return (report.value?.topCountCustomers || []).map((c) => ({
+    id: c.id,
+    name: c.name,
+    subText: c.phone,
+    value: c.value,
+  }));
+});
+
+const monthlyRevenueMapped = computed<StatsReportItem[]>(() => {
+  return (report.value?.monthlyRevenue || []).map((m) => ({
+    id: m.month,
+    name: m.month,
+    value: m.revenue,
+  }));
+});
+
+const topRentedItemsMapped = computed<StatsReportItem[]>(() => {
+  return (report.value?.topRentedItems || []).map((i) => ({
+    id: i.id,
+    name: i.name,
+    value: i.rentCount,
+  }));
+});
 
 const getReportValue = (key: string) => {
   if (!report.value) return "0";
@@ -31,6 +66,10 @@ const getReportValue = (key: string) => {
       return report.value.rentalTimesPerCustomer != null
         ? report.value.rentalTimesPerCustomer.toString() + " times"
         : "0 times";
+    case "cancellation-rate":
+      return report.value.cancellationRate != null
+        ? report.value.cancellationRate.toString() + "%"
+        : "0%";
     default:
       return "0";
   }
@@ -79,23 +118,46 @@ onMounted(() => {
       </div>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <DashboardTopCustomersList
+      <DashboardStatsList
         is-currency
         title="Top 5 Revenue Customers"
         description="Customers who generated the highest final amounts"
         icon="ph:crown-bold"
         icon-class="text-amber-500"
         value-color-class="text-emerald-600"
-        :items="report?.topRevenueCustomers"
+        sub-text-icon="ph:phone-fill"
+        :items="topRevenueCustomersMapped"
       />
-      <DashboardTopCustomersList
+      <DashboardStatsList
         title="Top 5 Repeat Customers"
         description="Customers with the most bookings"
         icon="ph:trend-up-bold"
         icon-class="text-indigo-500"
         value-suffix="bookings"
         value-color-class="text-indigo-600"
-        :items="report?.topCountCustomers"
+        sub-text-icon="ph:phone-fill"
+        :items="topCountCustomersMapped"
+      />
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+      <DashboardStatsList
+        is-currency
+        title="Monthly Revenue"
+        description="Total revenue generated per month"
+        icon="mdi:calendar-month-outline"
+        icon-class="text-emerald-500"
+        value-color-class="text-emerald-600"
+        :items="monthlyRevenueMapped"
+      />
+      <DashboardStatsList
+        title="Top Rented Items"
+        description="Most popular inventory items by quantity rented"
+        icon="mdi:car-multiple"
+        icon-class="text-indigo-500"
+        value-suffix="times"
+        value-color-class="text-indigo-600"
+        :items="topRentedItemsMapped"
       />
     </div>
   </section>
