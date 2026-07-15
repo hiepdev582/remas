@@ -24,11 +24,27 @@ const value = computed({
     emit("update:modelValue", val);
   },
 });
+
+const defaultFormatter = (val: any) => {
+  if (val === null || val === undefined || val === "") return "";
+  return `${val}`.replace(numberFormatterRegex, ",");
+};
+
+const defaultParser = (val: any) => {
+  if (!val) return "";
+  return val.replace(numberParserRegex, "");
+};
 </script>
 
 <template>
   <a-input-number
-    v-bind="{ ...$attrs, ...props, placeholder: props.disabled ? '' : props.placeholder }"
+    v-bind="{
+      ...$attrs,
+      ...props,
+      formatter: defaultFormatter,
+      parser: defaultParser,
+      placeholder: props.disabled ? '' : props.placeholder,
+    }"
     v-model:value="value"
     class="w-full"
     @change="(val: any) => emit('change', val)"
