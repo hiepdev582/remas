@@ -3,12 +3,12 @@ import type { SelectProps } from "ant-design-vue";
 
 export interface BaseSelectOption {
   label: string;
-  value: string | number;
+  value: any;
   [key: string]: any;
 }
 
 export interface BaseSelectProps extends /* @vue-ignore */ SelectProps {
-  modelValue?: string | number;
+  modelValue?: any;
   options?: BaseSelectOption[];
   placeholder?: string;
   disabled?: boolean;
